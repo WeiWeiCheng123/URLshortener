@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/WeiWeiCheng123/URLshortener/function"
 	"github.com/WeiWeiCheng123/URLshortener/store"
 	"github.com/go-redis/redis/v8"
 )
@@ -13,7 +14,6 @@ var RC *redis.Client
 func main() {
 
 	RC = store.NewClient()
-	fmt.Println(store.CheckId(RC, 1))
 	/*
 		//var a uint64
 		var b uint64
@@ -42,5 +42,5 @@ func main() {
 	fmt.Println(xx)
 	xx, _ = store.Save(RC, "15216546FQW4", t)
 	fmt.Println(xx)
-	fmt.Println(store.CheckId(RC, "EJlQv3wKYD6"))
+	fmt.Println(store.CheckId(RC, function.Decode(EJlQv3wKYD6)))
 }
