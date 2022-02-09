@@ -54,7 +54,7 @@ func Save(rdb *redis.Client, url string, exp time.Time) (string, error) {
 		id = rand.Uint64()
 	}
 	fmt.Println(id)
-	shortURL := Data{id, url, exp.Format("2022-02-09T09:20:41Z")}
+	shortURL := Data{id, url, exp.Format("2006-01-02T15:04:05.000Z")}
 	fmt.Print("shortURL")
 	fmt.Println(shortURL)
 	rdb.HMSet(ctx, strconv.FormatUint(id, 10))

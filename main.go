@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"time"
 
 	"github.com/WeiWeiCheng123/URLshortener/function"
 	"github.com/WeiWeiCheng123/URLshortener/store"
@@ -28,4 +29,9 @@ func main() {
 	d, err := function.Decode(s)
 	fmt.Println(d)
 	fmt.Println(err)
+	date := "2021-02-08T09:20:41Z"
+	layout := "2006-01-02T15:04:05.000Z"
+	t, err := time.Parse(layout, date)
+	xx, _ := store.Save(RC, "152165464", t)
+	fmt.Println(xx)
 }
