@@ -14,7 +14,9 @@ func main() {
 		b = rand.Uint64()
 	}
 	fmt.Println(b)
-	c := function.Encode(b)
+	//c := function.Encode(b)
+	c := Encode(b)
 	fmt.Println(c)
-
+	d,_ := Decode(c)
+	fmt.Println(d)
 }

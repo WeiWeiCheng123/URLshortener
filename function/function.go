@@ -7,16 +7,17 @@ import (
 )
 
 const (
-	alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-	length   = uint64(len(alphabet))
+	//total length is 62 (a~z + A~Z + 0~9)
+	charTable = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	length = uint64(62)
 )
-  
+
 func Encode(number uint64) string {
 	var encodedBuilder strings.Builder
 	encodedBuilder.Grow(11)
-  
+
 	for ; number > 0; number = number / length {
-	   encodedBuilder.WriteByte(alphabet[(number % length)])
+	   encodedBuilder.WriteByte(charTable[(number % length)])
 	}
   
 	return encodedBuilder.String()
@@ -24,12 +25,12 @@ func Encode(number uint64) string {
   
 func Decode(encoded string) (uint64, error) {
 	var number uint64
-  
-	for i, symbol := range encoded {
-	   alphabeticPosition := strings.IndexRune(alphabet, symbol)
-  
+
+	for i, char := range encoded {
+	   alphabeticPosition := strings.IndexRune(charTable, char)
+
 	   if alphabeticPosition == -1 {
-		  return uint64(alphabeticPosition), errors.New("invalid character: " + string(symbol))
+		  return uint64(alphabeticPosition), errors.New("invalid character: " + string(char))
 	   }
 	   number += uint64(alphabeticPosition) * uint64(math.Pow(float64(length), float64(i)))
 	}
