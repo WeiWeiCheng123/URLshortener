@@ -8,7 +8,6 @@ import (
 )
 
 var ctx = context.Background()
-var RC *redis.Client
 
 type Data struct {
 	Id          uint64 `json:"id" redis:"id"`
@@ -32,9 +31,8 @@ func NewClient() *redis.Client {
 	return rdb
 }
 
-func CheckId() bool {
-	RC = NewClient()
-	n, err := RC.Exists(ctx, "key1").Result()
+func CheckId(rdb *redis.Client) bool {
+	n, err := rdb.Exists(ctx, "key1").Result()
 	if err != nil {
 		panic(err)
 	}
