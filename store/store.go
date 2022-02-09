@@ -50,7 +50,7 @@ func CheckId(rdb *redis.Client, key string) bool {
 
 func Save(rdb *redis.Client, url string, exp time.Time) (string, error) {
 	var id uint64
-	for exist := true; exist; exist = CheckId(rdb, id) {
+	for exist := true; exist; exist = CheckId(rdb, strconv.FormatUint(id, 10)) {
 		id = rand.Uint64()
 	}
 	fmt.Println(id)
