@@ -14,9 +14,10 @@ func main() {
 		b = rand.Uint64()
 	}
 	fmt.Println(b)
-	//c := function.Encode(b)
-	c := Encode(b)
+	c := function.Encode(b)
 	fmt.Println(c)
-	d,_ := Decode(c)
+	s := "SSASFASDFFAW"
+	d,err := function.Decode(s)
 	fmt.Println(d)
+	fmt.Println(err)
 }
