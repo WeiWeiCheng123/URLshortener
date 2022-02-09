@@ -3,7 +3,9 @@ package store
 import (
 	"context"
 	"fmt"
+	"math/rand"
 	"strconv"
+	"time"
 
 	"github.com/go-redis/redis/v8"
 )
@@ -39,11 +41,21 @@ func CheckId(rdb *redis.Client, id uint64) bool {
 	}
 
 	if n > 0 {
-		fmt.Println("存在")
 		return true
 	} else {
-		fmt.Println("不存在")
 		return false
 	}
+}
 
+func Save(rdb *redis.Client, url string, exp time.Time) {
+	var id uint64
+	for exist := true; exist; exist = CheckId(rdb, id) {
+		id = rand.Uint64()
+	}
+	fmt.Println(id)
+	shortURL := Data{id, url, exp.Format("2022-02-09T09:20:41Z")}
+	fmt.Print("shortURL")
+	fmt.Println(shortURL)
+	rdb.HMSet(ctx, strconv.FormatUint(id, 10))
+	rdb.HMSet(ctx, strconv.FormatUint(id, 10), exp)
 }
