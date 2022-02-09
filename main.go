@@ -1,7 +1,7 @@
 package main
 
 import (
-	"function/encoder"
+	"github.com/WeiWeiCheng123/URLshortener/function"
 	"fmt"
 	"math/rand"
 )
@@ -14,7 +14,7 @@ func main() {
 		b = rand.Uint64()
 	}
 	fmt.Println(b)
-	c := Encode(b)
+	c := function.Encode(b)
 	fmt.Println(c)
 
 }
