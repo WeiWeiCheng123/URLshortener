@@ -5,6 +5,7 @@ import (
 	"math/rand"
 
 	"github.com/WeiWeiCheng123/URLshortener/function"
+	"github.com/WeiWeiCheng123/URLshortener/store"
 	"github.com/go-redis/redis/v8"
 )
 
