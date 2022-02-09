@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/WeiWeiCheng123/URLshortener/function"
 	"github.com/go-redis/redis/v8"
 )
 
@@ -47,7 +48,7 @@ func CheckId(rdb *redis.Client, id uint64) bool {
 	}
 }
 
-func Save(rdb *redis.Client, url string, exp time.Time) {
+func Save(rdb *redis.Client, url string, exp time.Time) (string, error) {
 	var id uint64
 	for exist := true; exist; exist = CheckId(rdb, id) {
 		id = rand.Uint64()
@@ -58,4 +59,6 @@ func Save(rdb *redis.Client, url string, exp time.Time) {
 	fmt.Println(shortURL)
 	rdb.HMSet(ctx, strconv.FormatUint(id, 10))
 	rdb.HMSet(ctx, strconv.FormatUint(id, 10), exp)
+
+	return function.Encode(id), nil
 }
