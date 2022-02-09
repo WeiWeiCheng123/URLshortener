@@ -3,14 +3,12 @@ package main
 import (
 	"fmt"
 	"math/rand"
-	"github.com/go-redis/redis/v8"
+
 	"github.com/WeiWeiCheng123/URLshortener/function"
-	"github.com/WeiWeiCheng123/URLshortener/store"
-	
+	"github.com/go-redis/redis/v8"
 )
 
 var RC *redis.Client
-
 
 func main() {
 	RC = store.newClient()
