@@ -42,5 +42,7 @@ func main() {
 	fmt.Println(xx)
 	xx, _ = store.Save(RC, "15216546FQW4", t)
 	fmt.Println(xx)
-	fmt.Println(store.CheckId(RC, function.Decode(EJlQv3wKYD6)))
+	dec, _ := function.Decode("EJlQv3wKYD6")
+	fmt.Println(dec)
+	fmt.Println(store.CheckId(RC, dec))
 }

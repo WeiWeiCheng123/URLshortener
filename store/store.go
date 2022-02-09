@@ -57,7 +57,8 @@ func Save(rdb *redis.Client, url string, exp time.Time) (string, error) {
 	shortURL := Data{id, url, exp.Format("2006-01-02 15:04:05")}
 	fmt.Print("shortURL")
 	fmt.Println(shortURL)
-	rdb.HMSet(ctx, strconv.FormatUint(id, 10))
+
+	rdb.HMSet(ctx, strconv.FormatUint(id, 10), url)
 	rdb.ExpireAt(ctx, strconv.FormatUint(id, 10), exp)
 
 	return function.Encode(id), nil
