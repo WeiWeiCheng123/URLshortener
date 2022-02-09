@@ -35,8 +35,8 @@ func NewClient() *redis.Client {
 	return rdb
 }
 
-func CheckId(rdb *redis.Client, id uint64) bool {
-	n, err := rdb.Exists(ctx, strconv.FormatUint(id, 10)).Result()
+func CheckId(rdb *redis.Client, key string) bool {
+	n, err := rdb.Exists(ctx, key).Result()
 	if err != nil {
 		panic(err)
 	}
