@@ -3,6 +3,7 @@ package store
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"github.com/go-redis/redis/v8"
 )
@@ -31,8 +32,8 @@ func NewClient() *redis.Client {
 	return rdb
 }
 
-func CheckId(rdb *redis.Client) bool {
-	n, err := rdb.Exists(ctx, "key1").Result()
+func CheckId(rdb *redis.Client, id uint64) bool {
+	n, err := rdb.Exists(ctx, strconv.FormatUint(id, 10)).Result()
 	if err != nil {
 		panic(err)
 	}

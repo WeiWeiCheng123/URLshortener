@@ -14,6 +14,7 @@ var RC *redis.Client
 func main() {
 
 	RC = store.NewClient()
+	fmt.Println(store.CheckId(RC))
 	//var a uint64
 	var b uint64
 	//a = rand.Uint64()
