@@ -8,6 +8,13 @@ import (
 )
 
 var ctx = context.Background()
+var RC *redis.Client
+
+type Data struct {
+	Id          uint64 `json:"id" redis:"id"`
+	OriginalURL string `json:"OriginalURL" redis:"OriginalURL"`
+	ExpTime     string `json:"exp" redis:"exp"`
+}
 
 func NewClient() *redis.Client {
 	rdb := redis.NewClient(&redis.Options{
@@ -23,4 +30,21 @@ func NewClient() *redis.Client {
 	fmt.Println("Connect!")
 
 	return rdb
+}
+
+func CheckId() bool {
+	RC = NewClient()
+	n, err := RC.Exists(ctx, "key1").Result()
+	if err != nil {
+		panic(err)
+	}
+
+	if n > 0 {
+		fmt.Println("存在")
+		return true
+	} else {
+		fmt.Println("不存在")
+		return false
+	}
+
 }
