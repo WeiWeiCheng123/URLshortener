@@ -8,8 +8,8 @@ import (
 )
 
 type PostData struct {
-	Url      string `json:"url"`
-	ExpireAt string `json:"expireAt"`
+	OriginalURL string `json:"OriginalURL"`
+	ExpireAt    string `json:"expireAt"`
 }
 
 func Build() *gin.Engine {
@@ -29,7 +29,7 @@ func Shorten(c *gin.Context) {
 	}
 	fmt.Println(postdata)
 	c.JSON(200, gin.H{
-		"url": postdata.Url,
+		"url": postdata.OriginalURL,
 		"exp": postdata.ExpireAt,
 	})
 	return
