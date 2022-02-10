@@ -39,10 +39,6 @@ func NewClient() *redis.Client {
 func CheckId(rdb *redis.Client, id uint64) bool {
 	err := rdb.Get(ctx, strconv.FormatUint(id, 10)).Err()
 
-	if err != nil {
-		panic(err)
-	}
-
 	if err == redis.Nil {
 		return false
 	} else if err != nil {
