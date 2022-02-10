@@ -22,7 +22,7 @@ func Build() *gin.Engine {
 
 func Shorten(c *gin.Context) {
 	var postdata PostData
-	err := c.Bind(&postdata)
+	err := c.BindJSON(&postdata)
 	if err != nil {
 		fmt.Println("ERR: ", err)
 		return
