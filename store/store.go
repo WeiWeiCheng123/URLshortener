@@ -78,3 +78,17 @@ func Save(rdb *redis.Client, url string, exp time.Time) (string, error) {
 
 	return function.Encode(id), nil
 }
+
+func Load(rdb *redis.Client, shortURL string) (string, error) {
+	id, err := function.Decode(shortURL)
+
+	if err != nil {
+		return "", err
+	}
+
+	url, err := rdb.Get(ctx, strconv.FormatUint(id, 10)).Result()
+	if err != nil {
+		return "", err
+	}
+	return url, nil
+}
