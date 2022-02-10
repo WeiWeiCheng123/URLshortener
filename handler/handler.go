@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"github.com/WeiWeiCheng123/URLshortener/store"
+	//"github.com/WeiWeiCheng123/URLshortener/store"
 )
 
 func Build() *gin.Engine {
@@ -22,6 +22,6 @@ func Shorten(c *gin.Context) {
 
 func Parse(c *gin.Context) {
 	shortURL := c.Param("shortURL")
-	store.Load()
+	//store.Load()
 	fmt.Println(shortURL)
 }
