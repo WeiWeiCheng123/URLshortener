@@ -16,9 +16,10 @@ func Build() *gin.Engine {
 			"message": "origin",
 		})
 	})
-
+	router.Run()
 	return router
 }
+
 
 func Shorten() gin.HandlerFunc {
 	return nil
