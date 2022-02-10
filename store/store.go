@@ -36,6 +36,8 @@ func NewClient() *redis.Client {
 	return rdb
 }
 
+
+//Check the id is exist or not
 func CheckId(rdb *redis.Client, id uint64) bool {
 	err := rdb.Get(ctx, strconv.FormatUint(id, 10)).Err()
 
@@ -48,6 +50,7 @@ func CheckId(rdb *redis.Client, id uint64) bool {
 	}
 }
 
+//Give original URL and expire time, save to Redis
 func Save(rdb *redis.Client, url string, exp time.Time) (string, error) {
 	var id uint64
 
@@ -62,13 +65,13 @@ func Save(rdb *redis.Client, url string, exp time.Time) (string, error) {
 	err := rdb.Set(ctx, strconv.FormatUint(id, 10), url, 0).Err()
 
 	if err != nil {
-		panic(err)
+		return "", err
 	}
 
 	res, err := rdb.ExpireAt(ctx, strconv.FormatUint(id, 10), exp).Result()
 
 	if err != nil {
-		panic(err)
+		return "", err
 	}
 	if res {
 		fmt.Println("Set")
@@ -79,6 +82,7 @@ func Save(rdb *redis.Client, url string, exp time.Time) (string, error) {
 	return function.Encode(id), nil
 }
 
+//Give shortURL return original URL
 func Load(rdb *redis.Client, shortURL string) (string, error) {
 	id, err := function.Decode(shortURL)
 

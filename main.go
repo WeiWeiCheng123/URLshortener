@@ -6,7 +6,7 @@ import (
 
 	"time"
 
-	"github.com/WeiWeiCheng123/URLshortener/function"
+	//"github.com/WeiWeiCheng123/URLshortener/function"
 	"github.com/WeiWeiCheng123/URLshortener/store"
 	"github.com/go-redis/redis/v8"
 )
@@ -28,15 +28,11 @@ func main() {
 	}
 	t = t.In(localLocation)
 	fmt.Println(t)
-	xx, _ := store.Save(RC, "152165464", t)
+	xx, _ := store.Save(RC, "GOOGLE", t)
 	fmt.Println(xx)
-	xx, _ = store.Save(RC, "15216541264", t)
+	xx, _ = store.Save(RC, "DCARD", t)
 	fmt.Println(xx)
-	xx, _ = store.Save(RC, "15216546FQW4", t)
+	xx, _ = store.Save(RC, "YAHOO", t)
 	fmt.Println(xx)
-	dec, _ := function.Decode("EJlQv3wKYD6")
-	fmt.Println(dec)
-	val, err := RC.Set(ctx, "5577006791947779410", "GOOGLE", 0).Result()
-	fmt.Printf("val = %s \n", val)
-
+	fmt.Println(store.Load(RC, "v2dBmrUHmW8"))
 }
