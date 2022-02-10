@@ -36,13 +36,16 @@ func Shorten(c *gin.Context) {
 		"id":       id,
 		"shortURL": "",
 	})
-
 	return
 }
 
 func Parse(c *gin.Context) {
 	shortURL := c.Param("shortURL")
-	//store.Load()
-	fmt.Println(shortURL)
+	url, err := store.Load(rdb, shortURL)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(url)
 	return
 }
