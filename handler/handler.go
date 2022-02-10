@@ -16,8 +16,9 @@ func Build() *gin.Engine {
 }
 
 func Shorten(c *gin.Context) {
-	url := c.DefaultPostForm("","")
-	fmt.Println(url)
+	url := c.PostForm("url")
+	expireAt := c.PostForm("time")
+	fmt.Println("url: ", url, "\n exp:", expireAt)
 }
 
 func Parse(c *gin.Context) {
