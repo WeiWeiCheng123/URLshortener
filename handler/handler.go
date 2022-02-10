@@ -22,7 +22,7 @@ func Build() *gin.Engine {
 }
 
 func Shorten(c *gin.Context) {
-	Data := PostData()
+	Data := PostData{}
 	c.BindJSON(&Data)
 	fmt.Println(&Data)
 	c.JSON(http.StatusOK, gin.H{
