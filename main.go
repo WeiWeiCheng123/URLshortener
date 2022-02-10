@@ -46,8 +46,4 @@ func main() {
 	fmt.Println(xx)
 	dec, _ := function.Decode("EJlQv3wKYD6")
 	fmt.Println(dec)
-	fmt.Println(RC.HMSet(ctx, "key1", "val"))
-	fmt.Println(RC.Keys(ctx, "1"))
-	fmt.Println(RC.Do(ctx, "hset", "KEY", "VAL").Result())
-	fmt.Println(RC.Get(ctx, "KEY"))
 }

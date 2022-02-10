@@ -45,6 +45,8 @@ func CheckId(rdb *redis.Client, id uint64) bool {
 
 	if err == redis.Nil {
 		return false
+	} else if err != nil {
+		panic(err)
 	} else {
 		return true
 	}
