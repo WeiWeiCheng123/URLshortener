@@ -2,17 +2,19 @@ package handler
 
 import (
 	"fmt"
+	"io/ioutil"
+	"strings"
 
+	"github.com/WeiWeiCheng123/URLshortener/store"
 	"github.com/gin-gonic/gin"
-	//"github.com/WeiWeiCheng123/URLshortener/store"
+	"github.com/go-redis/redis/v8"
 )
 
-type PostData struct {
-	OriginalURL string `json:"OriginalURL"`
-	ExpireAt    string `json:"expireAt"`
-}
+var rdb *redis.Client
+
 
 func Build() *gin.Engine {
+	rdb = store.NewClient()
 	router := gin.Default()
 	router.POST("/api/urls", Shorten)
 	router.GET("/:shortURL", Parse)
@@ -21,11 +23,17 @@ func Build() *gin.Engine {
 }
 
 func Shorten(c *gin.Context) {
-	url := c.PostForm("url")
-	fmt.Println(url)
+	data, _ := ioutil.ReadAll(c.Request.Body)
+	postdata := string(data)
+	post_split := strings.Split(postdata, ",")
+	url := post_split[0][6:]
+	exp := post_split[1][9:]
+	store.Save(rdb, url, exp)
 	c.JSON(200, gin.H{
-		"url": url,
+		"id": "",
+		"shortURL" : "",
 	})
+	
 	return
 }
 

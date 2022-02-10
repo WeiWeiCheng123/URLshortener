@@ -51,24 +51,34 @@ func CheckId(rdb *redis.Client, id uint64) bool {
 }
 
 //Give original URL and expire time, save to Redis
-func Save(rdb *redis.Client, url string, exp time.Time) (string, error) {
+func Save(rdb *redis.Client, url string, exp string) (string, error) {
 	var id uint64
+	var localLocation *time.Location
+	localLocation, _ = time.LoadLocation("Asia/Shanghai")
 
 	for exist := true; exist; exist = CheckId(rdb, id) {
 		id = rand.Uint64()
 	}
 
+	layout := "2006-01-02T15:04:05Z"
+	expireTime, err := time.Parse(layout, exp)
+	if err != nil {
+		fmt.Println(err)
+		return "", err
+	}
+	expireTime = expireTime.In(localLocation)
+
 	fmt.Println(id)
-	shortURL := Data{id, url, exp.Format("2006-01-02 15:04:05")}
+	shortURL := Data{id, url, expireTime.Format("2006-01-02 15:04:05")}
 	fmt.Println("shortURL")
 	fmt.Println(shortURL)
-	err := rdb.Set(ctx, strconv.FormatUint(id, 10), url, 0).Err()
+	err = rdb.Set(ctx, strconv.FormatUint(id, 10), url, 0).Err()
 
 	if err != nil {
 		return "", err
 	}
 
-	res, err := rdb.ExpireAt(ctx, strconv.FormatUint(id, 10), exp).Result()
+	res, err := rdb.ExpireAt(ctx, strconv.FormatUint(id, 10), expireTime).Result()
 
 	if err != nil {
 		return "", err
