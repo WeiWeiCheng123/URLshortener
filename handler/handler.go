@@ -21,11 +21,11 @@ func Build() *gin.Engine {
 }
 
 func Shorten(c *gin.Context) {
-	var Data PostData
-	fmt.Println(c.BindJSON(&Data))
+	var postdata PostData
+	fmt.Println(c.BindJSON(&postdata))
 	c.JSON(200, gin.H{
-		"url": Data.Url,
-		"exp": Data.ExpireAt,
+		"url": postdata.Url,
+		"exp": postdata.ExpireAt,
 	})
 	return
 }
