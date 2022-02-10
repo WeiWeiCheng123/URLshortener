@@ -8,8 +8,8 @@ import (
 )
 
 type PostData struct {
-	Url      string `json:"url" binding:"required"`
-	ExpireAt string `json:"expireAt" binding:"required"`
+	Url      string `json:"url"`
+	ExpireAt string `json:"expireAt"`
 }
 
 func Build() *gin.Engine {
