@@ -9,8 +9,8 @@ import (
 )
 
 type PostData struct {
-	Url      string `json:"url"`
-	ExpireAt string `json:"expireAt"`
+	Url      string `json:"url" binding:"required"`
+	ExpireAt string `json:"expireAt" binding:"required"`
 }
 
 func Build() *gin.Engine {
@@ -22,7 +22,7 @@ func Build() *gin.Engine {
 }
 
 func Shorten(c *gin.Context) {
-	Data := PostData{}
+	var Data PostData
 	c.BindJSON(&Data)
 	fmt.Println(&Data)
 	c.JSON(http.StatusOK, gin.H{
