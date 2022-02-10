@@ -23,8 +23,8 @@ func Build() *gin.Engine {
 func Shorten(c *gin.Context) {
 	//var postdata PostData
 	//fmt.Println(c.BindJSON(&postdata))
-	url := c.Query("url")
-	exp := c.Query("expireAt")
+	url := c.DefaultPostForm("url", "GOOGLE")
+	exp := c.DefaultPostForm("expireAt", "123")
 	c.JSON(200, gin.H{
 		"url": url,
 		"exp": exp,
