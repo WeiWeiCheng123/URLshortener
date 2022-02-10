@@ -2,7 +2,6 @@ package handler
 
 import (
 	"fmt"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 	//"github.com/WeiWeiCheng123/URLshortener/store"
@@ -22,12 +21,9 @@ func Build() *gin.Engine {
 }
 
 func Shorten(c *gin.Context) {
-	fmt.Println("1 ", c.PostForm("url"))
 	var Data PostData
-	c.BindJSON(&Data)
-	fmt.Println("2 ", c.Bind(&Data))
-	fmt.Println(&Data)
-	c.JSON(http.StatusOK, gin.H{
+	fmt.Println(c.BindJSON(&Data))
+	c.JSON(200, gin.H{
 		"url": Data.Url,
 		"exp": Data.ExpireAt,
 	})
