@@ -22,7 +22,7 @@ func Build() *gin.Engine {
 
 func Shorten(c *gin.Context) {
 	var postdata PostData
-	c.ShouldBind(&postdata)
+	c.ShouldBindJSON(&postdata)
 	fmt.Println(postdata)
 	c.JSON(200, gin.H{
 		"url": postdata.OriginalURL,
