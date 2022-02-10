@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	//"github.com/WeiWeiCheng123/URLshortener/store"
 )
 
@@ -22,7 +23,7 @@ func Build() *gin.Engine {
 
 func Shorten(c *gin.Context) {
 	var postdata PostData
-	c.BindJSON(&postdata)
+	c.ShouldBind(&postdata)
 	fmt.Println(postdata)
 	c.JSON(200, gin.H{
 		"url": postdata.OriginalURL,
