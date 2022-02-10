@@ -27,7 +27,7 @@ func Shorten(c *gin.Context) {
 	postdata := string(data)
 	post_split := strings.Split(postdata, ",")
 	url := post_split[0][6:]
-	exp := post_split[1][9:]
+	exp := post_split[1][9:len(post_split[1])-2]
 	store.Save(rdb, url, exp)
 	c.JSON(200, gin.H{
 		"id": "",
