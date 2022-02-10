@@ -12,7 +12,6 @@ import (
 
 var rdb *redis.Client
 
-
 func Build() *gin.Engine {
 	rdb = store.NewClient()
 	router := gin.Default()
@@ -27,13 +26,17 @@ func Shorten(c *gin.Context) {
 	postdata := string(data)
 	post_split := strings.Split(postdata, ",")
 	url := post_split[0][6:]
-	exp := post_split[1][9:len(post_split[1])-2]
-	store.Save(rdb, url, exp)
+	exp := post_split[1][9 : len(post_split[1])-2]
+	id, err := store.Save(rdb, url, exp)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	c.JSON(200, gin.H{
-		"id": "",
-		"shortURL" : "",
+		"id":       id,
+		"shortURL": "",
 	})
-	
+
 	return
 }
 
