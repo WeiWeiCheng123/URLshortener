@@ -24,6 +24,7 @@ func Shorten(c *gin.Context) {
 	var postdata PostData
 	err := c.Bind(&postdata)
 	if err != nil {
+		fmt.Println(err)
 		return
 	}
 	fmt.Println(postdata)
