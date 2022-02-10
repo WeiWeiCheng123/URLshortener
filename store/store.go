@@ -27,6 +27,7 @@ func NewClient() *redis.Client {
 	})
 
 	_, err := rdb.Ping(ctx).Result()
+
 	if err != nil {
 		panic(err)
 	}
@@ -36,30 +37,46 @@ func NewClient() *redis.Client {
 }
 
 func CheckId(rdb *redis.Client, id uint64) bool {
-	n, err := rdb.Exists(ctx, strconv.FormatUint(id, 10)).Result()
+	err := rdb.Get(ctx, strconv.FormatUint(id, 10)).Err()
+
 	if err != nil {
 		panic(err)
 	}
 
-	if n > 0 {
-		return true
-	} else {
+	if err == redis.Nil {
 		return false
+	} else {
+		return true
 	}
 }
 
 func Save(rdb *redis.Client, url string, exp time.Time) (string, error) {
 	var id uint64
+
 	for exist := true; exist; exist = CheckId(rdb, id) {
 		id = rand.Uint64()
 	}
+
 	fmt.Println(id)
 	shortURL := Data{id, url, exp.Format("2006-01-02 15:04:05")}
-	fmt.Print("shortURL")
+	fmt.Println("shortURL")
 	fmt.Println(shortURL)
+	err := rdb.Set(ctx, strconv.FormatUint(id, 10), url, 0).Err()
 
-	rdb.HMSet(ctx, strconv.FormatUint(id, 10), url)
-	rdb.ExpireAt(ctx, strconv.FormatUint(id, 10), exp)
+	if err != nil {
+		panic(err)
+	}
+
+	res, err := rdb.ExpireAt(ctx, strconv.FormatUint(id, 10), exp).Result()
+
+	if err != nil {
+		panic(err)
+	}
+	if res {
+		fmt.Println("Set")
+	} else {
+		fmt.Println("Fall to set")
+	}
 
 	return function.Encode(id), nil
 }
