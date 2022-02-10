@@ -6,16 +6,24 @@ import (
 
 func Build() *gin.Engine {
 	router := gin.Default()
-	router.POST("/api/urls", shorten())
-	router.GET("/{shortURL}", parse())
+	router.POST("/api/urls", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "short",
+		})
+	})
+	router.GET("/{shortURL}", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "origin",
+		})
+	})
 
 	return router
 }
 
-func shorten() gin.HandlerFunc {
+func Shorten() gin.HandlerFunc {
 	return nil
 }
 
-func parse() gin.HandlerFunc {
+func Parse() gin.HandlerFunc {
 	return nil
 }

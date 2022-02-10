@@ -8,6 +8,7 @@ import (
 
 	//"github.com/WeiWeiCheng123/URLshortener/function"
 	"github.com/WeiWeiCheng123/URLshortener/store"
+	"github.com/WeiWeiCheng123/URLshortener/handler"
 	"github.com/go-redis/redis/v8"
 )
 
@@ -15,7 +16,7 @@ var RC *redis.Client
 var ctx = context.Background()
 
 func main() {
-
+	handler.Build()
 	RC = store.NewClient()
 	var localLocation *time.Location
 	localLocation, _ = time.LoadLocation("Asia/Shanghai")
