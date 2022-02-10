@@ -22,6 +22,7 @@ func Build() *gin.Engine {
 }
 
 func Shorten(c *gin.Context) {
+	fmt.Println(c.PostForm("url"))
 	var Data PostData
 	c.BindJSON(&Data)
 	fmt.Println(&Data)
@@ -29,10 +30,12 @@ func Shorten(c *gin.Context) {
 		"url": Data.Url,
 		"exp": Data.ExpireAt,
 	})
+	return
 }
 
 func Parse(c *gin.Context) {
 	shortURL := c.Param("shortURL")
 	//store.Load()
 	fmt.Println(shortURL)
+	return
 }
