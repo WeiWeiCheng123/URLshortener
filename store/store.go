@@ -36,7 +36,6 @@ func NewClient() *redis.Client {
 	return rdb
 }
 
-
 //Check the id is exist or not
 func CheckId(rdb *redis.Client, id uint64) bool {
 	err := rdb.Get(ctx, strconv.FormatUint(id, 10)).Err()
@@ -104,5 +103,6 @@ func Load(rdb *redis.Client, shortURL string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	fmt.Println("url is : ", url)
 	return url, nil
 }
