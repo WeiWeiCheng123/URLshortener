@@ -100,6 +100,7 @@ func Load(rdb *redis.Client, shortURL string) (string, error) {
 	}
 
 	url, err := rdb.Get(ctx, strconv.FormatUint(id, 10)).Result()
+	fmt.Println("load : ", url, " ", err)
 	if err != nil {
 		return "", err
 	}
