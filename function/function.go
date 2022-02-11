@@ -4,6 +4,7 @@ import (
 	"errors"
 	"math"
 	"strings"
+	"net/url"
 )
 
 const (
@@ -35,4 +36,10 @@ func Decode(encoded string) (uint64, error) {
 	   number += uint64(charPosition) * uint64(math.Pow(float64(length), float64(i)))
 	}
 	return number, nil
+}
+
+//Valid the URL, if URL not correct then return false
+func IsUrl(str string) bool {
+	u, err := url.Parse(str)
+	return err == nil && u.Scheme != "" && u.Host != ""
 }

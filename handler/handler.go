@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"strings"
-
+	"github.com/WeiWeiCheng123/URLshortener/function"
 	"github.com/WeiWeiCheng123/URLshortener/store"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
@@ -27,6 +27,10 @@ func Shorten(c *gin.Context) {
 	post_split := strings.Split(postdata, ",")
 	url := post_split[0][6:]
 	exp := post_split[1][9 : len(post_split[1])-2]
+	if !function.IsUrl(url) {
+		c.String(400, "Invalid URL")
+		return
+	}
 	id, err := store.Save(rdb, url, exp)
 	if err != nil {
 		fmt.Println(err)
@@ -34,7 +38,7 @@ func Shorten(c *gin.Context) {
 	}
 	c.JSON(200, gin.H{
 		"id":       id,
-		"shortURL": "",
+		"shortURL": "http://localhost:8080/" + id,
 	})
 	return
 }
