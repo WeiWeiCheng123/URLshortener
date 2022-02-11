@@ -58,5 +58,8 @@ func TimeFormat(expTime string) (time.Time, error) {
 
 	expireTime = expireTime.In(localLocation)
 	expireTime = expireTime.Add(-8 * time.Hour)
+	if time.Now().After(expireTime)  {
+		return time.Time{}, err
+	}
 	return expireTime, nil
 }
