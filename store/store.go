@@ -14,9 +14,9 @@ import (
 var ctx = context.Background()
 
 type Data struct {
-	Id          uint64 `json:"id" redis:"id"`
-	OriginalURL string `json:"OriginalURL" redis:"OriginalURL"`
-	ExpTime     string `json:"exp" redis:"exp"`
+	Id          uint64    `json:"id" redis:"id"`
+	OriginalURL string    `json:"OriginalURL" redis:"OriginalURL"`
+	ExpTime     time.Time `json:"exp" redis:"exp"`
 }
 
 func NewClient() *redis.Client {
@@ -50,35 +50,25 @@ func CheckId(rdb *redis.Client, id uint64) bool {
 }
 
 //Give original URL and expire time, save to Redis
-func Save(rdb *redis.Client, url string, exp string) (string, error) {
+func Save(rdb *redis.Client, url string, expireTime time.Time) (string, error) {
 	var id uint64
-	var localLocation *time.Location
-	localLocation, _ = time.LoadLocation("Asia/Shanghai")
 
 	for exist := true; exist; exist = CheckId(rdb, id) {
 		id = rand.Uint64()
 	}
 
-	layout := "2006-01-02T15:04:05Z"
-	expireTime, err := time.Parse(layout, exp)
-	if err != nil {
-		fmt.Println(err)
-		return "", err
-	}
-	expireTime = expireTime.In(localLocation)
-
 	fmt.Println(id)
-	shortURL := Data{id, url, expireTime.Format("2006-01-02 15:04:05")}
+	shortURL := Data{id, url, expireTime}
 	fmt.Println("shortURL")
 	fmt.Println(shortURL)
-	err = rdb.Set(ctx, strconv.FormatUint(id, 10), url, 0).Err()
-
+	err := rdb.Set(ctx, strconv.FormatUint(id, 10), url, 0).Err()
+	//Error to save data
 	if err != nil {
 		return "", err
 	}
 
 	res, err := rdb.ExpireAt(ctx, strconv.FormatUint(id, 10), expireTime).Result()
-
+	//Error to set expire time
 	if err != nil {
 		return "", err
 	}
@@ -100,10 +90,9 @@ func Load(rdb *redis.Client, shortURL string) (string, error) {
 	}
 
 	url, err := rdb.Get(ctx, strconv.FormatUint(id, 10)).Result()
-	fmt.Println("load : ", url, " ", err)
-	if err != nil {
+
+	if err == redis.Nil {
 		return "", err
 	}
-	fmt.Println("url is : ", url)
 	return url, nil
 }

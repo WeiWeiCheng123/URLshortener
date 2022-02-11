@@ -29,18 +29,24 @@ func Shorten(c *gin.Context) {
 	post_split := strings.Split(postdata, ",")
 	url := post_split[0][6:]
 	exp := post_split[1][9 : len(post_split[1])-2]
-
+	//Wrong URL format
 	if !function.IsUrl(url) {
-		c.String(400, "Invalid URL")
+		c.String(http.StatusBadRequest, "Invalid URL")
 	}
 
-	id, err := store.Save(rdb, url, exp)
+	expTime, err := function.TimeFormat(exp)
+	//Wrong Time format
+	if err != nil {
+		c.String(http.StatusBadRequest, "Error time format")
+	}
 
+	id, err := store.Save(rdb, url, expTime)
+	//Fail to save
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 	}
 
-	c.JSON(200, gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"id":       id,
 		"shortURL": "http://localhost:8080/" + id,
 	})
@@ -51,7 +57,7 @@ func Parse(c *gin.Context) {
 	url, err := store.Load(rdb, shortURL)
 
 	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
+		c.String(http.StatusNotFound, "This short URL is not existed or expired")
 	}
 
 	fmt.Println("Redirect to ", url)
