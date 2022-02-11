@@ -57,10 +57,10 @@ func Save(rdb *redis.Client, url string, expireTime time.Time) (string, error) {
 		id = rand.Uint64()
 	}
 
-	fmt.Println(id)
-	shortURL := Data{id, url, expireTime}
-	fmt.Println("shortURL")
-	fmt.Println(shortURL)
+	//fmt.Println(id)
+	//shortURL := Data{id, url, expireTime}
+	//fmt.Println("shortURL")
+	//fmt.Println(shortURL)
 	err := rdb.Set(ctx, strconv.FormatUint(id, 10), url, 0).Err()
 	//Error to save data
 	if err != nil {

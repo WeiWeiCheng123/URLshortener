@@ -5,28 +5,54 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
-	"fmt"
+	"time"
+
 	"github.com/stretchr/testify/assert"
 )
 
 func Test_Parse_Pass(t *testing.T) {
+	//First send a post request and set the expire time to 10 second after
+	//Then use this shortURL, it should return 302 (redirect)
 	router := Build()
-	response := "'{url:https://www.dcard.tw/f,expireAt:2022-02-20T15:04:05Z}'"
+	nowTime := time.Now().Add(10 * time.Second).Format("2006-01-02T15:04:05Z")
+	response := "'{url:https://www.dcard.tw/f,expireAt:" + nowTime + "}'"
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/api/urls", strings.NewReader(response))
 	router.ServeHTTP(w, req)
-	fmt.Println(w.Body.String())
-	assert.Equal(t, http.StatusOK, w.Code)
-	assert.Contains(t, w.Body.String(), "http://localhost:8080/")
+	shortURL := w.Body.String()[7:18]
+	w = httptest.NewRecorder()
+	req, _ = http.NewRequest("GET", "/"+shortURL, nil)
+	router.ServeHTTP(w, req)
+	assert.Equal(t, http.StatusFound, w.Code)
+	assert.Contains(t, w.Body.String(), "")
 }
 
 func Test_Parse_Fail_wrong_url(t *testing.T) {
+	//Use an illegal shortURL id, it should return 404
 	router := Build()
-	response := "'{url:https//www.dcard.tw/f,expireAt:2022-02-20T15:04:05Z}'" // mise ":"
+	w := httptest.NewRecorder()
+	shortURL := "WeiWei"
+	req, _ := http.NewRequest("GET", "/"+shortURL, nil)
+	router.ServeHTTP(w, req)
+	assert.Equal(t, http.StatusNotFound, w.Code)
+	assert.Contains(t, w.Body.String(), "This short URL is not existed or expired")
+}
+
+func Test_Parse_Fail_url_expired(t *testing.T) {
+	//First send a post request and set the expire time to 2 second after
+	//Then wait for 3 second, this shortURL should expired and return 404
+	router := Build()
+	nowTime := time.Now().Add(2 * time.Second).Format("2006-01-02T15:04:05Z")
+	response := "'{url:https://www.dcard.tw/f,expireAt:" + nowTime + "}'"
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/api/urls", strings.NewReader(response))
 	router.ServeHTTP(w, req)
+	time.Sleep(3 * time.Second)
 
-	assert.Equal(t, http.StatusBadRequest, w.Code)
-	assert.Contains(t, w.Body.String(), "Invalid URL")
+	shortURL := w.Body.String()[7:18]
+	w = httptest.NewRecorder()
+	req, _ = http.NewRequest("GET", "/"+shortURL, nil)
+	router.ServeHTTP(w, req)
+	assert.Equal(t, http.StatusNotFound, w.Code)
+	assert.Contains(t, w.Body.String(), "This short URL is not existed or expired")
 }
