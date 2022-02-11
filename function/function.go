@@ -46,7 +46,7 @@ func IsUrl(OriginalURL string) bool {
 }
 
 //Time formater
-func TimeFormat(expTime string) (time.Time, error) {
+func TimeFormater(expTime string) (time.Time, error) {
 	var localLocation *time.Location
 	localLocation, _ = time.LoadLocation("Asia/Shanghai")
 	layout := "2006-01-02T15:04:05Z"

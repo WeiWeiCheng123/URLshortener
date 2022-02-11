@@ -35,7 +35,7 @@ func Shorten(c *gin.Context) {
 		return
 	}
 
-	expTime, err := function.TimeFormat(exp)
+	expTime, err := function.TimeFormater(exp)
 	//Wrong Time format or time expire
 	if err != nil {
 		c.String(http.StatusBadRequest, "Error time format or time is expired")
