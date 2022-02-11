@@ -40,7 +40,7 @@ func Decode(encoded string) (uint64, error) {
 }
 
 //Valid the URL, if URL not correct then return false
-func IsUrl(OriginalURL string) bool {
+func IsURL(OriginalURL string) bool {
 	u, err := url.Parse(OriginalURL)
 	return err == nil && u.Scheme != "" && u.Host != ""
 }

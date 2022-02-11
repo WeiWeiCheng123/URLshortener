@@ -30,7 +30,7 @@ func Shorten(c *gin.Context) {
 	url := post_split[0][6:]
 	exp := post_split[1][9 : len(post_split[1])-2]
 	//Wrong URL format
-	if !function.IsUrl(url) {
+	if !function.IsURL(url) {
 		c.String(http.StatusBadRequest, "Invalid URL")
 		return
 	}

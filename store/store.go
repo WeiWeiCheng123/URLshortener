@@ -2,6 +2,7 @@ package store
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"math/rand"
 	"strconv"
@@ -57,10 +58,6 @@ func Save(rdb *redis.Client, url string, expireTime time.Time) (string, error) {
 		id = rand.Uint64()
 	}
 
-	//fmt.Println(id)
-	//shortURL := Data{id, url, expireTime}
-	//fmt.Println("shortURL")
-	//fmt.Println(shortURL)
 	err := rdb.Set(ctx, strconv.FormatUint(id, 10), url, 0).Err()
 	//Error to save data
 	if err != nil {
@@ -73,12 +70,10 @@ func Save(rdb *redis.Client, url string, expireTime time.Time) (string, error) {
 		return "", err
 	}
 	if res {
-		fmt.Println("Set")
+		return function.Encode(id), nil
 	} else {
-		fmt.Println("Fall to set")
+		return "", errors.New("Fail to Set")
 	}
-
-	return function.Encode(id), nil
 }
 
 //Give shortURL return original URL

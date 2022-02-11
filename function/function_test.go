@@ -2,28 +2,28 @@ package function
 
 import "testing"
 
-func Test_url_Pass(t *testing.T) {
+func Test_IsUrl_is_URL(t *testing.T) {
 	url := "https://www.dcard.tw/f"
-	if IsUrl(url) != true {
+	if IsURL(url) != true {
 		t.Error("Wrong result")
 	}
 }
 
-func Test_url_Fail1(t *testing.T) {
+func Test_IsURL_not_a_URL(t *testing.T) {
 	url := "https//www.dcard.tw/f"
-	if IsUrl(url) != false {
+	if IsURL(url) != false {
 		t.Error("Wrong result")
 	}
 }
 
-func Test_url_Fail2(t *testing.T) {
+func Test_IsUrl_not_a_URL(t *testing.T) {
 	url := "https:/www.dcard.tw/f"
-	if IsUrl(url) != false {
+	if IsURL(url) != false {
 		t.Error("Wrong result")
 	}
 }
 
-func Test_time_Pass(t *testing.T) {
+func Test_TimeFormater_Pass(t *testing.T) {
 	time := "2022-02-12T15:04:05Z"
 	_, err := TimeFormater(time)
 	if err != nil {
@@ -31,7 +31,7 @@ func Test_time_Pass(t *testing.T) {
 	}
 }
 
-func Test_time_Fail_in_Day(t *testing.T) {
+func Test_TimeFormater_Fail_in_Day(t *testing.T) {
 	time := "2022-01-T15:04:05Z"
 	_, err := TimeFormater(time)
 	if err == nil {
@@ -39,7 +39,7 @@ func Test_time_Fail_in_Day(t *testing.T) {
 	}
 }
 
-func Test_time_Fail_in_Month(t *testing.T) {
+func Test_TimeFormater_Fail_in_Month(t *testing.T) {
 	time := "2022-13-01T15:04:05Z"
 	_, err := TimeFormater(time)
 	if err == nil {
@@ -47,7 +47,7 @@ func Test_time_Fail_in_Month(t *testing.T) {
 	}
 }
 
-func Test_time_Fail_in_Year(t *testing.T) {
+func Test_TimeFormater_Fail_in_Year(t *testing.T) {
 	time := "1-13-01T15:04:05Z"
 	_, err := TimeFormater(time)
 	if err == nil {
@@ -55,7 +55,7 @@ func Test_time_Fail_in_Year(t *testing.T) {
 	}
 }
 
-func Test_time_is_Expire(t *testing.T) {
+func Test_TimeFormater_is_Expired(t *testing.T) {
 	time := "2022-02-10T15:04:05Z"
 	_, err := TimeFormater(time)
 	if err == nil {
@@ -63,7 +63,7 @@ func Test_time_is_Expire(t *testing.T) {
 	}
 }
 
-func Test_time_is_not_Expire(t *testing.T) {
+func Test_TimeFormater_is_not_Expired(t *testing.T) {
 	time := "2022-02-10T15:04:05Z"
 	_, err := TimeFormater(time)
 	if err == nil {

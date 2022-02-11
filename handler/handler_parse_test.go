@@ -23,6 +23,7 @@ func Test_Parse_Pass(t *testing.T) {
 	w = httptest.NewRecorder()
 	req, _ = http.NewRequest("GET", "/"+shortURL, nil)
 	router.ServeHTTP(w, req)
+
 	assert.Equal(t, http.StatusFound, w.Code)
 	assert.Contains(t, w.Body.String(), "")
 }
@@ -34,6 +35,7 @@ func Test_Parse_Fail_wrong_url(t *testing.T) {
 	shortURL := "WeiWei"
 	req, _ := http.NewRequest("GET", "/"+shortURL, nil)
 	router.ServeHTTP(w, req)
+
 	assert.Equal(t, http.StatusNotFound, w.Code)
 	assert.Contains(t, w.Body.String(), "This short URL is not existed or expired")
 }
@@ -47,12 +49,14 @@ func Test_Parse_Fail_url_expired(t *testing.T) {
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/api/urls", strings.NewReader(response))
 	router.ServeHTTP(w, req)
+	//Wait until the data expired
 	time.Sleep(3 * time.Second)
 
 	shortURL := w.Body.String()[7:18]
 	w = httptest.NewRecorder()
 	req, _ = http.NewRequest("GET", "/"+shortURL, nil)
 	router.ServeHTTP(w, req)
+
 	assert.Equal(t, http.StatusNotFound, w.Code)
 	assert.Contains(t, w.Body.String(), "This short URL is not existed or expired")
 }
