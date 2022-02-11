@@ -2,7 +2,6 @@ package function
 
 import (
 	"errors"
-	"fmt"
 	"math"
 	"net/url"
 	"strings"
@@ -58,6 +57,6 @@ func TimeFormat(expTime string) (time.Time, error) {
 	}
 
 	expireTime = expireTime.In(localLocation)
-	fmt.Println("EXP TIME = ", expTime)
+	expireTime = expireTime.Add(-8 * time.Hour)
 	return expireTime, nil
 }
