@@ -32,18 +32,21 @@ func Shorten(c *gin.Context) {
 	//Wrong URL format
 	if !function.IsUrl(url) {
 		c.String(http.StatusBadRequest, "Invalid URL")
+		return
 	}
 
 	expTime, err := function.TimeFormat(exp)
 	//Wrong Time format
 	if err != nil {
 		c.String(http.StatusBadRequest, "Error time format")
+		return
 	}
 
 	id, err := store.Save(rdb, url, expTime)
 	//Fail to save
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
@@ -58,6 +61,7 @@ func Parse(c *gin.Context) {
 
 	if err != nil {
 		c.String(http.StatusNotFound, "This short URL is not existed or expired")
+		return
 	}
 
 	fmt.Println("Redirect to ", url)
