@@ -21,7 +21,6 @@ func Encode(number uint64) string {
 	for ; number > 0; number = number / length {
 		encoder.WriteByte(charTable[(number % length)])
 	}
-
 	return encoder.String()
 }
 

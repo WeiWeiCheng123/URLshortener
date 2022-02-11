@@ -9,13 +9,13 @@ import (
 	"github.com/WeiWeiCheng123/URLshortener/function"
 	"github.com/WeiWeiCheng123/URLshortener/store"
 	"github.com/gin-gonic/gin"
-	"github.com/go-redis/redis/v8"
+	"github.com/gomodule/redigo/redis"
 )
 
-var rdb *redis.Client
+var rdb *redis.Pool
 
 func Build() *gin.Engine {
-	rdb = store.NewClient()
+	rdb = store.NewPool("127.0.0.1:6379")
 	router := gin.Default()
 	router.POST("/api/urls", Shorten)
 	router.GET("/:shortURL", Parse)
