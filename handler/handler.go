@@ -58,7 +58,6 @@ func Shorten(c *gin.Context) {
 func Parse(c *gin.Context) {
 	shortURL := c.Param("shortURL")
 	url, err := store.Load(rdb, shortURL)
-
 	if err != nil {
 		c.String(http.StatusNotFound, "This short URL is not existed or expired")
 		return
