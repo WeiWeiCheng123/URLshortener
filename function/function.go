@@ -21,6 +21,7 @@ func Encode(number uint64) string {
 	for ; number > 0; number = number / length {
 		encoder.WriteByte(charTable[(number % length)])
 	}
+
 	return encoder.String()
 }
 
@@ -29,12 +30,13 @@ func Decode(encoded string) (uint64, error) {
 
 	for i, char := range encoded {
 		charPosition := strings.IndexRune(charTable, char)
-
 		if charPosition == -1 {
 			return uint64(charPosition), errors.New("Invalid character: " + string(char))
 		}
+
 		number += uint64(charPosition) * uint64(math.Pow(float64(length), float64(i)))
 	}
+
 	return number, nil
 }
 
@@ -57,8 +59,10 @@ func TimeFormater(expTime string) (time.Time, error) {
 
 	expireTime = expireTime.In(localLocation)
 	expireTime = expireTime.Add(-8 * time.Hour)
+	//Time expired
 	if time.Now().After(expireTime) {
 		return time.Time{}, errors.New("Time expired")
 	}
+
 	return expireTime, nil
 }
