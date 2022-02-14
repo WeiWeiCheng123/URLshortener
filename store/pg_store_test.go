@@ -16,4 +16,14 @@ func Test_Pg_save(t *testing.T) {
 	if err != nil {
 		t.Error("error")
 	}
+
+}
+
+func Test_Pg_load(t *testing.T) {
+	db := Connect_Pg()
+	_, err := Pg_Load(db, 777)
+	if err != nil {
+		t.Error("error")
+	}
+
 }

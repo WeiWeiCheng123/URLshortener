@@ -15,37 +15,57 @@ func Connect_Pg() *sql.DB {
 		fmt.Println(err)
 		panic(err)
 	}
+	
 	return db
 }
 
 func Pg_Save(db *sql.DB, shortID uint64, url string, expireTime string) error {
-	fmt.Println(db)
-	stmt, err := db.Prepare("insert into test(shortenerdb,originalurl,expiretime) values($1,$2,$3);")
-	fmt.Println(stmt)
+	defer db.Close()
+
+	stmt, err := db.Prepare("INSERT INTO shortenerdb(shortid,originalurl,expiretime) VALUES($1,$2,$3);")
 	if err != nil {
 		fmt.Println(err)
 		return err
 	}
-	res, err := stmt.Exec(shortID, url, expireTime)
-	fmt.Println("res = ", res.)
+	
+	_, err = stmt.Exec(shortID, url, expireTime)
 	if err != nil {
 		fmt.Println(err)
 		return err
 	}
+
 	return nil
 }
 
-func Pg_Load() error {
-	res, err := db.Query("SELECT * FROM shortenerdb where shortid=$1")
+func Pg_Load(db *sql.DB, shortID uint64) (bool, error) {
+	defer db.Close()
+
+	stmt, err := db.Prepare("SELECT * FROM shortenerdb WHERE shortid = $1;")
 	if err != nil {
 		fmt.Println(err)
-		return err
+		return false, err
 	}
-	fmt.Println(res)
-	return nil
+
+	res, err := stmt.Exec(shortID)
+	if err != nil {
+		fmt.Println(err)
+		return false, err
+	}
+
+	exist, err := res.RowsAffected() // = 1 means having data
+	if err != nil {
+		fmt.Println(err)
+		return false, err
+	}
+
+	if exist == 1 {
+		return true, nil
+	}
+	return false, nil
 }
 
 func Pg_Del(shortID uint64) error {
+	defer db.Close()
 	stmt, err := db.Prepare("DELETE FROM shortenerdb where shortid=$1")
 	if err != nil {
 		fmt.Println(err)
