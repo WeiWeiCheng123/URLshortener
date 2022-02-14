@@ -10,7 +10,7 @@ import (
 var db *sql.DB
 
 func Connect_Pg() *sql.DB {
-	db, err := sql.Open("postgres", "user=postgres password=password dbname=shortenerDB sslmode=disable")
+	db, err := sql.Open("postgres", "user=dcard_admin password=admin_password dbname=dcard_db sslmode=disable")
 	if err != nil {
 		fmt.Println(err)
 		panic(err)
@@ -19,12 +19,15 @@ func Connect_Pg() *sql.DB {
 }
 
 func Pg_Save(db *sql.DB, shortID uint64, url string, expireTime string) error {
-	stmt, err := db.Prepare("INSERT INTO shortenerDB(shortID, originalURL, expireTime) VALUES($1,$2,$3 RETURN uid")
+	fmt.Println(db)
+	stmt, err := db.Prepare("insert into test(shortenerdb,originalurl,expiretime) values($1,$2,$3);")
+	fmt.Println(stmt)
 	if err != nil {
 		fmt.Println(err)
 		return err
 	}
-	_, err = stmt.Exec(shortID, url, expireTime)
+	res, err := stmt.Exec(shortID, url, expireTime)
+	fmt.Println("res = ", res.)
 	if err != nil {
 		fmt.Println(err)
 		return err
@@ -33,7 +36,7 @@ func Pg_Save(db *sql.DB, shortID uint64, url string, expireTime string) error {
 }
 
 func Pg_Load() error {
-	res, err := db.Query("SELECT * FROM shortenerDB where shortID=$1")
+	res, err := db.Query("SELECT * FROM shortenerdb where shortid=$1")
 	if err != nil {
 		fmt.Println(err)
 		return err
@@ -43,7 +46,7 @@ func Pg_Load() error {
 }
 
 func Pg_Del(shortID uint64) error {
-	stmt, err := db.Prepare("DELETE FROM shortenerDB where shortID=$1")
+	stmt, err := db.Prepare("DELETE FROM shortenerdb where shortid=$1")
 	if err != nil {
 		fmt.Println(err)
 		return err
