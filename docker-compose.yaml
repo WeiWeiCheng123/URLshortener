@@ -7,15 +7,15 @@ services:
       POSTGRES_PASSWORD: password
     volumes:
       - ./docker-pg-init:/docker-entrypoint-initdb.d
-      - pgdata: /var/lib/postgresql/data
+     # - pgdata: /var/lib/postgresql/data
     ports:
       - "5432:5432"
   postgres-admin:
     container_name: 'pgadmin'
     image: dpage/pgadmin4
     environment:
-      PGADMIN_DEFAULT_EMAIL: 
-      PGADMIN_DEFAULT_PASSWORD: 
+      PGADMIN_DEFAULT_EMAIL: "dcard123@dcard.com"
+      PGADMIN_DEFAULT_PASSWORD: "dcard"
     ports:
       - "80:80"
     depends_on:
@@ -27,12 +27,18 @@ services:
     restart: always
     ports:
       - "6379:6379"
-  redis-admin:
-    container_name: redis-admin
-    image: erikdubbelboer/phpredisadmin
-    envrionment:
-      - ADMIN_USER=admin
-      - ADMIN_PASS=admin
-      - REDIS_1_PORT=6379
-      - REDIS_1_HOST=redis
-      - REDIS_1_AUTH=password
+
+#  redis-admin:
+#    container_name: redis-admin
+#    image: erikdubbelboer/phpredisadmin
+#    envrionment:
+#      - ADMIN_USER=admin
+#      - ADMIN_PASS=admin
+#      - REDIS_1_HOST=redis
+#      - REDIS_1_PORT=6379
+#      - REDIS_1_AUTH=password
+#    restart: always
+#    depends_on:
+  #    - redis
+ #   ports:
+#      - "8081:80"
