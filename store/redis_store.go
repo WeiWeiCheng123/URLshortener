@@ -16,7 +16,18 @@ func NewPool(addr string) *redis.Pool {
 	return &redis.Pool{
 		MaxIdle:     10, //Max connection
 		IdleTimeout: 240 * time.Second,
-		Dial:        func() (redis.Conn, error) { return redis.Dial("tcp", addr) },
+		Dial: func() (redis.Conn, error) {
+			c, err := redis.Dial("tcp", addr)
+			if err != nil {
+				return nil, err
+			}
+			_, err = c.Do("AUTH", "password")
+			if err != nil {
+				c.Close()
+				return nil, err
+			}
+			return c, nil
+		},
 	}
 }
 
