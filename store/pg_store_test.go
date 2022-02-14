@@ -11,7 +11,7 @@ func Test_Pg_Con(t *testing.T) {
 
 func Test_Pg_save(t *testing.T) {
 	db := Connect_Pg()
-	err := Pg_Save(db, 123, "http", "2021")
+	err := Pg_Save(db, 777, "http", "2021")
 	fmt.Println(err)
 	if err != nil {
 		t.Error("error")
@@ -22,6 +22,15 @@ func Test_Pg_save(t *testing.T) {
 func Test_Pg_load(t *testing.T) {
 	db := Connect_Pg()
 	_, err := Pg_Load(db, 777)
+	if err == nil {
+		t.Error("error")
+	}
+
+}
+
+func Test_Pg_del(t *testing.T) {
+	db := Connect_Pg()
+	err := Pg_Del(db, 666)
 	if err != nil {
 		t.Error("error")
 	}
