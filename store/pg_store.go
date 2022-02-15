@@ -54,7 +54,7 @@ func Pg_Load(db *sql.DB, shorturlID string) (bool, *ShortURL) {
 		return false, nil
 	}
 
-	err = stmt.QueryRow(shorturlID).Scan(&res.ShortID, &res.OriginalURL, &res.expireTime)
+	err = stmt.QueryRow(shorturlID).Scan(&res.ShortID, &res.OriginalURL, &res.ExpireTime)
 	stmt.Close()
 	if err != nil {
 		return false, nil
