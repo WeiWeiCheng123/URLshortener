@@ -14,7 +14,7 @@ func Test_Shorten_Pass(t *testing.T) {
 	//Send a correct request
 	//it should return 200 (redirect) and a shortURL content
 	router := Build()
-	nowTime := time.Now().Add(10 * time.Second).Format("2006-01-02T15:04:05Z")
+	nowTime := time.Now().Add(10 * time.Minute).Format("2006-01-02T15:04:05Z")
 	response := "'{url:https://www.dcard.tw/f,expireAt:" + nowTime + "}'"
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/api/urls", strings.NewReader(response))

@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -14,7 +15,7 @@ func Test_Parse_Pass(t *testing.T) {
 	//First send a post request and set the expire time to 10 second after
 	//Then use this shortURL, it should return 302 (redirect)
 	router := Build()
-	nowTime := time.Now().Add(10 * time.Second).Format("2006-01-02T15:04:05Z")
+	nowTime := time.Now().Add(10 * time.Minute).Format("2006-01-02T15:04:05Z")
 	response := "'{url:https://www.dcard.tw/f,expireAt:" + nowTime + "}'"
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/api/urls", strings.NewReader(response))
@@ -23,9 +24,10 @@ func Test_Parse_Pass(t *testing.T) {
 	w = httptest.NewRecorder()
 	req, _ = http.NewRequest("GET", "/"+shortURL, nil)
 	router.ServeHTTP(w, req)
-
-	assert.Equal(t, http.StatusFound, w.Code)
+	fmt.Println(w.Body.String())
 	assert.Contains(t, w.Body.String(), "")
+	assert.Equal(t, http.StatusFound, w.Code)
+	//assert.Contains(t, w.Body.String(), "")
 }
 
 func Test_Parse_Fail_wrong_url(t *testing.T) {
@@ -59,4 +61,9 @@ func Test_Parse_Fail_url_expired(t *testing.T) {
 
 	assert.Equal(t, http.StatusNotFound, w.Code)
 	assert.Contains(t, w.Body.String(), "This short URL is not existed or expired")
+}
+
+func Test_tt(t *testing.T) {
+	tt()
+	t.Error("123")
 }

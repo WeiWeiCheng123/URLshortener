@@ -1,6 +1,7 @@
 package store
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -14,8 +15,10 @@ func Test_Pg_save(t *testing.T) {
 
 func Test_Pg_load_exist(t *testing.T) {
 	db := Connect_Pg()
-	exist, _ := Pg_Load(db, "5OrfwXgJrmO")
-	if exist != true {
+	s := "4RwAwKukSW4"
+	exist, _ := Pg_Load(db, s)
+	fmt.Println(exist)
+	if exist == true {
 		t.Error("error")
 	}
 }
