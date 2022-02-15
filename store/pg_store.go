@@ -49,7 +49,6 @@ func Pg_Load(db *sql.DB, shorturlID string) (bool, string, string, string) {
 	// If there is not exist, return false, otherwise return true
 	stmt, err := db.Prepare("SELECT shortid, originalurl, expiretime FROM shortenerdb WHERE shortid = $1")
 	defer stmt.Close()
-	fmt.Println("1 ",err)
 	//defer db.Close()
 	if err != nil {
 		return false, "", "", ""
@@ -58,7 +57,6 @@ func Pg_Load(db *sql.DB, shorturlID string) (bool, string, string, string) {
 	var OriginalURL string
 	var ExpireTime string
 	err = stmt.QueryRow(shorturlID).Scan(&ShortID, &OriginalURL, &ExpireTime)
-	fmt.Println("2 ",err)
 	
 	if err != nil {
 		return false, "", "", ""

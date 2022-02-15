@@ -59,11 +59,14 @@ func Shorten(c *gin.Context) {
 }
 
 func Parse(c *gin.Context) {
+	var url string
+	var expireTime string
+	var exist bool
 	shortURL := c.Param("shortURL")
 	fmt.Println("shortid = ", shortURL)
 	url, err := store.Redis_Load(rdb, shortURL)
 	if err != nil {
-		exist, _, url, expireTime := store.Pg_Load(pdb, shortURL)
+		exist, _, url, expireTime = store.Pg_Load(pdb, shortURL)
 		if exist == false {
 			c.String(http.StatusNotFound, "This short URL is not existed or expired")
 			return
@@ -76,12 +79,7 @@ func Parse(c *gin.Context) {
 		}
 		store.Redis_Save(rdb, shortURL ,url, expTime)
 	}
-
+	fmt.Println(url)
 	fmt.Println("Redirect to ", url)
 	c.Redirect(http.StatusFound, url)
-}
-
-func tt() {
-	e, _, _, _ := store.Pg_Load(pdb, "bd7ujchwLuU")
-	fmt.Println(e)
 }

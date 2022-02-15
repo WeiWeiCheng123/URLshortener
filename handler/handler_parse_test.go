@@ -25,7 +25,7 @@ func Test_Parse_Pass(t *testing.T) {
 	req, _ = http.NewRequest("GET", "/"+shortURL, nil)
 	router.ServeHTTP(w, req)
 	fmt.Println(w.Body.String())
-	assert.Contains(t, w.Body.String(), "")
+	assert.Contains(t, w.Body.String(), "123")
 	assert.Equal(t, http.StatusFound, w.Code)
 	//assert.Contains(t, w.Body.String(), "")
 }
@@ -61,9 +61,4 @@ func Test_Parse_Fail_url_expired(t *testing.T) {
 
 	assert.Equal(t, http.StatusNotFound, w.Code)
 	assert.Contains(t, w.Body.String(), "This short URL is not existed or expired")
-}
-
-func Test_tt(t *testing.T) {
-	tt()
-	t.Error("123")
 }
