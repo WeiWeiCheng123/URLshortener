@@ -26,46 +26,50 @@ func Connect_Pg() *sql.DB {
 	return db
 }
 
-func Pg_Save(db *sql.DB, url string, expireTime string) (string,error) {
+func Pg_Save(db *sql.DB, url string, expireTime string) (string, error) {
 	stmt, err := db.Prepare("INSERT INTO shortenerdb(shortid,originalurl,expiretime) VALUES($1,$2,$3)")
-	defer db.Close()
+	//defer db.Close()
 	defer stmt.Close()
 	if err != nil {
 		fmt.Println(err)
-		return "",err
+		return "", err
 	}
 	shortID := function.Id()
 	_, err = stmt.Exec(shortID, url, expireTime)
 	stmt.Close()
 	if err != nil {
 		fmt.Println(err)
-		return "",err
+		return "", err
 	}
 
-	return shortID ,nil
+	return shortID, nil
 }
 
-func Pg_Load(db *sql.DB, shorturlID string) (bool, *ShortURL) {
+func Pg_Load(db *sql.DB, shorturlID string) (bool, string, string, string) {
 	// If there is not exist, return false, otherwise return true
-	defer db.Close()
-	res := ShortURL{}
 	stmt, err := db.Prepare("SELECT shortid, originalurl, expiretime FROM shortenerdb WHERE shortid = $1")
+	defer stmt.Close()
+	fmt.Println("1 ",err)
+	//defer db.Close()
 	if err != nil {
-		return false, nil
+		return false, "", "", ""
+	}
+	var ShortID string
+	var OriginalURL string
+	var ExpireTime string
+	err = stmt.QueryRow(shorturlID).Scan(&ShortID, &OriginalURL, &ExpireTime)
+	fmt.Println("2 ",err)
+	
+	if err != nil {
+		return false, "", "", ""
 	}
 
-	err = stmt.QueryRow(shorturlID).Scan(&res.ShortID, &res.OriginalURL, &res.ExpireTime)
-	stmt.Close()
-	if err != nil {
-		return false, nil
-	}
-
-	return true, &res
+	return true, ShortID, OriginalURL, ExpireTime
 }
 
 func Pg_Del(db *sql.DB, shorturlID uint64) error {
-	defer db.Close()
 	stmt, err := db.Prepare("DELETE FROM shortenerdb WHERE shortid = $1")
+	defer db.Close()
 	if err != nil {
 		fmt.Println(err)
 		return err

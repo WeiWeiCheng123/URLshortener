@@ -2,7 +2,6 @@ package store
 
 import (
 	"fmt"
-	"math/rand"
 	"strconv"
 	"time"
 
@@ -49,29 +48,29 @@ func CheckId(r *redis.Pool, id uint64) bool {
 }
 
 //Give original URL and expire time, save to Redis
-func Redis_Save(r *redis.Pool, url string, expireTime time.Time) (string, error) {
+func Redis_Save(r *redis.Pool, shorturlID string, url string, expireTime time.Time) (string, error) {
 	connections := r.Get()
 	defer connections.Close()
+	/*
+		var id uint64
 
-	var id uint64
-
-	for exist := true; exist; exist = CheckId(r, id) {
-		id = rand.Uint64()
-	}
-
-	_, err := connections.Do("SET", strconv.FormatUint(id, 10), url)
+		for exist := true; exist; exist = CheckId(r, id) {
+			id = rand.Uint64()
+		}
+	*/
+	_, err := connections.Do("SET", shorturlID, url)
 	if err != nil {
 		fmt.Println("set:", err)
 		return "", err
 	}
 
-	_, err = connections.Do("EXPIREAT", strconv.FormatUint(id, 10), expireTime.Unix())
+	_, err = connections.Do("EXPIREAT", shorturlID, expireTime.Unix())
 	if err != nil {
 		fmt.Println("exp", err)
 		return "", err
 	}
 
-	return function.Encode(id), nil
+	return shorturlID, nil
 }
 
 //Give shortURL return original URL

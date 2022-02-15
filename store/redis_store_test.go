@@ -12,7 +12,7 @@ func Test_CheckId_Exist(t *testing.T) {
 	//Then check this data id exists or not
 	//It should exist.
 	r := NewPool("127.0.0.1:6379")
-	id, err := Redis_Save(r, "https://www.dcard.tw/f", time.Now().Add(5*time.Minute))
+	id, err := Redis_Save(r, function.Id(), "https://www.dcard.tw/f", time.Now().Add(5*time.Minute))
 	if err != nil {
 		t.Error("Error in Save")
 	}
@@ -39,7 +39,7 @@ func Test_Save_Pass(t *testing.T) {
 	//First, save a data (correct form) to redis
 	//It should not have error
 	r := NewPool("127.0.0.1:6379")
-	_, err := Redis_Save(r, "https://www.dcard.tw/f", time.Now().Add(5*time.Minute))
+	_, err := Redis_Save(r, function.Id(), "https://www.dcard.tw/f", time.Now().Add(5*time.Minute))
 	if err != nil {
 		t.Error("Error in Save")
 	}
@@ -49,7 +49,7 @@ func Test_Load_Pass(t *testing.T) {
 	//First, save a data (correct form) to redis and get the short URL
 	//Then load the short URL, it should not have error (exist).
 	r := NewPool("127.0.0.1:6379")
-	res, err := Redis_Save(r, "https://www.dcard.tw/f", time.Now().Add(5*time.Minute))
+	res, err := Redis_Save(r, function.Id(), "https://www.dcard.tw/f", time.Now().Add(5*time.Minute))
 	if err != nil {
 		t.Error("Error in Save")
 	}

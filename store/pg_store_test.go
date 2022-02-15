@@ -15,9 +15,9 @@ func Test_Pg_save(t *testing.T) {
 
 func Test_Pg_load_exist(t *testing.T) {
 	db := Connect_Pg()
-	s := "4RwAwKukSW4"
-	exist, _ := Pg_Load(db, s)
-	fmt.Println(exist)
+	s := "888"
+	exist, _, u, _ := Pg_Load(db, s)
+	fmt.Println(exist, u)
 	if exist == true {
 		t.Error("error")
 	}
@@ -25,7 +25,7 @@ func Test_Pg_load_exist(t *testing.T) {
 
 func Test_Pg_load_not_exist(t *testing.T) {
 	db := Connect_Pg()
-	exist, _ := Pg_Load(db, "6")
+	exist, _, _, _ := Pg_Load(db, "6")
 	if exist != false {
 		t.Error("error")
 	}
