@@ -49,7 +49,7 @@ func CheckId(r *redis.Pool, id uint64) bool {
 }
 
 //Give original URL and expire time, save to Redis
-func Save(r *redis.Pool, url string, expireTime time.Time) (string, error) {
+func Redis_Save(r *redis.Pool, url string, expireTime time.Time) (string, error) {
 	connections := r.Get()
 	defer connections.Close()
 
@@ -75,7 +75,7 @@ func Save(r *redis.Pool, url string, expireTime time.Time) (string, error) {
 }
 
 //Give shortURL return original URL
-func Load(r *redis.Pool, shortURL string) (string, error) {
+func Redis_Load(r *redis.Pool, shortURL string) (string, error) {
 	id, err := function.Decode(shortURL)
 	connections := r.Get()
 	if err != nil {

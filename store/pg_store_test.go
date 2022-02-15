@@ -1,38 +1,45 @@
 package store
 
 import (
-	"fmt"
 	"testing"
 )
 
-func Test_Pg_Con(t *testing.T) {
-	Connect_Pg()
-}
-
 func Test_Pg_save(t *testing.T) {
 	db := Connect_Pg()
-	err := Pg_Save(db, 777, "http", "2021")
-	fmt.Println(err)
+	_, err := Pg_Save(db, "http", "2021")
 	if err != nil {
 		t.Error("error")
 	}
-
 }
 
-func Test_Pg_load(t *testing.T) {
+func Test_Pg_load_exist(t *testing.T) {
 	db := Connect_Pg()
-	_, err := Pg_Load(db, 777)
-	if err == nil {
+	exist, _ := Pg_Load(db, "5OrfwXgJrmO")
+	if exist != true {
 		t.Error("error")
 	}
-
 }
 
-func Test_Pg_del(t *testing.T) {
+func Test_Pg_load_not_exist(t *testing.T) {
 	db := Connect_Pg()
-	err := Pg_Del(db, 666)
+	exist, _ := Pg_Load(db, "6")
+	if exist != false {
+		t.Error("error")
+	}
+}
+
+func Test_Pg_del_exist(t *testing.T) {
+	db := Connect_Pg()
+	err := Pg_Del(db, 999)
 	if err != nil {
 		t.Error("error")
 	}
+}
 
+func Test_Pg_del_not_exist(t *testing.T) {
+	db := Connect_Pg()
+	err := Pg_Del(db, 123)
+	if err != nil {
+		t.Error("error")
+	}
 }

@@ -4,13 +4,20 @@ import (
 	"database/sql"
 	"fmt"
 
+	"github.com/WeiWeiCheng123/URLshortener/function"
 	_ "github.com/lib/pq"
 )
+
+type ShortURL struct {
+	ShortID     string
+	OriginalURL string
+	ExpireTime  string
+}
 
 var db *sql.DB
 
 func Connect_Pg() *sql.DB {
-	db, err := sql.Open("postgres", "user=dcard_admin password=admin_password dbname=dcard_db sslmode=disable")
+	db, err := sql.Open("postgres", "user=dcard_admin password=password123 dbname=dcard_db sslmode=disable")
 	if err != nil {
 		fmt.Println(err)
 		panic(err)
@@ -19,68 +26,57 @@ func Connect_Pg() *sql.DB {
 	return db
 }
 
-func Pg_Save(db *sql.DB, shortID uint64, url string, expireTime string) error {
+func Pg_Save(db *sql.DB, url string, expireTime string) (string,error) {
+	stmt, err := db.Prepare("INSERT INTO shortenerdb(shortid,originalurl,expiretime) VALUES($1,$2,$3)")
 	defer db.Close()
-
-	stmt, err := db.Prepare("INSERT INTO shortenerdb(shortid,originalurl,expiretime) VALUES($1,$2,$3);")
+	defer stmt.Close()
 	if err != nil {
 		fmt.Println(err)
-		return err
+		return "",err
 	}
-	
+	shortID := function.Id()
 	_, err = stmt.Exec(shortID, url, expireTime)
+	stmt.Close()
 	if err != nil {
 		fmt.Println(err)
-		return err
+		return "",err
 	}
 
-	return nil
+	return shortID ,nil
 }
 
-func Pg_Load(db *sql.DB, shortID uint64) (bool, error) {
+func Pg_Load(db *sql.DB, shorturlID string) (bool, *ShortURL) {
+	// If there is not exist, return false, otherwise return true
 	defer db.Close()
-	var shortid uint64
-	var originalurl string
-	var expiretime string
-	err := db.QueryRow("SELECT shortid, originalurl, expiretime FROM shortenerdb WHERE shortid = $1;", shortID).Scan(&shortid, &originalurl, &expiretime)
+	res := ShortURL{}
+	stmt, err := db.Prepare("SELECT shortid, originalurl, expiretime FROM shortenerdb WHERE shortid = $1")
 	if err != nil {
-		fmt.Println(err)
-		//return false, err
+		return false, nil
 	}
-	fmt.Println(shortID, " ", originalurl, " ", expiretime)
 
-	//res, err := stmt.Exec(shortID)
+	err = stmt.QueryRow(shorturlID).Scan(&res.ShortID, &res.OriginalURL, &res.expireTime)
+	stmt.Close()
 	if err != nil {
-		fmt.Println(err)
-		return false, err
+		return false, nil
 	}
-	
-	//exist, err := res.RowsAffected() // = 1 means having data
-	if err != nil {
-		fmt.Println(err)
-		return false, err
-	}
-/*
-	if exist == 1 {
-		return true, nil
-	}
-	*/
-	return false, nil
-	
+
+	return true, &res
 }
 
-func Pg_Del(db *sql.DB, shortID uint64) error {
+func Pg_Del(db *sql.DB, shorturlID uint64) error {
 	defer db.Close()
 	stmt, err := db.Prepare("DELETE FROM shortenerdb WHERE shortid = $1")
 	if err != nil {
 		fmt.Println(err)
 		return err
 	}
-	res, err := stmt.Exec(shortID)
+
+	_, err = stmt.Exec(shorturlID)
+	stmt.Close()
 	if err != nil {
 		fmt.Println(err)
 		return err
 	}
-	fmt.Println(res)
+
 	return nil
 }
