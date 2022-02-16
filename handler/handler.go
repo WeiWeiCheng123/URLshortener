@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
+	"sync"
 
 	"github.com/WeiWeiCheng123/URLshortener/function"
 	"github.com/WeiWeiCheng123/URLshortener/store"
@@ -15,6 +16,7 @@ import (
 
 var rdb *redis.Pool
 var pdb *sql.DB
+var mux sync.RWMutex
 
 //Connect to redis, postgres, and create a router
 func Build() *gin.Engine {
@@ -47,14 +49,16 @@ func Shorten(c *gin.Context) {
 		c.String(http.StatusBadRequest, "Error time format or time is expired")
 		return
 	}
+	mux.Lock()
 	id, err := store.Pg_Save(pdb, url, exp)
 	//	_, err = store.Redis_Save(rdb, url, expTime)
 	//Fail to save
 	if err != nil {
+		mux.Unlock()
 		c.String(http.StatusInternalServerError, err.Error())
 		return
 	}
-
+	mux.Unlock()
 	c.JSON(http.StatusOK, gin.H{
 		"id":       id,
 		"shortURL": "http://localhost:8080/" + id,
@@ -65,11 +69,12 @@ func Shorten(c *gin.Context) {
 //Otherwise, return an error (404) and won't redirect
 func Parse(c *gin.Context) {
 	shortURL := c.Param("shortURL")
-	fmt.Println("shortid = ", shortURL)
+	mux.RLock()
 	url, err := store.Redis_Load(rdb, shortURL)
 	if err != nil {
 		exist, _, url, expireTime := store.Pg_Load(pdb, shortURL)
 		if !exist {
+			mux.RUnlock()
 			c.String(http.StatusNotFound, "This short URL is not existed or expired")
 			return
 		}
@@ -77,16 +82,19 @@ func Parse(c *gin.Context) {
 		expTime, err := function.TimeFormater(expireTime)
 		//Wrong Time format or time expire
 		if err != nil {
+			mux.RUnlock()
 			c.String(http.StatusNotFound, "This short URL is not existed or expired")
+			store.Pg_Del(pdb, shortURL)
 			return
 		}
 
 		store.Redis_Save(rdb, shortURL, url, expTime)
+		mux.RUnlock()
 		fmt.Println("Redirect to ", url)
 		c.Redirect(http.StatusFound, url)
 		return
 	}
-
+	mux.RUnlock()
 	fmt.Println("Redirect to ", url)
 	c.Redirect(http.StatusFound, url)
 }

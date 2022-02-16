@@ -17,7 +17,7 @@ func Test_Shorten_Pass(t *testing.T) {
 	nowTime := time.Now().Add(10 * time.Minute).Format("2006-01-02T15:04:05Z")
 	response := "'{url:https://www.dcard.tw/f,expireAt:" + nowTime + "}'"
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("POST", "/api/urls", strings.NewReader(response))
+	req, _ := http.NewRequest("POST", "/api/v1/urls", strings.NewReader(response))
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusOK, w.Code)
@@ -30,7 +30,7 @@ func Test_Shorten_Fail_wrong_url(t *testing.T) {
 	router := Build()
 	response := "'{url:https//www.dcard.tw/f,expireAt:2022-02-20T15:04:05Z}'" // miss ":"
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("POST", "/api/urls", strings.NewReader(response))
+	req, _ := http.NewRequest("POST", "/api/v1/urls", strings.NewReader(response))
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusBadRequest, w.Code)
@@ -43,7 +43,7 @@ func Test_Shorten_Fail_time_wrong_format(t *testing.T) {
 	router := Build()
 	response := "'{url:https://www.dcard.tw/f,expireAt:2022-02-T15:04:05Z}'" // miss day
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("POST", "/api/urls", strings.NewReader(response))
+	req, _ := http.NewRequest("POST", "/api/v1/urls", strings.NewReader(response))
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusBadRequest, w.Code)
@@ -56,7 +56,7 @@ func Test_Shorten_Fail_time_expired(t *testing.T) {
 	router := Build()
 	response := "'{url:https://www.dcard.tw/f,expireAt:2022-02-10T15:04:05Z}'" // time expired
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("POST", "/api/urls", strings.NewReader(response))
+	req, _ := http.NewRequest("POST", "/api/v1/urls", strings.NewReader(response))
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusBadRequest, w.Code)

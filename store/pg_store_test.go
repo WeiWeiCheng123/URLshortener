@@ -33,7 +33,7 @@ func Test_Pg_load_not_exist(t *testing.T) {
 
 func Test_Pg_del_exist(t *testing.T) {
 	db := Connect_Pg()
-	err := Pg_Del(db, 999)
+	err := Pg_Del(db, "999")
 	if err != nil {
 		t.Error("error")
 	}
@@ -41,7 +41,7 @@ func Test_Pg_del_exist(t *testing.T) {
 
 func Test_Pg_del_not_exist(t *testing.T) {
 	db := Connect_Pg()
-	err := Pg_Del(db, 123)
+	err := Pg_Del(db, "123")
 	if err != nil {
 		t.Error("error")
 	}

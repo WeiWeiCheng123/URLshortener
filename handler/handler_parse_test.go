@@ -18,7 +18,7 @@ func Test_Parse_Pass(t *testing.T) {
 	nowTime := time.Now().Add(10 * time.Minute).Format("2006-01-02T15:04:05Z")
 	response := "'{url:https://www.dcard.tw/f,expireAt:" + nowTime + "}'"
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("POST", "/api/urls", strings.NewReader(response))
+	req, _ := http.NewRequest("POST", "/api/v1/urls", strings.NewReader(response))
 	router.ServeHTTP(w, req)
 	shortURL := w.Body.String()[7:18]
 	w = httptest.NewRecorder()
@@ -49,7 +49,7 @@ func Test_Parse_Fail_url_expired(t *testing.T) {
 	nowTime := time.Now().Add(2 * time.Second).Format("2006-01-02T15:04:05Z")
 	response := "'{url:https://www.dcard.tw/f,expireAt:" + nowTime + "}'"
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("POST", "/api/urls", strings.NewReader(response))
+	req, _ := http.NewRequest("POST", "/api/v1/urls", strings.NewReader(response))
 	router.ServeHTTP(w, req)
 	//Wait until the data expired
 	time.Sleep(3 * time.Second)

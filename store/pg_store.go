@@ -15,6 +15,7 @@ type ShortURL struct {
 
 var db *sql.DB
 
+
 func Connect_Pg() *sql.DB {
 	db, err := sql.Open("postgres", "user=dcard_admin password=password123 dbname=dcard_db sslmode=disable")
 	if err != nil {
@@ -37,7 +38,6 @@ func Pg_Save(db *sql.DB, url string, expireTime string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-
 	return shortID, nil
 }
 
@@ -61,7 +61,7 @@ func Pg_Load(db *sql.DB, shorturlID string) (bool, string, string, string) {
 }
 
 // If data expired, delete the data.
-func Pg_Del(db *sql.DB, shorturlID uint64) error {
+func Pg_Del(db *sql.DB, shorturlID string) error {
 	stmt, err := db.Prepare("DELETE FROM shortenerdb WHERE shortid = $1")
 	if err != nil {
 		return err
