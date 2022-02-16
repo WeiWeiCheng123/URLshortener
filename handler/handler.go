@@ -16,16 +16,19 @@ import (
 var rdb *redis.Pool
 var pdb *sql.DB
 
+//Connect to redis, postgres, and create a router
 func Build() *gin.Engine {
 	rdb = store.NewPool("127.0.0.1:6379")
 	pdb = store.Connect_Pg()
 	router := gin.Default()
-	router.POST("/api/urls", Shorten)
+	router.POST("/api/v1/urls", Shorten)
 	router.GET("/:shortURL", Parse)
 	router.Run(":8080")
 	return router
 }
 
+//Give a long URL, if the data format is correct, then save to DB and return a short URL.
+//Otherwise, return an error and won't save to DB
 func Shorten(c *gin.Context) {
 	data, _ := ioutil.ReadAll(c.Request.Body)
 	postdata := string(data)
@@ -58,28 +61,32 @@ func Shorten(c *gin.Context) {
 	})
 }
 
+//Give a short URL, if the URL exists, then redirect to the original URL.
+//Otherwise, return an error (404) and won't redirect
 func Parse(c *gin.Context) {
-	var url string
-	var expireTime string
-	var exist bool
 	shortURL := c.Param("shortURL")
 	fmt.Println("shortid = ", shortURL)
 	url, err := store.Redis_Load(rdb, shortURL)
 	if err != nil {
-		exist, _, url, expireTime = store.Pg_Load(pdb, shortURL)
-		if exist == false {
+		exist, _, url, expireTime := store.Pg_Load(pdb, shortURL)
+		if !exist {
 			c.String(http.StatusNotFound, "This short URL is not existed or expired")
 			return
 		}
+
 		expTime, err := function.TimeFormater(expireTime)
 		//Wrong Time format or time expire
 		if err != nil {
 			c.String(http.StatusNotFound, "This short URL is not existed or expired")
 			return
 		}
-		store.Redis_Save(rdb, shortURL ,url, expTime)
+
+		store.Redis_Save(rdb, shortURL, url, expTime)
+		fmt.Println("Redirect to ", url)
+		c.Redirect(http.StatusFound, url)
+		return
 	}
-	fmt.Println(url)
+
 	fmt.Println("Redirect to ", url)
 	c.Redirect(http.StatusFound, url)
 }

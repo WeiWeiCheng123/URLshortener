@@ -25,7 +25,7 @@ func Test_Parse_Pass(t *testing.T) {
 	req, _ = http.NewRequest("GET", "/"+shortURL, nil)
 	router.ServeHTTP(w, req)
 	fmt.Println(w.Body.String())
-	assert.Contains(t, w.Body.String(), "123")
+	assert.Contains(t, w.Body.String(), "")
 	assert.Equal(t, http.StatusFound, w.Code)
 	//assert.Contains(t, w.Body.String(), "")
 }
