@@ -37,8 +37,10 @@ func Shorten(c *gin.Context) {
 	post_split := strings.Split(postdata, ",")
 	url := post_split[0][6:]
 	exp := post_split[1][9 : len(post_split[1])-2]
+	fmt.Println(url, exp)
 	//Wrong URL format
 	if !function.IsURL(url) {
+		fmt.Println("NOT URL")
 		c.String(http.StatusBadRequest, "Invalid URL")
 		return
 	}
@@ -46,6 +48,7 @@ func Shorten(c *gin.Context) {
 	_, err := function.TimeFormater(exp)
 	//Wrong Time format or time expire
 	if err != nil {
+		fmt.Println("ERROR TIME")
 		c.String(http.StatusBadRequest, "Error time format or time is expired")
 		return
 	}
@@ -54,6 +57,7 @@ func Shorten(c *gin.Context) {
 	//	_, err = store.Redis_Save(rdb, url, expTime)
 	//Fail to save
 	if err != nil {
+		fmt.Println("ERROR TO SAVE")
 		mux.Unlock()
 		c.String(http.StatusInternalServerError, err.Error())
 		return
