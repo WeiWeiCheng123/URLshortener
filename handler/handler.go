@@ -2,6 +2,7 @@ package handler
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -17,6 +18,11 @@ import (
 var rdb *redis.Pool
 var pdb *sql.DB
 var mux sync.RWMutex
+
+type ShortURLForm struct {
+	Originurl string `json:"url"`
+	Exp string `json:"expireAt"`
+}
 
 //Connect to redis, postgres, and create a router
 func Build() *gin.Engine {
@@ -34,6 +40,14 @@ func Build() *gin.Engine {
 func Shorten(c *gin.Context) {
 	data, _ := ioutil.ReadAll(c.Request.Body)
 	postdata := string(data)
+	var ss ShortURLForm
+	fmt.Println(data)
+	fmt.Println(postdata)
+	json.Unmarshal(data, &ss)
+	fmt.Println(data)
+	dddd, _ := json.Marshal(ss)
+	fmt.Println(dddd)
+	fmt.Println(string(dddd))
 	post_split := strings.Split(postdata, ",")
 	url := post_split[0][6:]
 	exp := post_split[1][9 : len(post_split[1])-2]
