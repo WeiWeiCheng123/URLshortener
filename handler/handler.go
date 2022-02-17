@@ -2,7 +2,6 @@ package handler
 
 import (
 	"database/sql"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -21,7 +20,7 @@ var mux sync.RWMutex
 
 type ShortURLForm struct {
 	Originurl string `json:"url"`
-	Exp string `json:"expireAt"`
+	Exp       string `json:"expireAt"`
 }
 
 //Connect to redis, postgres, and create a router
@@ -40,14 +39,6 @@ func Build() *gin.Engine {
 func Shorten(c *gin.Context) {
 	data, _ := ioutil.ReadAll(c.Request.Body)
 	postdata := string(data)
-	var ss ShortURLForm
-	fmt.Println(data)
-	fmt.Println(postdata)
-	json.Unmarshal(data, &ss)
-	fmt.Println(data)
-	dddd, _ := json.Marshal(ss)
-	fmt.Println(dddd)
-	fmt.Println(string(dddd))
 	post_split := strings.Split(postdata, ",")
 	url := post_split[0][6:]
 	exp := post_split[1][9 : len(post_split[1])-2]
@@ -87,6 +78,11 @@ func Shorten(c *gin.Context) {
 //Otherwise, return an error (404) and won't redirect
 func Parse(c *gin.Context) {
 	shortURL := c.Param("shortURL")
+	if len(shortURL) != 11 {
+		c.String(http.StatusNotFound, "This short URL is not existed or expired")
+		return
+	}
+
 	mux.RLock()
 	url, err := store.Redis_Load(rdb, shortURL)
 	if err != nil {
@@ -112,6 +108,7 @@ func Parse(c *gin.Context) {
 		c.Redirect(http.StatusFound, url)
 		return
 	}
+
 	mux.RUnlock()
 	fmt.Println("Redirect to ", url)
 	c.Redirect(http.StatusFound, url)
