@@ -8,8 +8,9 @@ import (
 func GetStr(key string) string {
 	val := os.Getenv(key)
 	if val == "" {
-		panic("Error to get" + key)
+		panic("Error to get " + key)
 	}
+	
 
 	return val
 }

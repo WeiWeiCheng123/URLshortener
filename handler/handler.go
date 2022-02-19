@@ -24,7 +24,7 @@ type ShortURLForm struct {
 
 //Connect to redis, postgres, and create a router
 func Build() *gin.Engine {
-	redis_connect := config.GetStr("REDIS_HOST") + ":" + config.GetStr("REDIS_PORT")
+	redis_connect := config.GetStr("REDIS_HOST")
 	pg_connect := fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s sslmode=%s",
 		config.GetStr("DB_HOST"), config.GetStr("DB_PORT"), config.GetStr("DB_NAME"),
 		config.GetStr("DB_USERNAME"), config.GetStr("DB_PASSWORD"), config.GetStr("DB_SSL_MODE"))
