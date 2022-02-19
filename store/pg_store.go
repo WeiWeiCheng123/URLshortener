@@ -15,9 +15,8 @@ type ShortURL struct {
 
 var db *sql.DB
 
-
 func Connect_Pg() *sql.DB {
-	db, err := sql.Open("postgres", "user=dcard_admin password=password123 dbname=dcard_db sslmode=disable")
+	db, err := sql.Open("postgres", "host=127.0.0.1 port=5432 user=dcard_admin password=password123 dbname=dcard_db sslmode=disable")
 	if err != nil {
 		panic(err)
 	}
