@@ -3,14 +3,16 @@ package handler
 import (
 	"database/sql"
 	"fmt"
-	"io/ioutil"
+
+	//	"io/ioutil"
 	"net/http"
-	"strings"
+	//	"strings"
 	"sync"
 
 	"github.com/WeiWeiCheng123/URLshortener/function"
 	"github.com/WeiWeiCheng123/URLshortener/store"
 	"github.com/gin-gonic/gin"
+//	"github.com/go-playground/locales/da"
 	"github.com/gomodule/redigo/redis"
 )
 
@@ -29,31 +31,32 @@ func Build() *gin.Engine {
 	pdb = store.Connect_Pg()
 	router := gin.Default()
 	router.POST("/api/v1/urls", Shorten)
-	router.POST("/Test", Test)
 	router.GET("/:shortURL", Parse)
 	router.Run(":8080")
 	return router
 }
 
-func Test(c *gin.Context) {
-	data := ShortURLForm{}
-	err := c.BindJSON(&data)
-	if err != nil {
-		c.String(400,err.Error())
-	}
-	fmt.Println(data)
-	c.String(200,data.Originurl)
-}
-
 //Give a long URL, if the data format is correct, then save to DB and return a short URL.
 //Otherwise, return an error and won't save to DB
 func Shorten(c *gin.Context) {
+	data := ShortURLForm{}
+	err := c.BindJSON(&data)
+	if err != nil {
+		c.String(http.StatusBadRequest,err.Error())
+	}
+	fmt.Println(data)
+	url := data.Originurl
+	exp := data.Exp
+
+	/*
 	data, _ := ioutil.ReadAll(c.Request.Body)
 	postdata := string(data)
 	post_split := strings.Split(postdata, ",")
 	url := post_split[0][6:]
 	exp := post_split[1][9 : len(post_split[1])-2]
 	fmt.Println(url, exp)
+	*/
+	
 	//Wrong URL format
 	if !function.IsURL(url) {
 		fmt.Println("NOT URL")
@@ -61,7 +64,7 @@ func Shorten(c *gin.Context) {
 		return
 	}
 
-	_, err := function.TimeFormater(exp)
+	_, err = function.TimeFormater(exp)
 	//Wrong Time format or time expire
 	if err != nil {
 		fmt.Println("ERROR TIME")
