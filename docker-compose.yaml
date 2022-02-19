@@ -29,6 +29,7 @@ services:
   backend:
     container_name: 'url_shortener'
     image: 'url_shortener'
+    build: ./
     ports:
       - "8080:8080"
     restart: always

@@ -2,6 +2,7 @@ package store
 
 import (
 	"database/sql"
+	"fmt"
 
 	"github.com/WeiWeiCheng123/URLshortener/function"
 	_ "github.com/lib/pq"
@@ -16,7 +17,7 @@ type ShortURL struct {
 var db *sql.DB
 
 func Connect_Pg() *sql.DB {
-	db, err := sql.Open("postgres", "host=127.0.0.1 port=5432 user=dcard_admin password=password123 dbname=dcard_db sslmode=disable")
+	db, err := sql.Open("postgres", "host=postgres port=5432 user=dcard_admin password=password123 dbname=dcard_db sslmode=disable")
 	if err != nil {
 		panic(err)
 	}
@@ -28,6 +29,7 @@ func Connect_Pg() *sql.DB {
 func Pg_Save(db *sql.DB, url string, expireTime string) (string, error) {
 	stmt, err := db.Prepare("INSERT INTO shortenerdb(shortid,originalurl,expiretime) VALUES($1,$2,$3)")
 	if err != nil {
+		fmt.Println(err.Error())
 		return "", err
 	}
 
@@ -35,6 +37,7 @@ func Pg_Save(db *sql.DB, url string, expireTime string) (string, error) {
 	_, err = stmt.Exec(shortID, url, expireTime)
 	defer stmt.Close()
 	if err != nil {
+		fmt.Println(err.Error())
 		return "", err
 	}
 	return shortID, nil
