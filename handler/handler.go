@@ -34,6 +34,7 @@ func Build() *gin.Engine {
 	router.POST("/api/v1/urls", Shorten)
 	router.GET("/:shortURL", Parse)
 	router.Run(":8080")
+	fmt.Println("HI, WELCOME")
 	return router
 }
 
