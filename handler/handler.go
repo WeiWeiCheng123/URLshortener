@@ -12,7 +12,8 @@ import (
 	"github.com/WeiWeiCheng123/URLshortener/function"
 	"github.com/WeiWeiCheng123/URLshortener/store"
 	"github.com/gin-gonic/gin"
-//	"github.com/go-playground/locales/da"
+
+	//	"github.com/go-playground/locales/da"
 	"github.com/gomodule/redigo/redis"
 )
 
@@ -42,21 +43,21 @@ func Shorten(c *gin.Context) {
 	data := ShortURLForm{}
 	err := c.BindJSON(&data)
 	if err != nil {
-		c.String(http.StatusBadRequest,err.Error())
+		c.String(http.StatusBadRequest, err.Error())
 	}
 	fmt.Println(data)
 	url := data.Originurl
 	exp := data.Exp
 
 	/*
-	data, _ := ioutil.ReadAll(c.Request.Body)
-	postdata := string(data)
-	post_split := strings.Split(postdata, ",")
-	url := post_split[0][6:]
-	exp := post_split[1][9 : len(post_split[1])-2]
-	fmt.Println(url, exp)
+		data, _ := ioutil.ReadAll(c.Request.Body)
+		postdata := string(data)
+		post_split := strings.Split(postdata, ",")
+		url := post_split[0][6:]
+		exp := post_split[1][9 : len(post_split[1])-2]
+		fmt.Println(url, exp)
 	*/
-	
+
 	//Wrong URL format
 	if !function.IsURL(url) {
 		fmt.Println("NOT URL")
@@ -77,6 +78,7 @@ func Shorten(c *gin.Context) {
 	//Fail to save
 	if err != nil {
 		fmt.Println("ERROR TO SAVE")
+		fmt.Println(err.Error())
 		mux.Unlock()
 		c.String(http.StatusInternalServerError, err.Error())
 		return
