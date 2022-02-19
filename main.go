@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "github.com/joho/godotenv/autoload"
 	"github.com/WeiWeiCheng123/URLshortener/config"
 	"github.com/WeiWeiCheng123/URLshortener/handler"
 )
