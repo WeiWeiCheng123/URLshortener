@@ -29,9 +29,20 @@ func Build() *gin.Engine {
 	pdb = store.Connect_Pg()
 	router := gin.Default()
 	router.POST("/api/v1/urls", Shorten)
+	router.POST("/Test", Test)
 	router.GET("/:shortURL", Parse)
 	router.Run(":8080")
 	return router
+}
+
+func Test(c *gin.Context) {
+	data := ShortURLForm{}
+	err := c.BindJSON(&data)
+	if err != nil {
+		c.String(400,err.Error())
+	}
+	fmt.Println(data)
+	c.String(200,data.Originurl)
 }
 
 //Give a long URL, if the data format is correct, then save to DB and return a short URL.
