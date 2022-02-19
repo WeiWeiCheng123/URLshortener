@@ -8,6 +8,7 @@ require (
 	github.com/gomodule/redigo v1.8.8
 	github.com/google/go-cmp v0.5.6 // indirect
 	github.com/google/uuid v1.3.0
+	github.com/joho/godotenv v1.4.0
 	github.com/lib/pq v1.10.4
 	github.com/stretchr/testify v1.7.0
 	golang.org/x/sys v0.0.0-20210423082822-04245dca01da // indirect

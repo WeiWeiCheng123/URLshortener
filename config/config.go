@@ -1,16 +1,17 @@
 package config
 
 import (
+	"fmt"
 	"os"
 	"strconv"
 )
 
 func GetStr(key string) string {
 	val := os.Getenv(key)
+	fmt.Println(val)
 	if val == "" {
 		panic("Error to get " + key)
 	}
-	
 
 	return val
 }

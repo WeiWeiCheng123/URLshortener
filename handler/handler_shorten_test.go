@@ -14,7 +14,7 @@ import (
 func Test_Shorten_Pass(t *testing.T) {
 	//Send a correct request
 	//it should return 200 (redirect) and a shortURL content
-	router := Build()
+	router := Build("localhost", "5432", "dcard_db", "dcard_admin", "password123", "disable", "localhost:6379", 100, "password")
 	TestTime := time.Now().Add(10 * time.Minute).Format("2006-01-02T15:04:05Z")
 	post_data := ShortURLForm{}
 	post_data.Originurl = "https://www.dcard.tw/f"
@@ -33,7 +33,7 @@ func Test_Shorten_Pass(t *testing.T) {
 func Test_Shorten_Fail_wrong_url(t *testing.T) {
 	//Send a wrong request (wrong URL)
 	//it should return 400 and Invalid URL
-	router := Build()
+	router := Build("localhost", "5432", "dcard_db", "dcard_admin", "password123", "disable", "localhost:6379", 100, "password")
 	TestTime := time.Now().Add(10 * time.Minute).Format("2006-01-02T15:04:05Z")
 	post_data := ShortURLForm{}
 	post_data.Originurl = "https//www.dcard.tw/f"
@@ -52,7 +52,7 @@ func Test_Shorten_Fail_wrong_url(t *testing.T) {
 func Test_Shorten_Fail_time_wrong_format(t *testing.T) {
 	//Send a wrong request (wrong time format)
 	//it should return 400 and Error time format or time is expired
-	router := Build()
+	router := Build("localhost", "5432", "dcard_db", "dcard_admin", "password123", "disable", "localhost:6379", 100, "password")
 	TestTime := "2022-02-T15:04:05Z"
 	post_data := ShortURLForm{}
 	post_data.Originurl = "https://www.dcard.tw/f"
@@ -71,7 +71,7 @@ func Test_Shorten_Fail_time_wrong_format(t *testing.T) {
 func Test_Shorten_Fail_time_expired(t *testing.T) {
 	//Send a wrong request (expired time)
 	//it should return 400 and Error time format or time is expired
-	router := Build()
+	router := Build("localhost", "5432", "dcard_db", "dcard_admin", "password123", "disable", "localhost:6379", 100, "password")
 	TestTime := time.Now().Add(-10 * time.Minute).Format("2006-01-02T15:04:05Z")
 	post_data := ShortURLForm{}
 	post_data.Originurl = "https://www.dcard.tw/f"

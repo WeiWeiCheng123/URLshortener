@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/WeiWeiCheng123/URLshortener/config"
 	"github.com/WeiWeiCheng123/URLshortener/function"
 	"github.com/WeiWeiCheng123/URLshortener/store"
 	"github.com/gin-gonic/gin"
@@ -23,13 +22,11 @@ type ShortURLForm struct {
 }
 
 //Connect to redis, postgres, and create a router
-func Build() *gin.Engine {
-	redis_connect := config.GetStr("REDIS_HOST")
-	pg_connect := fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s sslmode=%s",
-		config.GetStr("DB_HOST"), config.GetStr("DB_PORT"), config.GetStr("DB_NAME"),
-		config.GetStr("DB_USERNAME"), config.GetStr("DB_PASSWORD"), config.GetStr("DB_SSL_MODE"))
+func Build(db_host string, db_port string, db_name string, db_username string, db_password string, sslmode string, redis_host string, redis_pool int, redis_password string) *gin.Engine {
+	redis_connect := redis_host
+	pg_connect := fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s sslmode=%s", db_host, db_port, db_name, db_username, db_password, sslmode)
 
-	rdb = store.NewPool(redis_connect, config.GetInt("REDIS_POOL"), config.GetStr("REDIS_PASSWORD"))
+	rdb = store.NewPool(redis_connect, redis_pool, redis_password)
 	pdb = store.Connect_Pg(pg_connect)
 	router := gin.Default()
 	router.POST("/api/v1/urls", Shorten)

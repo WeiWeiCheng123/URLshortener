@@ -15,7 +15,7 @@ import (
 func Test_Parse_Pass(t *testing.T) {
 	//First send a post request and set the expire time to 10 second after
 	//Then use this shortURL, it should return 302 (redirect)
-	router := Build()
+	router := Build("localhost", "5432", "dcard_db", "dcard_admin", "password123", "disable", "localhost:6379", 100, "password")
 	TestTime := time.Now().Add(10 * time.Minute).Format("2006-01-02T15:04:05Z")
 	post_data := ShortURLForm{}
 	post_data.Originurl = "https://www.dcard.tw/f"
@@ -39,7 +39,7 @@ func Test_Parse_Pass(t *testing.T) {
 
 func Test_Parse_Fail_wrong_url(t *testing.T) {
 	//Use an illegal shortURL id, it should return 404
-	router := Build()
+	router := Build("localhost", "5432", "dcard_db", "dcard_admin", "password123", "disable", "localhost:6379", 100, "password")
 	w := httptest.NewRecorder()
 	shortURL := "WeiWei"
 	req, _ := http.NewRequest("GET", "/"+shortURL, nil)
@@ -52,7 +52,7 @@ func Test_Parse_Fail_wrong_url(t *testing.T) {
 func Test_Parse_Fail_url_expired(t *testing.T) {
 	//First send a post request and set the expire time to 2 second after
 	//Then wait for 3 second, this shortURL should expired and return 404
-	router := Build()
+	router := Build("localhost", "5432", "dcard_db", "dcard_admin", "password123", "disable", "localhost:6379", 100, "password")
 	TestTime := time.Now().Add(2 * time.Second).Format("2006-01-02T15:04:05Z")
 	post_data := ShortURLForm{}
 	post_data.Originurl = "https://www.dcard.tw/f"
