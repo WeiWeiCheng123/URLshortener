@@ -21,18 +21,10 @@ type ShortURLForm struct {
 	Exp       string `json:"expireAt"`
 }
 
-//Connect to redis, postgres, and create a router
-func Build(db_host string, db_port string, db_name string, db_username string, db_password string, sslmode string, redis_host string, redis_pool int, redis_password string) *gin.Engine {
-	redis_connect := redis_host
-	pg_connect := fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s sslmode=%s", db_host, db_port, db_name, db_username, db_password, sslmode)
-
-	rdb = store.NewPool(redis_connect, redis_pool, redis_password)
-	pdb = store.Connect_Pg(pg_connect)
-	router := gin.Default()
-	router.POST("/api/v1/urls", Shorten)
-	router.GET("/:shortURL", Parse)
-	router.Run(":8080")
-	return router
+//Connect to postgres and redis
+func Init(postgres_db *sql.DB, redis_db *redis.Pool) {
+	pdb = postgres_db
+	rdb = redis_db
 }
 
 //Give a long URL, if the data format is correct, then save to DB and return a short URL.
@@ -43,18 +35,8 @@ func Shorten(c *gin.Context) {
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 	}
-	fmt.Println(data)
 	url := data.Originurl
 	exp := data.Exp
-
-	/*
-		data, _ := ioutil.ReadAll(c.Request.Body)
-		postdata := string(data)
-		post_split := strings.Split(postdata, ",")
-		url := post_split[0][6:]
-		exp := post_split[1][9 : len(post_split[1])-2]
-		fmt.Println(url, exp)
-	*/
 
 	//Wrong URL format
 	if !function.IsURL(url) {
@@ -66,21 +48,21 @@ func Shorten(c *gin.Context) {
 	_, err = function.TimeFormater(exp)
 	//Wrong Time format or time expire
 	if err != nil {
-		fmt.Println("ERROR TIME")
+		fmt.Println("ERROR TIME ", err.Error())
 		c.String(http.StatusBadRequest, "Error time format or time is expired")
 		return
 	}
+
 	mux.Lock()
 	id, err := store.Pg_Save(pdb, url, exp)
-	//	_, err = store.Redis_Save(rdb, url, expTime)
 	//Fail to save
 	if err != nil {
-		fmt.Println("ERROR TO SAVE")
-		fmt.Println(err.Error())
+		fmt.Println("ERROR TO SAVE ", err.Error())
 		mux.Unlock()
 		c.String(http.StatusInternalServerError, err.Error())
 		return
 	}
+
 	mux.Unlock()
 	c.JSON(http.StatusOK, gin.H{
 		"id":       id,

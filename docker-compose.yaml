@@ -26,16 +26,16 @@ services:
     restart: always
     ports:
       - "6379:6379"
-  backend:
-    container_name: 'url_shortener'
-    image: 'url_shortener'
-    build: ./
-    ports:
-      - "8080:8080"
-    restart: always
-    environment:
-      DB_HOST: "postgres"
-      REDIS_HOST: "redis:6379"
-    depends_on:
-      - postgres
-      - redis
+#  backend:
+#    container_name: 'url_shortener'
+#    image: 'url_shortener'
+#    build: ./
+#    ports:
+#      - "8080:8080"
+#    restart: always
+#    environment:
+#      DB_HOST: "postgres"
+#      REDIS_HOST: "redis:6379"
+#    depends_on:
+#      - postgres
+#      - redis
