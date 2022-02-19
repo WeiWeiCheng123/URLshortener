@@ -3,17 +3,13 @@ package handler
 import (
 	"database/sql"
 	"fmt"
-
-	//	"io/ioutil"
 	"net/http"
-	//	"strings"
 	"sync"
 
+	"github.com/WeiWeiCheng123/URLshortener/config"
 	"github.com/WeiWeiCheng123/URLshortener/function"
 	"github.com/WeiWeiCheng123/URLshortener/store"
 	"github.com/gin-gonic/gin"
-
-	//	"github.com/go-playground/locales/da"
 	"github.com/gomodule/redigo/redis"
 )
 
@@ -28,13 +24,17 @@ type ShortURLForm struct {
 
 //Connect to redis, postgres, and create a router
 func Build() *gin.Engine {
-	rdb = store.NewPool("127.0.0.1:6379")
-	pdb = store.Connect_Pg()
+	redis_connect := config.GetStr("REDIS_HOST") + config.GetStr("REDIS_PORT")
+	pg_connect := fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s sslmode=%s",
+		config.GetStr("DB_HOST"), config.GetStr("DB_PORT"), config.GetStr("DB_NAME"),
+		config.GetStr("DB_USERNAME"), config.GetStr("DB_PASSWORD"), config.GetStr("DB_SSL_MODE"))
+
+	rdb = store.NewPool(redis_connect, config.GetInt("REDIS_POOL"), config.GetStr("REDIS_PASSWORD"))
+	pdb = store.Connect_Pg(pg_connect)
 	router := gin.Default()
 	router.POST("/api/v1/urls", Shorten)
 	router.GET("/:shortURL", Parse)
 	router.Run(":8080")
-	fmt.Println("HI, WELCOME")
 	return router
 }
 
