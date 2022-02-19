@@ -67,4 +67,23 @@
 在本專案中實現縮網址的方式是採用，待補
 
 ### Cache
+在設計Cache的時候，常見的問題有
 
+1. Caching Penetration
+2. Cache avalanche
+3. Cache Stampede 
+
+在這個專案中，容易發生問題的地方是縮網址Redirect到原網址的API
+
+假設現在有一群人要使用原先不在Cache的縮網址或是一大堆根本不存在的縮網址的request時該怎麼做 ?
+
+解決方法: 
+
+- 123
+- 123
+- 123
+- 123
+- 123
+- 123
+
+### 系統

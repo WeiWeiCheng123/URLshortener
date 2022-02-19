@@ -83,9 +83,9 @@ func Parse(c *gin.Context) {
 		return
 	}
 
-	mux.RLock()
 	url, err := store.Redis_Load(rdb, shortURL)
 	if err != nil {
+		mux.RLock()
 		exist, _, url, expireTime := store.Pg_Load(pdb, shortURL)
 		if !exist {
 			mux.RUnlock()
@@ -109,7 +109,6 @@ func Parse(c *gin.Context) {
 		return
 	}
 
-	mux.RUnlock()
 	fmt.Println("Redirect to ", url)
 	c.Redirect(http.StatusFound, url)
 }
