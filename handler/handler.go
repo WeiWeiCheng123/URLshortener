@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"database/sql"
 	"fmt"
 	"net/http"
 	"sync"
@@ -8,14 +9,23 @@ import (
 	"github.com/WeiWeiCheng123/URLshortener/function"
 	"github.com/WeiWeiCheng123/URLshortener/store"
 	"github.com/gin-gonic/gin"
+	"github.com/gomodule/redigo/redis"
 )
 
 var mux sync.RWMutex
+var pdb *sql.DB
+var rdb *redis.Pool
 
 type PostURLForm struct {
 	Originurl string `json:"url"`
 	Exp       string `json:"expireAt"`
 }
+
+func Init(p *sql.DB, r *redis.Pool) {
+	pdb = p
+	rdb = r
+}
+
 
 //Give a long URL, if the data format is correct, then save to DB and return a short URL.
 //Otherwise, return an error and won't save to DB
@@ -69,7 +79,7 @@ func Parse(c *gin.Context) {
 		return
 	}
 
-	url, err := store.Redis_Load(shortURL)
+	url, err := store.Redis_Load(rdb, shortURL)
 	if err != nil {
 		mux.RLock()
 		exist, data := store.Pg_Load(shortURL)
@@ -88,7 +98,7 @@ func Parse(c *gin.Context) {
 			return
 		}
 
-		store.Redis_Save(shortURL, data.OriginalURL, expTime)
+		store.Redis_Save(rdb, shortURL, data.OriginalURL, expTime)
 		mux.RUnlock()
 		fmt.Println("Redirect to ", data.OriginalURL)
 		c.Redirect(http.StatusFound, data.OriginalURL)
