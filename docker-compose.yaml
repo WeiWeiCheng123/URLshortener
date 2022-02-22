@@ -37,7 +37,7 @@ services:
     restart: always
     environment:
       - DB_HOST= postgres
-      - REDIS_HOST= redis:6379
+      - REDIS_HOST= 127.0.0.1:6379
     depends_on:
       - postgres
       - redis
