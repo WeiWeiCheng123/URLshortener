@@ -35,6 +35,7 @@ func Test_Load_Pass(t *testing.T) {
 func Test_Load_not_exist(t *testing.T) {
 	//Set the short URL to a non-existsent string
 	//It should return Error (not exist).
+	rdb := Connect_Redis("redis:6379", 100, "password")
 	_, err := Redis_Load(rdb, "WeiWei")
 	if err == nil {
 		t.Error("Error in Load")

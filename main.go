@@ -17,7 +17,8 @@ func init() {
 		config.GetStr("DB_USERNAME"), config.GetStr("DB_PASSWORD"), config.GetStr("DB_SSL_MODE"))
 	pdb := store.Connect_Pg(pg_connect)
 	rdb := store.Connect_Redis(config.GetStr("REDIS_HOST"), config.GetInt("REDIS_POOL"), config.GetStr("REDIS_PASSWORD"))
-	store.Init(pdb, rdb)
+	store.Init(pdb)
+	handler.Init(pdb, rdb)
 }
 
 //Create router

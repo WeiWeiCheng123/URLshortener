@@ -49,7 +49,7 @@ func Redis_Save(r *redis.Pool, shorturlID string, url string, expireTime time.Ti
 
 //Give shortURL if not expired return original URL
 func Redis_Load(r *redis.Pool, shortURL string) (string, error) {
-	connections := rdb.Get()
+	connections := r.Get()
 	defer connections.Close()
 
 	url, err := redis.String(connections.Do("GET", shortURL))
