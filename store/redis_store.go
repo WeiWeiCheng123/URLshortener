@@ -8,7 +8,7 @@ import (
 )
 
 //Connect to redis
-func NewPool(addr string, max int, password string) *redis.Pool {
+func Connect_Redis(addr string, max int, password string) *redis.Pool {
 	return &redis.Pool{
 		MaxIdle:     max, //Max connection
 		IdleTimeout: 240 * time.Second,
@@ -33,7 +33,7 @@ func NewPool(addr string, max int, password string) *redis.Pool {
 func Redis_Save(shorturlID string, url string, expireTime time.Time) (string, error) {
 	connections := rdb.Get()
 	defer connections.Close()
-
+	fmt.Println("save")
 	_, err := connections.Do("SET", shorturlID, url)
 	if err != nil {
 		return "", err
