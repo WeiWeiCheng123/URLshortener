@@ -43,7 +43,7 @@ func Redis_Save(shorturlID string, url string, expireTime time.Time) (string, er
 	if err != nil {
 		return "", err
 	}
-
+	fmt.Println("done")
 	return shorturlID, nil
 }
 

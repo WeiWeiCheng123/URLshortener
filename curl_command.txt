@@ -1,4 +1,4 @@
 curl -i -X POST -H "Content-Type:application/json" http://localhost:8080/api/v1/urls -d '{"url":"https://www.dcard.tw/f","expireAt":"2022-02-21T09:20:41Z"}'
 curl -i -X POST -H "Content-Type:application/json" http://localhost:8080/api/v1/urls -d '{"url":"https://www.google.com","expireAt":"2022-02-21T09:20:41Z"}'
 
-curl -L -X GET http://localhost:8080/nMFhxgfJhO0
+curl -L -X GET http://localhost:8080/40NiY7qdGyd
