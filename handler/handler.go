@@ -20,7 +20,7 @@ type PostURLForm struct {
 //Give a long URL, if the data format is correct, then save to DB and return a short URL.
 //Otherwise, return an error and won't save to DB
 func Shorten(c *gin.Context) {
-	fmt.Println(c.ClientIP())
+	fmt.Println("IP= ", c.ClientIP())
 	data := PostURLForm{}
 	err := c.BindJSON(&data)
 	if err != nil {
@@ -62,7 +62,7 @@ func Shorten(c *gin.Context) {
 //Give a short URL, if the URL exists, then redirect to the original URL.
 //Otherwise, return an error (404) and won't redirect
 func Parse(c *gin.Context) {
-	fmt.Println(c.ClientIP())
+	fmt.Println("IP= ", c.ClientIP())
 	shortURL := c.Param("shortURL")
 	if len(shortURL) != 11 {
 		c.String(http.StatusNotFound, "This short URL is not existed or expired")
