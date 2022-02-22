@@ -18,7 +18,7 @@ func Test_Shorten_Pass(t *testing.T) {
 	router := engine()
 	router.Run()
 	TestTime := time.Now().Add(10 * time.Minute).Format("2006-01-02T15:04:05Z")
-	post_data := handler.ShortURLForm{}
+	post_data := handler.PostURLForm{}
 	post_data.Originurl = "https://www.dcard.tw/f"
 	post_data.Exp = TestTime
 	body, _ := json.Marshal(post_data)
@@ -38,7 +38,7 @@ func Test_Shorten_Fail_wrong_url(t *testing.T) {
 	router := engine()
 	router.Run()
 	TestTime := time.Now().Add(10 * time.Minute).Format("2006-01-02T15:04:05Z")
-	post_data := handler.ShortURLForm{}
+	post_data := handler.PostURLForm{}
 	post_data.Originurl = "https//www.dcard.tw/f"
 	post_data.Exp = TestTime
 	body, _ := json.Marshal(post_data)
@@ -58,7 +58,7 @@ func Test_Shorten_Fail_time_wrong_format(t *testing.T) {
 	router := engine()
 	router.Run()
 	TestTime := "2022-02-T15:04:05Z"
-	post_data := handler.ShortURLForm{}
+	post_data := handler.PostURLForm{}
 	post_data.Originurl = "https://www.dcard.tw/f"
 	post_data.Exp = TestTime
 	body, _ := json.Marshal(post_data)
@@ -78,7 +78,7 @@ func Test_Shorten_Fail_time_expired(t *testing.T) {
 	router := engine()
 	router.Run()
 	TestTime := time.Now().Add(-10 * time.Minute).Format("2006-01-02T15:04:05Z")
-	post_data := handler.ShortURLForm{}
+	post_data := handler.PostURLForm{}
 	post_data.Originurl = "https://www.dcard.tw/f"
 	post_data.Exp = TestTime
 	body, _ := json.Marshal(post_data)

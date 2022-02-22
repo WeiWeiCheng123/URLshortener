@@ -1,0 +1,12 @@
+BenchmarkMaxOpenConns1-8 		500  3129633 ns/op 478 B/op 10 allocs/op 
+BenchmarkMaxOpenConns2-8 		1000 2181641 ns/op 470 B/op 10 allocs/op 
+BenchmarkMaxOpenConns5-8 		2000 859654  ns/op 493 B/op 10 allocs/op 
+BenchmarkMaxOpenConns10-8 		2000 545394  ns/op 510 B/op 10 allocs/op 
+BenchmarkMaxOpenConnsUnlimited-8 	2000 531030  ns/op 479 B/op 9 allocs/op PASS
+
+
+
+BenchmarkMaxIdleConnsNone-8 	300 4567245 ns/op 58174 B/op 625 allocs/op BenchmarkMaxIdleConns1-8 	2000 568765 ns/op 2596 B/op 32 allocs/op BenchmarkMaxIdleConns2-8 	2000 529359 ns/op 596 B/op 11 allocs/op BenchmarkMaxIdleConns5-8 	2000 506207 ns/op 451 B/op 9 allocs/op BenchmarkMaxIdleConns10-8 	2000 501639 ns/op 450 B/op 9 allocs/op PASS
+
+BenchmarkConnMaxLifetime100-8 		2000 637902 ns/op 2770 B/op 34 allocs/op BenchmarkConnMaxLifetime200-8 		2000 576053 ns/op 1612 B/op 21 allocs/op BenchmarkConnMaxLifetime500-8 		2000 558297 ns/op 913 B/op 14 allocs/op BenchmarkConnMaxLifetime1000-8 		2000 543601 ns/op 740 B/op 12 allocs/op BenchmarkConnMaxLifetimeUnlimited-8 	3000 532789 ns/op 412 B/op 9 allocs/op PASS
+

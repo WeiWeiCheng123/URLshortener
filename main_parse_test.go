@@ -20,7 +20,7 @@ func Test_Parse_Pass(t *testing.T) {
 	router.Run()
 
 	TestTime := time.Now().Add(10 * time.Minute).Format("2006-01-02T15:04:05Z")
-	post_data := handler.ShortURLForm{}
+	post_data := handler.PostURLForm{}
 	post_data.Originurl = "https://www.dcard.tw/f"
 	post_data.Exp = TestTime
 	body, _ := json.Marshal(post_data)
@@ -60,7 +60,7 @@ func Test_Parse_Fail_url_expired(t *testing.T) {
 	router := engine()
 	router.Run()	
 	TestTime := time.Now().Add(2 * time.Second).Format("2006-01-02T15:04:05Z")
-	post_data := handler.ShortURLForm{}
+	post_data := handler.PostURLForm{}
 	post_data.Originurl = "https://www.dcard.tw/f"
 	post_data.Exp = TestTime
 	body, _ := json.Marshal(post_data)

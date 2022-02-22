@@ -7,8 +7,7 @@ import (
 	"github.com/gomodule/redigo/redis"
 )
 
-var pool *redis.Pool
-
+//Connect to redis
 func NewPool(addr string, max int, password string) *redis.Pool {
 	return &redis.Pool{
 		MaxIdle:     max, //Max connection
@@ -29,14 +28,10 @@ func NewPool(addr string, max int, password string) *redis.Pool {
 	}
 }
 
-func Get() redis.Conn {
-	return pool.Get()
-}
-
 //Give original URL and expire time, save to Redis.
 //Key: shortURL  ; 	Value: URL  ; 	TTL: expire time  ;
-func Redis_Save(r *redis.Pool, shorturlID string, url string, expireTime time.Time) (string, error) {
-	connections := r.Get()
+func Redis_Save(shorturlID string, url string, expireTime time.Time) (string, error) {
+	connections := rdb.Get()
 	defer connections.Close()
 
 	_, err := connections.Do("SET", shorturlID, url)
@@ -53,8 +48,8 @@ func Redis_Save(r *redis.Pool, shorturlID string, url string, expireTime time.Ti
 }
 
 //Give shortURL if not expired return original URL
-func Redis_Load(r *redis.Pool, shortURL string) (string, error) {
-	connections := r.Get()
+func Redis_Load(shortURL string) (string, error) {
+	connections := rdb.Get()
 	defer connections.Close()
 
 	url, err := redis.String(connections.Do("GET", shortURL))
