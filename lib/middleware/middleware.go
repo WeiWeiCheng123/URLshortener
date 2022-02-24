@@ -31,7 +31,7 @@ func IPLimiter(c *gin.Context) {
 		con.Do("EXPIRE", c.ClientIP(), IPLimitPeriod)
 	} else {
 		con.Do("EXPIRE", c.ClientIP(), IPLimitPeriod)
-		if cont > IPLimitMax {
+		if cont < IPLimitMax {
 			con.Do("INCR", c.ClientIP())
 		}
 	}
