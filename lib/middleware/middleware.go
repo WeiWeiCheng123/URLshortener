@@ -10,7 +10,7 @@ import (
 const (
 	IPLimitPeriod     = 1800
 	IPLimitTimeFormat = "2006-01-02 15:04:05"
-	IPLimitMax        = 5
+	IPLimitMax        = 10
 )
 
 var rdb *redis.Pool
@@ -31,13 +31,15 @@ func IPLimiter(c *gin.Context) {
 		con.Do("EXPIRE", c.ClientIP(), IPLimitPeriod)
 	} else {
 		con.Do("EXPIRE", c.ClientIP(), IPLimitPeriod)
-		con.Do("INCR", c.ClientIP())
-		cont++
+		if cont > IPLimitMax {
+			con.Do("INCR", c.ClientIP())
+		}
 	}
 
-	if cont <= IPLimitMax {
+	if cont >= IPLimitMax {
 		c.String(429, "Too many requests")
 		c.Abort()
 	}
+
 	c.Next()
 }
