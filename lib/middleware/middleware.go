@@ -25,6 +25,7 @@ func IPLimiter(c *gin.Context) {
 	defer con.Close()
 
 	cont, err := redis.Int(con.Do("GET", c.ClientIP()))
+	fmt.Println(cont)
 	if err != nil {
 		con.Do("SET", c.ClientIP(), 1)
 		con.Do("EXPIRE", c.ClientIP(), IPLimitPeriod)
