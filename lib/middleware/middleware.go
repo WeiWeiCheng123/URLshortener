@@ -7,16 +7,14 @@ import (
 	"github.com/gomodule/redigo/redis"
 )
 
-const (
-	IPLimitPeriod     = 1800
-	IPLimitTimeFormat = "2006-01-02 15:04:05"
-	IPLimitMax        = 1000
-)
-
 var rdb *redis.Pool
+var IPLimitMax int
+var IPLimitPeriod int
 
-func Init(r *redis.Pool) {
+func Init(r *redis.Pool, ip_max int, ip_limit_period int) {
 	rdb = r
+	IPLimitMax = ip_max
+	IPLimitPeriod = ip_limit_period
 }
 
 func IPLimiter(c *gin.Context) {
