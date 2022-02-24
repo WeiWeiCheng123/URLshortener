@@ -12,7 +12,7 @@ func Test_Save_Pass(t *testing.T) {
 	//First, save a data (correct form) to redis
 	//It should not have error
 	r := NewPool("0.0.0.0:6379", 10, "password")
-	_, err := Redis_Save(r, function.Id(), "https://www.dcard.tw/f", time.Now().Add(5*time.Minute))
+	err := Redis_Save(r, function.Id(), "https://www.dcard.tw/f", time.Now().Add(5*time.Minute))
 	if err != nil {
 		fmt.Println(err)
 		t.Error("Error in Save")
@@ -23,12 +23,13 @@ func Test_Load_Pass(t *testing.T) {
 	//First, save a data (correct form) to redis and get the short URL
 	//Then load the short URL, it should not have error (exist).
 	r := NewPool("127.0.0.1:6379", 10, "password")
-	res, err := Redis_Save(r, function.Id(), "https://www.dcard.tw/f", time.Now().Add(5*time.Minute))
+	ShortURL := function.Id()
+	err := Redis_Save(r, ShortURL, "https://www.dcard.tw/f", time.Now().Add(5*time.Minute))
 	if err != nil {
 		t.Error("Error in Save")
 	}
 
-	_, err = Redis_Load(r, res)
+	_, err = Redis_Load(r, ShortURL)
 	if err != nil {
 		t.Error("Error in Load")
 	}

@@ -80,10 +80,16 @@ func Parse(c *gin.Context) {
 	}
 
 	url, err := store.Redis_Load(rdb, shortURL)
+	if url == "NotExist" {
+		c.String(http.StatusNotFound, "This short URL is not existed or expired")
+		return
+	}
+
 	if err != nil {
 		mux.RLock()
 		exist, _, url, expireTime := store.Pg_Load(pdb, shortURL)
 		if !exist {
+			store.Redis_Set_NotExist(rdb, shortURL)
 			mux.RUnlock()
 			c.String(http.StatusNotFound, "This short URL is not existed or expired")
 			return
@@ -92,6 +98,7 @@ func Parse(c *gin.Context) {
 		expTime, err := function.TimeFormater(expireTime)
 		//Wrong Time format or time expire
 		if err != nil {
+			store.Redis_Set_NotExist(rdb, shortURL)
 			mux.RUnlock()
 			c.String(http.StatusNotFound, "This short URL is not existed or expired")
 			store.Pg_Del(pdb, shortURL)
