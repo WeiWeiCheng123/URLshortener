@@ -10,7 +10,7 @@ import (
 const (
 	IPLimitPeriod     = 1800
 	IPLimitTimeFormat = "2006-01-02 15:04:05"
-	IPLimitMax        = 10
+	IPLimitMax        = 1000
 )
 
 var rdb *redis.Pool
