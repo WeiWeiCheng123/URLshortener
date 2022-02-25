@@ -2,9 +2,11 @@ package middleware
 
 import (
 	"fmt"
+	"go/constant"
 	"net/http"
 
 	"github.com/WeiWeiCheng123/URLshortener/handler"
+	"github.com/WeiWeiCheng123/URLshortener/pkg/constant"
 	"github.com/gin-gonic/gin"
 	"github.com/gomodule/redigo/redis"
 )
@@ -54,6 +56,7 @@ func Datachecker() gin.HandlerFunc {
 			c.String(http.StatusBadRequest, err.Error())
 		}
 		fmt.Println(data)
-		c.JSON(200, data)
+		c.Set(constant.URL, data.Originurl)
+		c.Set(constant.EXP, data.Exp)
 	}
 }
