@@ -2,7 +2,9 @@ package middleware
 
 import (
 	"fmt"
+	"net/http"
 
+	"github.com/WeiWeiCheng123/URLshortener/handler"
 	"github.com/gin-gonic/gin"
 	"github.com/gomodule/redigo/redis"
 )
@@ -35,9 +37,19 @@ func IPLimiter(c *gin.Context) {
 	}
 
 	if cont >= IPLimitMax {
-		c.String(429, "Too many requests")
+		c.String(http.StatusTooManyRequests, "Too many requests")
 		c.Abort()
 	}
 
+	c.Next()
+}
+
+func Datachecker(c *gin.Context) {
+	data := handler.ShortURLForm{}
+	err := c.BindJSON(&data)
+	if err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+	}
+	fmt.Println(data)
 	c.Next()
 }
