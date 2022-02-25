@@ -7,6 +7,7 @@ import (
 	"github.com/WeiWeiCheng123/URLshortener/handler"
 	"github.com/WeiWeiCheng123/URLshortener/middleware"
 	"github.com/WeiWeiCheng123/URLshortener/model"
+	"github.com/WeiWeiCheng123/URLshortener/pkg/cron"
 	"github.com/gin-gonic/gin"
 	_ "github.com/joho/godotenv/autoload"
 )
@@ -32,5 +33,6 @@ func engine() *gin.Engine {
 
 func main() {
 	router := engine()
+	cron.Dosome()
 	router.Run(":8080")
 }
