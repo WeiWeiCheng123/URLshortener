@@ -23,7 +23,6 @@ func Parse1(c *gin.Context) {
 	}
 
 	if err != nil {
-		mux.RLock()
 		fmt.Println("hello")
 		exist, _, url, expireTime := model.Pg_Load(pdb, shortURL)
 		if !exist {
@@ -37,14 +36,12 @@ func Parse1(c *gin.Context) {
 		//Wrong Time format or time expire
 		if err != nil {
 			model.Redis_Set_NotExist(rdb, shortURL)
-			mux.RUnlock()
 			c.String(http.StatusNotFound, "This short URL is not existed or expired")
 			model.Pg_Del(pdb, shortURL)
 			return
 		}
 
 		model.Redis_Save(rdb, shortURL, url, expTime)
-		mux.RUnlock()
 		fmt.Println("Redirect to ", url)
 		c.Redirect(http.StatusFound, url)
 		return
