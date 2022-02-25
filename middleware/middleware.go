@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/WeiWeiCheng123/URLshortener/handler"
-	"github.com/WeiWeiCheng123/URLshortener/pkg/constant"
 	"github.com/gin-gonic/gin"
 	"github.com/gomodule/redigo/redis"
 )
@@ -44,18 +42,5 @@ func IPLimiter() gin.HandlerFunc {
 		}
 
 		c.Next()
-	}
-}
-
-func Datachecker() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		data := handler.ShortURLForm{}
-		err := c.BindJSON(&data)
-		if err != nil {
-			c.String(http.StatusBadRequest, err.Error())
-		}
-		fmt.Println(data)
-		c.Set(constant.URL, data.Originurl)
-		c.Set(constant.EXP, data.Exp)
 	}
 }

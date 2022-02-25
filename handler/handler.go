@@ -7,7 +7,6 @@ import (
 	"sync"
 
 	"github.com/WeiWeiCheng123/URLshortener/model"
-	"github.com/WeiWeiCheng123/URLshortener/pkg/constant"
 	"github.com/WeiWeiCheng123/URLshortener/pkg/function"
 	"github.com/gin-gonic/gin"
 	"github.com/gomodule/redigo/redis"
@@ -31,16 +30,13 @@ func Init(postgres_db *sql.DB, redis_db *redis.Pool) {
 //Give a long URL, if the data format is correct, then save to DB and return a short URL.
 //Otherwise, return an error and won't save to DB
 func Shorten(c *gin.Context) {
-	url := c.GetString(constant.URL)
-	exp := c.GetString(constant.EXP)
 	data := ShortURLForm{}
 	err := c.BindJSON(&data)
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 	}
-	fmt.Println(url, " ", exp)
-	//url := data.Originurl
-	//exp := data.Exp
+	url := data.Originurl
+	exp := data.Exp
 
 	//Wrong URL format
 	if !function.IsURL(url) {
