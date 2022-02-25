@@ -3,6 +3,7 @@ package model
 import (
 	"database/sql"
 	"fmt"
+	"time"
 
 	"github.com/WeiWeiCheng123/URLshortener/pkg/function"
 	_ "github.com/lib/pq"
@@ -14,6 +15,9 @@ func Connect_Pg(connect string) *sql.DB {
 	if err != nil {
 		panic(err)
 	}
+	db.SetMaxOpenConns(25)
+	db.SetMaxIdleConns(25)
+	db.SetConnMaxLifetime(5 * time.Minute)
 	fmt.Println("Postgres connect!")
 	return db
 }
