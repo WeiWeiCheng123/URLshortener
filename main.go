@@ -4,10 +4,10 @@ import (
 	"fmt"
 
 	"github.com/WeiWeiCheng123/URLshortener/handler"
-	"github.com/WeiWeiCheng123/URLshortener/lib/config"
-	"github.com/WeiWeiCheng123/URLshortener/lib/store"
+	"github.com/WeiWeiCheng123/URLshortener/config"
+	"github.com/WeiWeiCheng123/URLshortener/model"
 	"github.com/gin-gonic/gin"
-	"github.com/WeiWeiCheng123/URLshortener/lib/middleware"
+	"github.com/WeiWeiCheng123/URLshortener/middleware"
 	_ "github.com/joho/godotenv/autoload"
 )
 
@@ -16,8 +16,8 @@ func init() {
 	pg_connect := fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s sslmode=%s",
 		config.GetStr("DB_HOST"), config.GetStr("DB_PORT"), config.GetStr("DB_NAME"),
 		config.GetStr("DB_USERNAME"), config.GetStr("DB_PASSWORD"), config.GetStr("DB_SSL_MODE"))
-	pdb := store.Connect_Pg(pg_connect)
-	rdb := store.NewPool(config.GetStr("REDIS_HOST"), config.GetInt("REDIS_POOL"), config.GetStr("REDIS_PASSWORD"))
+	pdb := model.Connect_Pg(pg_connect)
+	rdb := model.NewPool(config.GetStr("REDIS_HOST"), config.GetInt("REDIS_POOL"), config.GetStr("REDIS_PASSWORD"))
 	fmt.Println("pdb = ", pdb)
 	fmt.Println("rdb = ", rdb)
 	handler.Init(pdb, rdb)
