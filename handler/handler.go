@@ -35,6 +35,7 @@ func Shorten(c *gin.Context) {
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 	}
+	fmt.Println("data = ", data)
 	url := data.Originurl
 	exp := data.Exp
 

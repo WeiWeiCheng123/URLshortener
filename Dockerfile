@@ -11,6 +11,8 @@ RUN apt-get update \
 RUN TZ=Asia/Taipei \
     && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
     && echo $TZ > /etc/timezone \
-    && dpkg-reconfigure -f noninteractive tzdata 
+    && dpkg-reconfigure -f noninteractive tzdata
+# GET AB for test
+RUN apt-get install apache2-utils
 
 ENTRYPOINT ["./app"]
