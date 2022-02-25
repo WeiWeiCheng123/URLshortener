@@ -40,7 +40,5 @@ func IPLimiter() gin.HandlerFunc {
 			c.String(http.StatusTooManyRequests, "Too many requests")
 			c.Abort()
 		}
-
-		c.Next()
 	}
 }
