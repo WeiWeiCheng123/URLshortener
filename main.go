@@ -3,11 +3,11 @@ package main
 import (
 	"fmt"
 
-	"github.com/WeiWeiCheng123/URLshortener/handler"
 	"github.com/WeiWeiCheng123/URLshortener/config"
+	"github.com/WeiWeiCheng123/URLshortener/handler"
+	"github.com/WeiWeiCheng123/URLshortener/middleware"
 	"github.com/WeiWeiCheng123/URLshortener/model"
 	"github.com/gin-gonic/gin"
-	"github.com/WeiWeiCheng123/URLshortener/middleware"
 	_ "github.com/joho/godotenv/autoload"
 )
 
@@ -28,6 +28,7 @@ func init() {
 func engine() *gin.Engine {
 	router := gin.Default()
 	router.POST("/api/v1/urls", handler.Shorten)
+	router.POST("/api/v1/test/urls", handler.Shortentest)
 	router.GET("/:shortURL", middleware.IPLimiter(), handler.Parse)
 	return router
 }
