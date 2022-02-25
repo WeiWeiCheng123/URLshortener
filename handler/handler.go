@@ -88,6 +88,7 @@ func Parse(c *gin.Context) {
 		}
 		fmt.Println("exp: ", expireTime)
 		expTime, err := function.Time_to_Taiwanzone(expireTime)
+		fmt.Println(expTime)
 		//Wrong Time format or time expire
 		if err != nil {
 			model.Redis_Set_NotExist(shortURL)
