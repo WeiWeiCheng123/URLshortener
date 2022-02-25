@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/WeiWeiCheng123/URLshortener/lib/function"
+	"github.com/WeiWeiCheng123/URLshortener/pkg/function"
 )
 
 func Test_Save_Pass(t *testing.T) {
