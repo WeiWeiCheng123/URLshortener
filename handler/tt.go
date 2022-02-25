@@ -27,7 +27,6 @@ func Parse1(c *gin.Context) {
 		exist, _, url, expireTime := model.Pg_Load(pdb, shortURL)
 		if !exist {
 			model.Redis_Set_NotExist(rdb, shortURL)
-			mux.RUnlock()
 			c.String(http.StatusNotFound, "This short URL is not existed or expired")
 			return
 		}
