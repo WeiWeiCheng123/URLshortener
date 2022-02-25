@@ -37,19 +37,13 @@ func TimeFormater(expTime string) (time.Time, error) {
 func Time_to_Taiwanzone(expTime time.Time) (time.Time, error) {
 	var localLocation *time.Location
 	localLocation, _ = time.LoadLocation("Asia/Shanghai")
-	layout := "2006-01-02T15:04:05Z"
-	expireTime, err := time.Parse(layout, expTime.String())
-	//Time format error
-	if err != nil {
-		return time.Time{}, err
-	}
 
-	expireTime = expireTime.In(localLocation)
-	expireTime = expireTime.Add(-8 * time.Hour)
+	expTime = expTime.In(localLocation)
+	expTime = expTime.Add(-8 * time.Hour)
 	//Time expired
-	if time.Now().After(expireTime) {
+	if time.Now().After(expTime) {
 		return time.Time{}, errors.New("Time expired")
 	}
 
-	return expireTime, nil
+	return expTime, nil
 }
