@@ -32,6 +32,26 @@ func Test_Shorten_Pass(t *testing.T) {
 	assert.Contains(t, w.Body.String(), "http://localhost:8080/")
 }
 
+func Test_Shorten1_Pass(t *testing.T) {
+	//Send a correct request
+	//it should return 200 (redirect) and a shortURL content
+	router := engine()
+
+	TestTime := time.Now().Add(10 * time.Minute).Format("2006-01-02T15:04:05Z")
+	post_data := handler.ShortURLForm{}
+	post_data.Originurl = "https://www.dcard.tw/f"
+	post_data.Exp = TestTime
+	body, _ := json.Marshal(post_data)
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("POST", "/api/v1/test/urls", bytes.NewBuffer(body))
+	req.Header.Set("Content-Type", "application/json")
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusOK, w.Code)
+	assert.Contains(t, w.Body.String(), "http://localhost:8080/")
+}
+
 func Test_Shorten_Fail_wrong_url(t *testing.T) {
 	//Send a wrong request (wrong URL)
 	//it should return 400 and Invalid URL
