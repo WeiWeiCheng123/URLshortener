@@ -18,7 +18,6 @@ func Connect_Pg(connect string) *sql.DB {
 	db.SetMaxOpenConns(25)
 	db.SetMaxIdleConns(25)
 	db.SetConnMaxLifetime(5 * time.Minute)
-	fmt.Println("Postgres connect!")
 	return db
 }
 

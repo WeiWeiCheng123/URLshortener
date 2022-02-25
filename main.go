@@ -18,8 +18,6 @@ func init() {
 		config.GetStr("DB_USERNAME"), config.GetStr("DB_PASSWORD"), config.GetStr("DB_SSL_MODE"))
 	pdb := model.Connect_Pg(pg_connect)
 	rdb := model.NewPool(config.GetStr("REDIS_HOST"), config.GetInt("REDIS_POOL"), config.GetStr("REDIS_PASSWORD"))
-	fmt.Println("pdb = ", pdb)
-	fmt.Println("rdb = ", rdb)
 	handler.Init(pdb, rdb)
 	middleware.Init(rdb, config.GetInt("IPLimitMax"), config.GetInt("IPLimitPeriod"))
 }
@@ -28,7 +26,6 @@ func init() {
 func engine() *gin.Engine {
 	router := gin.Default()
 	router.POST("/api/v1/urls", handler.Shorten)
-	router.GET("/1/:shortURL", middleware.IPLimiter(), handler.Parse1)
 	router.GET("/:shortURL", middleware.IPLimiter(), handler.Parse)
 	return router
 }

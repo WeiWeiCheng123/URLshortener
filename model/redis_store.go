@@ -1,7 +1,6 @@
 package model
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/gomodule/redigo/redis"
@@ -24,7 +23,6 @@ func NewPool(addr string, max int, password string) *redis.Pool {
 				c.Close()
 				return nil, err
 			}
-			fmt.Println("Redis connect!")
 			return c, nil
 		},
 	}
@@ -36,7 +34,7 @@ func Get() redis.Conn {
 
 //Give original URL and expire time, save to Redis.
 //Key: shortURL  ; 	Value: URL  ; 	TTL: expire time  ;
-func Redis_Save(r *redis.Pool, shortURL string, url string, expireTime time.Time) (error) {
+func Redis_Save(r *redis.Pool, shortURL string, url string, expireTime time.Time) error {
 	connections := r.Get()
 	defer connections.Close()
 
@@ -80,6 +78,6 @@ func Redis_Set_NotExist(r *redis.Pool, shortURL string) error {
 	if err != nil {
 		return err
 	}
-	
+
 	return nil
 }

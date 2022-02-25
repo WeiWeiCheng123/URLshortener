@@ -16,5 +16,5 @@ func Id() string {
 func toBase62(uuid uuid.UUID) string {
 	var i big.Int
 	i.SetBytes(uuid[:])
-	return i.Text(62)[:11]
+	return i.Text(62)[:7]
 }
