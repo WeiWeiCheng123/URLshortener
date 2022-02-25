@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"sync"
-	"time"
 
 	"github.com/WeiWeiCheng123/URLshortener/model"
 	"github.com/WeiWeiCheng123/URLshortener/pkg/function"
