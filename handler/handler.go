@@ -66,7 +66,7 @@ func Shorten(c *gin.Context) {
 //Otherwise, return an error (404) and won't redirect
 func Parse(c *gin.Context) {
 	shortURL := c.Param("shortURL")
-	if len(shortURL) != 11 {
+	if len(shortURL) != 7 {
 		c.String(http.StatusNotFound, "This short URL is not existed or expired")
 		return
 	}
@@ -79,7 +79,6 @@ func Parse(c *gin.Context) {
 
 	if err != nil {
 		mux.RLock()
-		fmt.Println("hello")
 		exist, _, url, expireTime := model.Pg_Load(shortURL)
 		if !exist {
 			model.Redis_Set_NotExist(shortURL)

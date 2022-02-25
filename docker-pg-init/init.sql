@@ -10,7 +10,7 @@ CREATE TABLE shortenerdb
     id serial NOT NULL,
     shortID  character(11) NOT NULL,
     originalURL character varying(500) NOT NULL,
-    expireTime DATETIME NOT NULL,
+    expireTime timestamp,
     CONSTRAINT "short_url" PRIMARY KEY (id)
 );
 
