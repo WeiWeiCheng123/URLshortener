@@ -1,2 +1,67 @@
 **ab -n 1000 -c 200 -p post.json -T 'application/x-www-form-urlencoded' http://localhost:8080/api/v1/urls
 
+**Shorten
+
+Concurrency Level:      200
+Time taken for tests:   0.957 seconds
+Complete requests:      1000
+Failed requests:        0
+Total transferred:      190000 bytes
+Total body sent:        229000
+HTML transferred:       67000 bytes
+Requests per second:    1045.37 [#/sec] (mean)
+Time per request:       191.320 [ms] (mean)
+Time per request:       0.957 [ms] (mean, across all concurrent requests)
+Transfer rate:          193.97 [Kbytes/sec] received
+                        233.78 kb/s sent
+                        427.74 kb/s total
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    2   3.3      0      12
+Processing:    25  172 137.1    131     924
+Waiting:       13  172 137.1    130     923
+Total:         26  174 138.0    131     928
+
+Percentage of the requests served within a certain time (ms)
+  50%    131
+  66%    178
+  75%    212
+  80%    240
+  90%    354
+  95%    470
+  98%    608
+  99%    726
+ 100%    928 (longest request)
+
+**Parse
+
+Concurrency Level:      200
+Time taken for tests:   0.562 seconds
+Complete requests:      1000
+Failed requests:        0
+Non-2xx responses:      1000
+Total transferred:      198000 bytes
+HTML transferred:       45000 bytes
+Requests per second:    1778.12 [#/sec] (mean)
+Time per request:       112.478 [ms] (mean)
+Time per request:       0.562 [ms] (mean, across all concurrent requests)
+Transfer rate:          343.82 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    7   6.6      5      20
+Processing:     4   96  72.4     67     313
+Waiting:        4   91  73.0     63     313
+Total:         14  103  72.4     81     320
+
+Percentage of the requests served within a certain time (ms)
+  50%     81
+  66%     95
+  75%    108
+  80%    159
+  90%    237
+  95%    256
+  98%    270
+  99%    283
+ 100%    320 (longest request)
