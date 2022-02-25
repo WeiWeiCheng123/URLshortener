@@ -40,6 +40,7 @@ func Shorten(c *gin.Context) {
 
 	exp := data.Exp
 	expTime, err := function.TimeFormater(exp)
+	fmt.Println(expTime)
 	//Wrong Time format or time expire
 	if err != nil {
 		fmt.Println("ERROR TIME ", err.Error())
