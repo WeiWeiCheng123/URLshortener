@@ -47,13 +47,13 @@ func IPLimiter() gin.HandlerFunc {
 }
 
 func Datachecker() gin.HandlerFunc {
-	return func (c *gin.Context)  {
+	return func(c *gin.Context) {
 		data := handler.ShortURLForm{}
 		err := c.BindJSON(&data)
 		if err != nil {
 			c.String(http.StatusBadRequest, err.Error())
 		}
 		fmt.Println(data)
-		c.Next()
+		c.JSON(200, data)
 	}
 }
