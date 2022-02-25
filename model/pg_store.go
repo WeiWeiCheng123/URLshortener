@@ -1,10 +1,10 @@
-package store
+package model
 
 import (
 	"database/sql"
 	"fmt"
 
-	"github.com/WeiWeiCheng123/URLshortener/lib/function"
+	"github.com/WeiWeiCheng123/URLshortener/pkg/function"
 	_ "github.com/lib/pq"
 )
 

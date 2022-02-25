@@ -1,4 +1,4 @@
-package store
+package model
 
 type ShortURL struct {
 	ShortID     string
