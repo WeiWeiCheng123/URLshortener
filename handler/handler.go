@@ -35,9 +35,8 @@ func Shorten(c *gin.Context) {
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 	}
-	url := data.Originurl
-	exp := data.Exp
 
+	url := data.Originurl
 	//Wrong URL format
 	if !function.IsURL(url) {
 		fmt.Println("NOT URL")
@@ -45,6 +44,7 @@ func Shorten(c *gin.Context) {
 		return
 	}
 
+	exp := data.Exp
 	_, err = function.TimeFormater(exp)
 	//Wrong Time format or time expire
 	if err != nil {
@@ -53,17 +53,14 @@ func Shorten(c *gin.Context) {
 		return
 	}
 
-	mux.Lock()
 	id, err := model.Pg_Save(pdb, url, exp)
 	//Fail to save
 	if err != nil {
 		fmt.Println("ERROR TO SAVE ", err.Error())
-		mux.Unlock()
 		c.String(http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	mux.Unlock()
 	c.JSON(http.StatusOK, gin.H{
 		"id":       id,
 		"shortURL": "http://localhost:8080/" + id,
@@ -87,6 +84,7 @@ func Parse(c *gin.Context) {
 
 	if err != nil {
 		mux.RLock()
+		fmt.Println("hello")
 		exist, _, url, expireTime := model.Pg_Load(pdb, shortURL)
 		if !exist {
 			model.Redis_Set_NotExist(rdb, shortURL)
