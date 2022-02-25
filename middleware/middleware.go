@@ -19,38 +19,41 @@ func Init(r *redis.Pool, ip_max int, ip_limit_period int) {
 	IPLimitPeriod = ip_limit_period
 }
 
-func IPLimiter(c *gin.Context) {
-	fmt.Println("ip= ", c.ClientIP())
-	con := rdb.Get()
-	defer con.Close()
+func IPLimiter() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		fmt.Println("ip= ", c.ClientIP())
+		con := rdb.Get()
+		defer con.Close()
 
-	cont, err := redis.Int(con.Do("GET", c.ClientIP()))
-	fmt.Println(cont)
-	if err != nil {
-		con.Do("SET", c.ClientIP(), 1)
-		con.Do("EXPIRE", c.ClientIP(), IPLimitPeriod)
-	} else {
-		con.Do("EXPIRE", c.ClientIP(), IPLimitPeriod)
-		if cont < IPLimitMax {
-			con.Do("INCR", c.ClientIP())
+		cont, err := redis.Int(con.Do("GET", c.ClientIP()))
+		fmt.Println(cont)
+		if err != nil {
+			con.Do("SET", c.ClientIP(), 1)
+			con.Do("EXPIRE", c.ClientIP(), IPLimitPeriod)
+		} else {
+			con.Do("EXPIRE", c.ClientIP(), IPLimitPeriod)
+			if cont < IPLimitMax {
+				con.Do("INCR", c.ClientIP())
+			}
 		}
-	}
 
-	if cont >= IPLimitMax {
-		c.String(http.StatusTooManyRequests, "Too many requests")
-		c.Abort()
-	}
+		if cont >= IPLimitMax {
+			c.String(http.StatusTooManyRequests, "Too many requests")
+			c.Abort()
+		}
 
-	c.Next()
+		c.Next()
+	}
 }
 
-func Datachecker(c *gin.Context) {
-	data := handler.ShortURLForm{}
-	err := c.BindJSON(&data)
-	if err != nil {
-		c.String(http.StatusBadRequest, err.Error())
+func Datachecker() gin.HandlerFunc {
+	return func (c *gin.Context)  {
+		data := handler.ShortURLForm{}
+		err := c.BindJSON(&data)
+		if err != nil {
+			c.String(http.StatusBadRequest, err.Error())
+		}
+		fmt.Println(data)
+		c.Next()
 	}
-	fmt.Println(data)
-	c.JSON(200, data)
-	c.Next()
 }
