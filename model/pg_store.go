@@ -22,8 +22,8 @@ func Connect_Pg(connect string) *sql.DB {
 }
 
 //Give original URL and expire time, save to Postgres.
-func Pg_Save(db *sql.DB, url string, expireTime string) (string, error) {
-	stmt, err := db.Prepare("INSERT INTO shortenerdb(shortid,originalurl,expiretime) VALUES($1,$2,$3)")
+func Pg_Save(url string, expireTime time.Time) (string, error) {
+	stmt, err := pdb.Prepare("INSERT INTO shortenerdb(shortid,originalurl,expiretime) VALUES($1,$2,$3)")
 	if err != nil {
 		fmt.Println(err.Error())
 		return "", err
@@ -40,24 +40,24 @@ func Pg_Save(db *sql.DB, url string, expireTime string) (string, error) {
 }
 
 // If there is not exist, return false, otherwise return true
-func Pg_Load(db *sql.DB, shorturlID string) (bool, string, string, string) {
-	stmt, err := db.Prepare("SELECT shortid, originalurl, expiretime FROM shortenerdb WHERE shortid = $1")
+func Pg_Load(shorturlID string) (bool, string, string, time.Time) {
+	stmt, err := pdb.Prepare("SELECT shortid, originalurl, expiretime FROM shortenerdb WHERE shortid = $1")
 	if err != nil {
-		return false, "", "", ""
+		return false, "", "", time.Time{}
 	}
 	data := ShortURL{}
 	err = stmt.QueryRow(shorturlID).Scan(&data.ShortID, &data.OriginalURL, &data.ExpireTime)
 	defer stmt.Close()
 	if err != nil {
-		return false, "", "", ""
+		return false, "", "", time.Time{}
 	}
 
 	return true, data.ShortID, data.OriginalURL, data.ExpireTime
 }
 
 // If data expired, delete the data.
-func Pg_Del(db *sql.DB, shorturlID string) error {
-	stmt, err := db.Prepare("DELETE FROM shortenerdb WHERE shortid = $1")
+func Pg_Del(shorturlID string) error {
+	stmt, err := pdb.Prepare("DELETE FROM shortenerdb WHERE shortid = $1")
 	if err != nil {
 		return err
 	}
@@ -69,4 +69,12 @@ func Pg_Del(db *sql.DB, shorturlID string) error {
 	}
 
 	return nil
+}
+
+func Pg_Del_Exp() {
+	fmt.Println("hello")
+	stmt, _ := pdb.Prepare("DELETE FROM shortenerdb WHERE expireTime < $1")
+	stmt.Exec(time.Now())
+	stmt.Close()
+	fmt.Println("Del_exp")
 }

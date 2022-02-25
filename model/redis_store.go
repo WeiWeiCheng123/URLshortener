@@ -34,8 +34,8 @@ func Get() redis.Conn {
 
 //Give original URL and expire time, save to Redis.
 //Key: shortURL  ; 	Value: URL  ; 	TTL: expire time  ;
-func Redis_Save(r *redis.Pool, shortURL string, url string, expireTime time.Time) error {
-	connections := r.Get()
+func Redis_Save(shortURL string, url string, expireTime time.Time) error {
+	connections := rdb.Get()
 	defer connections.Close()
 
 	_, err := connections.Do("SET", shortURL, url)
@@ -52,8 +52,8 @@ func Redis_Save(r *redis.Pool, shortURL string, url string, expireTime time.Time
 }
 
 //Give shortURL if not expired return original URL
-func Redis_Load(r *redis.Pool, shortURL string) (string, error) {
-	connections := r.Get()
+func Redis_Load(shortURL string) (string, error) {
+	connections := rdb.Get()
 	defer connections.Close()
 
 	url, err := redis.String(connections.Do("GET", shortURL))
@@ -65,8 +65,8 @@ func Redis_Load(r *redis.Pool, shortURL string) (string, error) {
 
 //Give the not existing shortURL and set it into Redis with value NotExist.
 //To prevent too many users trying to access with a non-existent shorten URL.
-func Redis_Set_NotExist(r *redis.Pool, shortURL string) error {
-	connections := r.Get()
+func Redis_Set_NotExist(shortURL string) error {
+	connections := rdb.Get()
 	defer connections.Close()
 
 	_, err := connections.Do("SET", shortURL, "NotExist")

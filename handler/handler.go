@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"sync"
+	"time"
 
 	"github.com/WeiWeiCheng123/URLshortener/model"
 	"github.com/WeiWeiCheng123/URLshortener/pkg/function"
@@ -19,12 +20,6 @@ var mux sync.RWMutex
 type ShortURLForm struct {
 	Originurl string `json:"url"`
 	Exp       string `json:"expireAt"`
-}
-
-//Connect to postgres and redis
-func Init(postgres_db *sql.DB, redis_db *redis.Pool) {
-	pdb = postgres_db
-	rdb = redis_db
 }
 
 //Give a long URL, if the data format is correct, then save to DB and return a short URL.
@@ -45,7 +40,7 @@ func Shorten(c *gin.Context) {
 	}
 
 	exp := data.Exp
-	_, err = function.TimeFormater(exp)
+	expTime, err := function.TimeFormater(exp)
 	//Wrong Time format or time expire
 	if err != nil {
 		fmt.Println("ERROR TIME ", err.Error())
@@ -53,7 +48,7 @@ func Shorten(c *gin.Context) {
 		return
 	}
 
-	id, err := model.Pg_Save(pdb, url, exp)
+	id, err := model.Pg_Save(url, expTime)
 	//Fail to save
 	if err != nil {
 		fmt.Println("ERROR TO SAVE ", err.Error())
@@ -76,7 +71,7 @@ func Parse(c *gin.Context) {
 		return
 	}
 
-	url, err := model.Redis_Load(rdb, shortURL)
+	url, err := model.Redis_Load(shortURL)
 	if url == "NotExist" {
 		c.String(http.StatusNotFound, "This short URL is not existed or expired")
 		return
@@ -85,25 +80,25 @@ func Parse(c *gin.Context) {
 	if err != nil {
 		mux.RLock()
 		fmt.Println("hello")
-		exist, _, url, expireTime := model.Pg_Load(pdb, shortURL)
+		exist, _, url, expireTime := model.Pg_Load(shortURL)
 		if !exist {
-			model.Redis_Set_NotExist(rdb, shortURL)
+			model.Redis_Set_NotExist(shortURL)
 			mux.RUnlock()
 			c.String(http.StatusNotFound, "This short URL is not existed or expired")
 			return
 		}
 
-		expTime, err := function.TimeFormater(expireTime)
+//		expTime, err := function.TimeFormater(expireTime)
 		//Wrong Time format or time expire
-		if err != nil {
-			model.Redis_Set_NotExist(rdb, shortURL)
+		if expireTime.Before(time.Now()) {
+			model.Redis_Set_NotExist(shortURL)
 			mux.RUnlock()
 			c.String(http.StatusNotFound, "This short URL is not existed or expired")
-			model.Pg_Del(pdb, shortURL)
+			model.Pg_Del(shortURL)
 			return
 		}
 
-		model.Redis_Save(rdb, shortURL, url, expTime)
+		model.Redis_Save(shortURL, url, expireTime)
 		mux.RUnlock()
 		fmt.Println("Redirect to ", url)
 		c.Redirect(http.StatusFound, url)

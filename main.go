@@ -19,7 +19,7 @@ func init() {
 		config.GetStr("DB_USERNAME"), config.GetStr("DB_PASSWORD"), config.GetStr("DB_SSL_MODE"))
 	pdb := model.Connect_Pg(pg_connect)
 	rdb := model.NewPool(config.GetStr("REDIS_HOST"), config.GetInt("REDIS_POOL"), config.GetStr("REDIS_PASSWORD"))
-	handler.Init(pdb, rdb)
+	model.Init(pdb, rdb)
 	middleware.Init(rdb, config.GetInt("IPLimitMax"), config.GetInt("IPLimitPeriod"))
 }
 
@@ -33,6 +33,6 @@ func engine() *gin.Engine {
 
 func main() {
 	router := engine()
-	cron.Dosome()
+	cron.Del_Expdata()
 	router.Run(":8080")
 }

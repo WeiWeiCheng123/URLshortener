@@ -1,16 +1,13 @@
 package cron
 import (
-	"log"
-
+	"github.com/WeiWeiCheng123/URLshortener/model"
 	"github.com/robfig/cron"
 )
 
-func Dosome() {
-	log.Println("Starting...")
-
+func Del_Expdata() {
 	c := cron.New()
-	c.AddFunc("5 * * * *", func() {
-		log.Println("hello world")
-	}) // 給物件增加定時任務
+	c.AddFunc("0 * * * *", 
+		model.Pg_Del_Exp,
+	)
 	c.Start()
 }
