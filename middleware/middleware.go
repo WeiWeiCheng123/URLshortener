@@ -51,5 +51,6 @@ func Datachecker(c *gin.Context) {
 		c.String(http.StatusBadRequest, err.Error())
 	}
 	fmt.Println(data)
+	c.JSON(200, data)
 	c.Next()
 }
