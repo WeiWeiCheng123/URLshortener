@@ -74,7 +74,7 @@ func Redis_Set_NotExist(shortURL string) error {
 		return err
 	}
 
-	_, err = connections.Do("EXPIREAT", shortURL, time.Now().Add(5*time.Minute))
+	_, err = connections.Do("EXPIREAT", shortURL, time.Now().Add(3*time.Minute))
 	if err != nil {
 		return err
 	}

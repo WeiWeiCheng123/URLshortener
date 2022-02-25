@@ -40,7 +40,6 @@ func Shorten(c *gin.Context) {
 
 	exp := data.Exp
 	expTime, err := function.TimeFormater(exp)
-	fmt.Println(expTime)
 	//Wrong Time format or time expire
 	if err != nil {
 		fmt.Println("ERROR TIME ", err.Error())
@@ -67,12 +66,14 @@ func Shorten(c *gin.Context) {
 func Parse(c *gin.Context) {
 	shortURL := c.Param("shortURL")
 	if len(shortURL) != 7 {
+		fmt.Println("Length error")
 		c.String(http.StatusNotFound, "This short URL is not existed or expired")
 		return
 	}
 
 	url, err := model.Redis_Load(shortURL)
 	if url == "NotExist" {
+		fmt.Println("Not exist")
 		c.String(http.StatusNotFound, "This short URL is not existed or expired")
 		return
 	}
@@ -81,16 +82,17 @@ func Parse(c *gin.Context) {
 		mux.RLock()
 		exist, _, url, expireTime := model.Pg_Load(shortURL)
 		if !exist {
+			fmt.Println("Not exist")
 			model.Redis_Set_NotExist(shortURL)
 			mux.RUnlock()
 			c.String(http.StatusNotFound, "This short URL is not existed or expired")
 			return
 		}
-		fmt.Println("exp: ", expireTime)
+
 		expTime, err := function.Time_to_Taiwanzone(expireTime)
-		fmt.Println(expTime)
 		//Wrong Time format or time expire
 		if err != nil {
+			fmt.Println("Expired")
 			model.Redis_Set_NotExist(shortURL)
 			mux.RUnlock()
 			c.String(http.StatusNotFound, "This short URL is not existed or expired")

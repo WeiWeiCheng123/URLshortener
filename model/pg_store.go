@@ -72,9 +72,9 @@ func Pg_Del(shorturlID string) error {
 }
 
 func Pg_Del_Exp() {
-	fmt.Println("hello")
+	fmt.Println("Cron Job start")
 	stmt, _ := pdb.Prepare("DELETE FROM shortenerdb WHERE expireTime < $1")
 	stmt.Exec(time.Now())
 	stmt.Close()
-	fmt.Println("Del_exp")
+	fmt.Println("Cron Job done")
 }
