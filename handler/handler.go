@@ -87,9 +87,9 @@ func Parse(c *gin.Context) {
 			return
 		}
 		fmt.Println("exp: ", expireTime)
-		//		expTime, err := function.TimeFormater(expireTime)
+		expTime, err := function.Time_to_Taiwanzone(expireTime)
 		//Wrong Time format or time expire
-		if expireTime.Before(time.Now()) {
+		if err != nil {
 			model.Redis_Set_NotExist(shortURL)
 			mux.RUnlock()
 			c.String(http.StatusNotFound, "This short URL is not existed or expired")
@@ -97,7 +97,7 @@ func Parse(c *gin.Context) {
 			return
 		}
 
-		model.Redis_Save(shortURL, url, expireTime)
+		model.Redis_Save(shortURL, url, expTime)
 		mux.RUnlock()
 		fmt.Println("Redirect to ", url)
 		c.Redirect(http.StatusFound, url)
