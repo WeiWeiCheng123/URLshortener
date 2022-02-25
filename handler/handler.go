@@ -86,8 +86,8 @@ func Parse(c *gin.Context) {
 			c.String(http.StatusNotFound, "This short URL is not existed or expired")
 			return
 		}
-
-//		expTime, err := function.TimeFormater(expireTime)
+		fmt.Println("exp: ", expireTime)
+		//		expTime, err := function.TimeFormater(expireTime)
 		//Wrong Time format or time expire
 		if expireTime.Before(time.Now()) {
 			model.Redis_Set_NotExist(shortURL)
