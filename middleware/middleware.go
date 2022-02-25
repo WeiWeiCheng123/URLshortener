@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"fmt"
-	"go/constant"
 	"net/http"
 
 	"github.com/WeiWeiCheng123/URLshortener/handler"
