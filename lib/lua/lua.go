@@ -5,10 +5,10 @@ local key = KEYS[1]
 local ipLimit = tonumber(ARGV[1])
 local period = tonumber(ARGV[2])
 local userInfo = redis.call('GET', key)
-println("key ",key)
-println("iplim ",ipLimit)
-println("period ",period)
-println("userInfo ",userInfo)
+print("key ",key)
+print("iplim ",ipLimit)
+print("period ",period)
+print("userInfo ",userInfo)
 return userInfo
 `
 
