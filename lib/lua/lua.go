@@ -6,6 +6,7 @@ local ipLimit = tonumber(ARGV[1])
 local period = tonumber(ARGV[2])
 local userInfo = redis.call('GET', key)
 if userInfo == 0 then
+	print("hello")
     redis.call('SET', key, 1)
 	redis.call('EXPIRE',period)
     result = 1
