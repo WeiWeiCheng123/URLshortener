@@ -10,7 +10,6 @@ println("iplim ",ipLimit)
 println("period ",period)
 println("userInfo ",userInfo)
 return userInfo
-end
 `
 
 /*
