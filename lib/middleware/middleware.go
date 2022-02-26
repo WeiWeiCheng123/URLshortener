@@ -25,7 +25,7 @@ func IPLimiter() gin.HandlerFunc {
 		defer con.Close()
 
 		script := redis.NewScript(1, lua.IP_script)
-		res, err := redis.Int(script.Do(con, c.ClientIP(), IPLimitMax, IPLimitPeriod))
+		res, err := redis.String(script.Do(con, c.ClientIP(), IPLimitMax, IPLimitPeriod))
 		/*
 			cont, err := redis.Int(con.Do("GET", c.ClientIP()))
 			if err != nil {
@@ -47,7 +47,7 @@ func IPLimiter() gin.HandlerFunc {
 		if err != redis.ErrNil {
 			fmt.Println("err: ", res, " ; ", err.Error())
 		}
-		if res == -1 {
+		if res == "-1" {
 			c.String(http.StatusTooManyRequests, "Too many requests")
 			c.Abort()
 		}
