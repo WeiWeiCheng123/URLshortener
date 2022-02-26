@@ -11,6 +11,7 @@ if userInfo == '<nil>' then
 	result = 1
 	return result
 end
+return 2
 `
 
 /*
