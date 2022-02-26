@@ -1,8 +1,10 @@
 package middleware
 
 import (
+	"fmt"
 	"net/http"
 
+	"github.com/WeiWeiCheng123/URLshortener/lib/lua"
 	"github.com/gin-gonic/gin"
 	"github.com/gomodule/redigo/redis"
 )
@@ -22,18 +24,28 @@ func IPLimiter() gin.HandlerFunc {
 		con := rdb.Get()
 		defer con.Close()
 
-		cont, err := redis.Int(con.Do("GET", c.ClientIP()))
-		if err != nil {
-			con.Do("SET", c.ClientIP(), 1)
-			con.Do("EXPIRE", c.ClientIP(), IPLimitPeriod)
-		} else {
-			con.Do("EXPIRE", c.ClientIP(), IPLimitPeriod)
-			if cont < IPLimitMax {
-				con.Do("INCR", c.ClientIP())
+		script := redis.NewScript(1, lua.IP_script)
+		res, err := redis.Int(script.Do(con, c.ClientIP(), IPLimitMax, IPLimitPeriod))
+		/*
+			cont, err := redis.Int(con.Do("GET", c.ClientIP()))
+			if err != nil {
+				con.Do("SET", c.ClientIP(), 1)
+				con.Do("EXPIRE", c.ClientIP(), IPLimitPeriod)
+			} else {
+				con.Do("EXPIRE", c.ClientIP(), IPLimitPeriod)
+				if cont < IPLimitMax {
+					con.Do("INCR", c.ClientIP())
+				}
 			}
+			if cont >= IPLimitMax {
+				c.String(http.StatusTooManyRequests, "Too many requests")
+				c.Abort()
+			}
+		*/
+		if err != nil {
+			fmt.Println(res, " ", err.Error())
 		}
-
-		if cont >= IPLimitMax {
+		if res == -1 {
 			c.String(http.StatusTooManyRequests, "Too many requests")
 			c.Abort()
 		}
