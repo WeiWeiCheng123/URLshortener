@@ -42,7 +42,7 @@ func IPLimiter() gin.HandlerFunc {
 				c.Abort()
 			}
 		*/
-		if err != nil {
+		if err != redis.ErrNil {
 			fmt.Println("err: ", res, " ; ", err.Error())
 		}
 		if res == -1 {
