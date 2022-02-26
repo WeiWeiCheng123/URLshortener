@@ -43,7 +43,7 @@ func IPLimiter() gin.HandlerFunc {
 			}
 		*/
 		if err != nil {
-			fmt.Println(res, " ", err.Error())
+			fmt.Println("err: ", res, " ; ", err.Error())
 		}
 		if res == -1 {
 			c.String(http.StatusTooManyRequests, "Too many requests")
