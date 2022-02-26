@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"sync"
 
+	"github.com/WeiWeiCheng123/URLshortener/lib/function"
 	"github.com/WeiWeiCheng123/URLshortener/model"
-	"github.com/WeiWeiCheng123/URLshortener/pkg/function"
 	"github.com/gin-gonic/gin"
 	"github.com/gomodule/redigo/redis"
 )

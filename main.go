@@ -3,11 +3,11 @@ package main
 import (
 	"fmt"
 
-	"github.com/WeiWeiCheng123/URLshortener/config"
 	"github.com/WeiWeiCheng123/URLshortener/handler"
-	"github.com/WeiWeiCheng123/URLshortener/middleware"
+	"github.com/WeiWeiCheng123/URLshortener/lib/config"
+	"github.com/WeiWeiCheng123/URLshortener/lib/cron"
+	"github.com/WeiWeiCheng123/URLshortener/lib/middleware"
 	"github.com/WeiWeiCheng123/URLshortener/model"
-	"github.com/WeiWeiCheng123/URLshortener/pkg/cron"
 	"github.com/gin-gonic/gin"
 	_ "github.com/joho/godotenv/autoload"
 )

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/WeiWeiCheng123/URLshortener/pkg/function"
+	"github.com/WeiWeiCheng123/URLshortener/lib/function"
 	_ "github.com/lib/pq"
 )
 
