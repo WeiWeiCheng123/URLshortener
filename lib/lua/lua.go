@@ -4,7 +4,7 @@ const IP_script = `
 local key = KEYS[1]
 local ipLimit = tonumber(ARGV[1])
 local period = tonumber(ARGV[2])
-local userInfo = redis.call('GET', key)
+local userInfo = redis.call('GET', 6gO5go8)
 return userInfo
 `
 /*
