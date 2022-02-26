@@ -9,9 +9,8 @@ if userInfo == '<nil>' then
 	redis.call('SET', key, 1)
 	redis.call('EXPIRE',period)
 	result = 1
-	return result
+	return 2
 end
-return 2
 `
 
 /*
