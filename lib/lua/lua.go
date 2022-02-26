@@ -5,8 +5,10 @@ local key = KEYS[1]
 local ipLimit = tonumber(ARGV[1])
 local period = tonumber(ARGV[2])
 local userInfo = redis.call('GET', key)
-print("hello world")
-if userInfo == 0 then
+return userInfo
+`
+/*
+if #userInfo == 0 then
 	print("hello")
     redis.call('SET', key, 1)
 	redis.call('EXPIRE',period)
