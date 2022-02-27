@@ -48,7 +48,7 @@ func Test_Parse_Fail_wrong_url(t *testing.T) {
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusNotFound, w.Code)
-	assert.Contains(t, w.Body.String(), "11This short URL is not existed or expired")
+	assert.Contains(t, w.Body.String(), "This short URL is not existed or expired")
 }
 
 func Test_Parse_Fail_url_expired(t *testing.T) {

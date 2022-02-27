@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"fmt"
+	"net/http"
 	//"net/http"
 
 	"github.com/WeiWeiCheng123/URLshortener/lib/lua"
@@ -25,36 +26,13 @@ func IPLimiter() gin.HandlerFunc {
 		defer con.Close()
 
 		script := redis.NewScript(1, lua.IP_script)
-		fmt.Println("ip= ", c.ClientIP())
-		res, err := script.Do(con, c.ClientIP())
-		//res, err := redis.String(script.Do(con, c.ClientIP()))
-		/*
-			cont, err := redis.Int(con.Do("GET", c.ClientIP()))
-			if err != nil {
-				con.Do("SET", c.ClientIP(), 1)
-				con.Do("EXPIRE", c.ClientIP(), IPLimitPeriod)
-			} else {
-				con.Do("EXPIRE", c.ClientIP(), IPLimitPeriod)
-				if cont < IPLimitMax {
-					con.Do("INCR", c.ClientIP())
-				}
-			}
-			if cont >= IPLimitMax {
-				c.String(http.StatusTooManyRequests, "Too many requests")
-				c.Abort()
-			}
-		*/
-		fmt.Println("res= ", res)
-		fmt.Println("err= ", err)
-		/*
-		if err != redis.ErrNil {
+		res, err := redis.Int(script.Do(con, c.ClientIP(), IPLimitMax, IPLimitPeriod))
+		if err != nil {
 			fmt.Println("err: ", res, " ; ", err.Error())
 		}
-		
-		if res == "-1" {
+		if res == -1 {
 			c.String(http.StatusTooManyRequests, "Too many requests")
 			c.Abort()
 		}
-		*/
 	}
 }
