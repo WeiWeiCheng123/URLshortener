@@ -26,7 +26,7 @@ func IPLimiter() gin.HandlerFunc {
 		defer con.Close()
 
 		script := redis.NewScript(1, lua.IP_script)
-		res, err := redis.Int(script.Do(con, c.ClientIP(), IPLimitMax, IPLimitPeriod))
+		res, err := redis.Int(script.Do(con, c.ClientIP(), IPLimitMax, 10))
 		if err != nil {
 			fmt.Println("err: ", res, " ; ", err.Error())
 		}
