@@ -29,7 +29,7 @@ func Test_Parse_Pass(t *testing.T) {
 	req.Header.Set("Content-Type", "application/json")
 	router.ServeHTTP(w, req)
 
-	shortURL := w.Body.String()[7:18]
+	shortURL := w.Body.String()[7:14]
 	w = httptest.NewRecorder()
 	req, _ = http.NewRequest("GET", "/"+shortURL, nil)
 	router.ServeHTTP(w, req)
@@ -70,7 +70,7 @@ func Test_Parse_Fail_url_expired(t *testing.T) {
 	//Wait until the data expired
 	time.Sleep(3 * time.Second)
 
-	shortURL := w.Body.String()[7:18]
+	shortURL := w.Body.String()[7:14]
 	w = httptest.NewRecorder()
 	req, _ = http.NewRequest("GET", "/"+shortURL, nil)
 	router.ServeHTTP(w, req)

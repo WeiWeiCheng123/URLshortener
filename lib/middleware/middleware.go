@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"net/http"
 	//"net/http"
 
@@ -26,9 +25,9 @@ func IPLimiter() gin.HandlerFunc {
 		defer con.Close()
 
 		script := redis.NewScript(1, lua.IP_script)
-		res, err := redis.Int(script.Do(con, c.ClientIP(), IPLimitMax, 10))
+		res, err := redis.Int(script.Do(con, c.ClientIP(), IPLimitMax, IPLimitPeriod))
 		if err != nil {
-			fmt.Println("err: ", res, " ; ", err.Error())
+			c.String(http.StatusInternalServerError, err.Error())
 		}
 		if res == -1 {
 			c.String(http.StatusTooManyRequests, "Too many requests")

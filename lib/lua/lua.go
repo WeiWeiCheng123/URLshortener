@@ -13,6 +13,7 @@ if (not count) then
 end
 if (tonumber(count) < ipLimit) then
     redis.call('INCR', ip)
+    redis.call('EXPIRE', ip, period)
     return 1
 end
 return -1
