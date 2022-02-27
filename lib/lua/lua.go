@@ -1,15 +1,21 @@
 package lua
 
-const IP_script = `
-local key = KEYS[1]
+const (
+	IP_script = `
+redis.call('SET', KEYS[1], 12)
+return KEYS[1]
+`
+)
+
+/*
 local ipLimit = tonumber(ARGV[1])
 local period = tonumber(ARGV[2])
 local userInfo = redis.call('GET', key)
-if userInfo == '<nil>' then
+
 	redis.call('SET', key, 1)
 	redis.call('EXPIRE',period)
 	result = 1
-	return 2
+
 end
 `
 

@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"fmt"
-	"net/http"
+	//"net/http"
 
 	"github.com/WeiWeiCheng123/URLshortener/lib/lua"
 	"github.com/gin-gonic/gin"
@@ -25,7 +25,9 @@ func IPLimiter() gin.HandlerFunc {
 		defer con.Close()
 
 		script := redis.NewScript(1, lua.IP_script)
-		res, err := redis.Int(script.Do(con, c.ClientIP(), IPLimitMax, IPLimitPeriod))
+		fmt.Println("ip= ", c.ClientIP())
+		res, err := script.Do(con, c.ClientIP())
+		//res, err := redis.String(script.Do(con, c.ClientIP()))
 		/*
 			cont, err := redis.Int(con.Do("GET", c.ClientIP()))
 			if err != nil {
@@ -43,13 +45,16 @@ func IPLimiter() gin.HandlerFunc {
 			}
 		*/
 		fmt.Println("res= ", res)
-		fmt.Println("err= ", err.Error())
+		fmt.Println("err= ", err)
+		/*
 		if err != redis.ErrNil {
 			fmt.Println("err: ", res, " ; ", err.Error())
 		}
-		if res == -1 {
+		
+		if res == "-1" {
 			c.String(http.StatusTooManyRequests, "Too many requests")
 			c.Abort()
 		}
+		*/
 	}
 }
