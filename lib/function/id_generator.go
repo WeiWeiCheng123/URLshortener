@@ -1,12 +1,9 @@
 package function
 
 import (
-	"math/big"
 	"math/rand"
 	"strings"
 	"time"
-
-	"github.com/google/uuid"
 )
 
 const (
@@ -16,18 +13,6 @@ const (
 )
 
 //Generate a unique id and convert it into base62 type
-func Id() string {
-	uuid, _ := uuid.NewRandom()
-	return toBase62(uuid)
-}
-
-//Convert id into base62 type
-func toBase62(uuid uuid.UUID) string {
-	var i big.Int
-	i.SetBytes(uuid[:])
-	return i.Text(62)[:7]
-}
-
 func Generator() string {
 	t := uint64(time.Now().Unix())
 	rand.Seed(time.Now().UnixNano())

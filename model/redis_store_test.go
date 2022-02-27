@@ -11,7 +11,7 @@ import (
 func Test_Save_Pass(t *testing.T) {
 	//First, save a data (correct form) to redis
 	//It should not have error
-	err := Redis_Save(function.Id(), "https://www.dcard.tw/f", time.Now().Add(5*time.Minute))
+	err := Redis_Save(function.Generator(), "https://www.dcard.tw/f", time.Now().Add(5*time.Minute))
 	if err != nil {
 		fmt.Println(err)
 		t.Error("Error in Save")
@@ -21,7 +21,7 @@ func Test_Save_Pass(t *testing.T) {
 func Test_Load_Pass(t *testing.T) {
 	//First, save a data (correct form) to redis and get the short URL
 	//Then load the short URL, it should not have error (exist).
-	ShortURL := function.Id()
+	ShortURL := function.Generator()
 	err := Redis_Save(ShortURL, "https://www.dcard.tw/f", time.Now().Add(5*time.Minute))
 	if err != nil {
 		t.Error("Error in Save")
