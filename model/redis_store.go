@@ -44,18 +44,7 @@ func Redis_Save(shortURL string, url string, expireTime time.Time) error {
 	if err != nil {
 		return err
 	}
-	/*
-		_, err := connections.Do("SET", shortURL, url)
-		if err != nil {
-			return err
-		}
-
-		_, err = connections.Do("EXPIREAT", shortURL, expireTime.Unix())
-		if err != nil {
-			return err
-		}
-	*/
-
+	
 	return nil
 }
 
@@ -68,6 +57,7 @@ func Redis_Load(shortURL string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+
 	return url, nil
 }
 
@@ -81,16 +71,6 @@ func Redis_Set_NotExist(shortURL string) error {
 	if err != nil {
 		return err
 	}
-	/*
-	_, err := connections.Do("SET", shortURL, "NotExist")
-	if err != nil {
-		return err
-	}
 
-	_, err = connections.Do("EXPIREAT", shortURL, time.Now().Add(3*time.Minute))
-	if err != nil {
-		return err
-	}
-	*/
 	return nil
 }

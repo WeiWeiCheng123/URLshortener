@@ -22,11 +22,11 @@ func Init(r *redis.Pool, ip_max int, ip_limit_period int) {
 //Limit IP usage
 func IPLimiter() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		con := rdb.Get()
-		defer con.Close()
+		connections := rdb.Get()
+		defer connections.Close()
 
 		script := redis.NewScript(1, lua.IP_script)
-		res, err := redis.Int(script.Do(con, c.ClientIP(), IPLimitMax, IPLimitPeriod))
+		res, err := redis.Int(script.Do(connections, c.ClientIP(), IPLimitMax, IPLimitPeriod))
 		if err != nil {
 			c.String(http.StatusInternalServerError, err.Error())
 		}

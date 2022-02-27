@@ -29,7 +29,7 @@ func Pg_Save(url string, expireTime time.Time) (string, error) {
 		return "", err
 	}
 
-	shortID := function.Id()
+	shortID := function.Generator()
 	_, err = stmt.Exec(shortID, url, expireTime)
 	defer stmt.Close()
 	if err != nil {
