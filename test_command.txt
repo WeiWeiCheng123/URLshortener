@@ -1,6 +1,6 @@
 curl -i -X POST -H "Content-Type:application/json" http://localhost:8080/api/v1/urls -d '{"url":"https://www.dcard.tw/f","expireAt":"2022-02-28T09:20:41Z"}'
 
-curl -L -X GET "http://localhost:8080/1xWq5FW"
+curl -L -X GET "http://localhost:8080/L4q1J2a"
 
 ab -n 1000 -c 200 -p post.json -T 'application/x-www-form-urlencoded' http://localhost:8080/api/v1/urls
-ab -n 1000 -c 200 http://localhost:8080/555LWWjoM9I
+ab -n 1000 -c 200 http://localhost:8080/L4qOJ2a

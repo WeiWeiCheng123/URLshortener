@@ -37,7 +37,7 @@ func Get() redis.Conn {
 func Redis_Save(shortURL string, url string, expireTime time.Time) error {
 	connections := rdb.Get()
 	defer connections.Close()
-	_, err := connections.Do("SETEX", shortURL, url, int(expireTime.Sub(time.Now()).Seconds()))
+	_, err := connections.Do("SETEX", shortURL, int(expireTime.Sub(time.Now()).Seconds()), url)
 	//	script := redis.NewScript(1, lua.Save_URL)
 	//	_, err := script.Do(connections, shortURL, url, expireTime.Unix())
 	if err != nil {
@@ -65,7 +65,7 @@ func Redis_Load(shortURL string) (string, error) {
 func Redis_Set_NotExist(shortURL string) error {
 	connections := rdb.Get()
 	defer connections.Close()
-	_, err := connections.Do("SETEX", shortURL, 300)
+	_, err := connections.Do("SETEX", 300, shortURL)
 	if err != nil {
 		return err
 	}
