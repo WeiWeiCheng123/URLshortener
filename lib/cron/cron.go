@@ -8,7 +8,7 @@ import (
 func Del_Expdata() {
 	c := cron.New()
 	//Demo用，所以設置成每3分鐘進行刪除
-	c.AddFunc("*/1 * * * *",
+	c.AddFunc("*/3 * * * *",
 		model.Pg_Del_Exp,
 	)
 	/*
