@@ -30,9 +30,11 @@ func toBase62(uuid uuid.UUID) string {
 
 func Generator() string {
 	t := uint64(time.Now().Unix())
+	rand.Seed(time.Now().UnixNano())
 	r_1 := rand.Uint64()
+	rand.Seed(time.Now().Unix())
 	r_2 := uint64(rand.Int())
-	t = (t + r_1/r_2) * 1000
+	t = t + r_1 + r_2
 
 	return encode(t)
 }
@@ -45,5 +47,5 @@ func encode(num uint64) string {
 		encoder.WriteByte(charTable[(num % length)])
 	}
 
-	return encoder.String()
+	return encoder.String()[:7]
 }
