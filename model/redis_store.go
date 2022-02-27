@@ -3,6 +3,8 @@ package model
 import (
 	"time"
 
+	"github.com/WeiWeiCheng123/URLshortener/lib/lua"
+
 	"github.com/gomodule/redigo/redis"
 )
 
@@ -37,16 +39,22 @@ func Get() redis.Conn {
 func Redis_Save(shortURL string, url string, expireTime time.Time) error {
 	connections := rdb.Get()
 	defer connections.Close()
-
-	_, err := connections.Do("SET", shortURL, url)
+	script := redis.NewScript(1, lua.Save_URL)
+	_, err := script.Do(connections, shortURL, url, expireTime.Unix())
 	if err != nil {
 		return err
 	}
+	/*
+		_, err := connections.Do("SET", shortURL, url)
+		if err != nil {
+			return err
+		}
 
-	_, err = connections.Do("EXPIREAT", shortURL, expireTime.Unix())
-	if err != nil {
-		return err
-	}
+		_, err = connections.Do("EXPIREAT", shortURL, expireTime.Unix())
+		if err != nil {
+			return err
+		}
+	*/
 
 	return nil
 }
@@ -68,7 +76,12 @@ func Redis_Load(shortURL string) (string, error) {
 func Redis_Set_NotExist(shortURL string) error {
 	connections := rdb.Get()
 	defer connections.Close()
-
+	script := redis.NewScript(1, lua.Set_NotExist)
+	_, err := script.Do(connections, shortURL)
+	if err != nil {
+		return err
+	}
+	/*
 	_, err := connections.Do("SET", shortURL, "NotExist")
 	if err != nil {
 		return err
@@ -78,6 +91,6 @@ func Redis_Set_NotExist(shortURL string) error {
 	if err != nil {
 		return err
 	}
-
+	*/
 	return nil
 }

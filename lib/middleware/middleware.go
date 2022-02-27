@@ -19,6 +19,7 @@ func Init(r *redis.Pool, ip_max int, ip_limit_period int) {
 	IPLimitPeriod = ip_limit_period
 }
 
+//Limit IP usage
 func IPLimiter() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		con := rdb.Get()

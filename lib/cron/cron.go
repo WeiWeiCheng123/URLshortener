@@ -5,6 +5,7 @@ import (
 	"github.com/robfig/cron/v3"
 )
 
+//At a specific time use cron job to delete expired data 
 func Del_Expdata() {
 	c := cron.New()
 	//Demo用，所以設置成每3分鐘進行刪除
@@ -21,6 +22,5 @@ func Del_Expdata() {
 			model.Pg_Del_Exp,
 		)
 	*/
-
 	c.Start()
 }
