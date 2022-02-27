@@ -18,6 +18,7 @@ if (tonumber(count) < ipLimit) then
 end
 return -1
 `
+/*
 	Save_URL = `
 local shortURL = KEYS[1]
 local URL = ARGV[1]
@@ -25,9 +26,5 @@ local exp = ARGV[2]
 redis.call('SET', shortURL, URL)
 redis.call('EXPIREAT', shortURL, exp)
 `
-	Set_NotExist = `
-local shortURL = KEYS[1]
-redis.call('SET', shortURL, "NotExist")
-redis.call('EXPIRE', shortURL, 600)
-`
+*/
 )
