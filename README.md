@@ -94,7 +94,7 @@
 
 ---
 ## 專案目錄結構
-```
+```c
 |--URLshortener 
     |-- .env                 // 環境變數，裡面宣告了資料庫連線的資料和程式中會使用到的參數
     |-- ab_test_result.txt   // 我之前使用Apache banchmark 測試POST和GET的紀錄
