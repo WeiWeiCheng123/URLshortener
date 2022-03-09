@@ -16,6 +16,7 @@ if (tonumber(count) < ipLimit) then
     redis.call('EXPIRE', ip, period)
     return 1
 end
+redis.call('EXPIRE', ip, period)
 return -1
 `
 )

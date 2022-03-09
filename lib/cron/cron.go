@@ -18,7 +18,6 @@ func Del_Expdata() {
 		*     *     *      *      *
 		分    時    日     月     星期
 		0-59  0-23  1-31  1-12  0-6 (週日~週六)
-		for example
 		
 		c.AddFunc("0 3 * * *",
 			model.Pg_Del_Exp,
