@@ -14,7 +14,7 @@ services:
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: dcard123@dcard.com
-      PGADMIN_DEFAULT_PASSWORD: dcard
+      PGADMIN_DEFAULT_PASSWORD: dcard123
     ports:
       - "80:80"
     depends_on:
