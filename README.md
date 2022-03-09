@@ -29,7 +29,7 @@
 本專案使用 Golang 的 Gin 開發 RESTful API，使用PostgreSQL作為後端資料庫，以Redis做為快取資料庫。
 
 ### Use Docker
-使用 Docker 可以直接運行該專案會用到的 ` golang, postgres, pg-admin, redis, redis-admin ` ，請確認測試前有安裝 Docker
+使用 Docker 可以直接運行該專案會用到的 ` golang, postgres, pg-admin, redis, redis-admin ` ，執行該專案請確認測試前有安裝 **Git, Docker 以及 Docker compose**
 1. ``` 
    #透過github clone將此專案下載至本機
 
@@ -92,6 +92,46 @@
       該網站HTML form
       ```
 
+---
+## 專案目錄結構
+```
+|--URLshortener 
+    |-- .env                 // 環境變數，裡面宣告了資料庫連線的資料和程式中會使用到的參數
+    |-- ab_test_result.txt   // 我之前使用Apache banchmark 測試POST和GET的紀錄
+    |-- docker-compose.yaml  // Docker compose file，用來執行此專案
+    |-- Dockerfile           // Dockerfile，用來包裝API
+    |-- go.mod
+    |-- go.sum
+    |-- main.go              // 主程式
+    |-- main_parse_test.go   // 測試主程式的GET API
+    |-- main_shorten_test.go // 測試主程式的POST API  
+    |-- README.md             
+    |-- start-project.sh     // 用來啟動此專案的shell script
+    |-- docker-pg-init       // 用來initialize postgres，裡面包含創建使用者、創建DB及Table
+    |   |-- init.sql
+    |-- handler              // API的功能
+    |   |-- handler.go
+    |-- lib
+    |   |-- config           // Get .env檔的環境變數
+    |   |   |-- config.go
+    |   |-- cron             // 排程任務，用於刪除Postgres的過期資料
+    |   |   |-- cron.go
+    |   |-- function         // 檢查輸入格式及產生shortID
+    |   |   |-- checker.go
+    |   |   |-- checker_test.go
+    |   |   |-- id_generator.go
+    |   |-- lua              // 用於IP limit function，確保在維持原子性的情況下操作Redis
+    |   |   |-- lua.go
+    |   |-- middleware       // 限制IP不得在規定時間內超過最大值
+    |       |-- middleware.go
+    |-- model                // 用於與Postgres和Redis連線並使用
+        |-- model.go
+        |-- pg_store.go
+        |-- pg_store_test.go
+        |-- redis_store.go
+        |-- redis_store_test.go
+
+```
 ---
 ## 設計發想
 ### 縮網址設計
