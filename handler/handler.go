@@ -80,7 +80,7 @@ func Parse(c *gin.Context) {
 
 	if err != nil {
 		mux.RLock()
-		exist, _, url, expireTime := model.Pg_Load(shortURL)
+		exist, url, expireTime := model.Pg_Load(shortURL)
 		if !exist {
 			fmt.Println("Not exist")
 			model.Redis_Set_NotExist(shortURL)

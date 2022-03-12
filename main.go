@@ -20,7 +20,7 @@ func init() {
 	pdb := model.Connect_Pg(pg_connect)
 	rdb := model.NewPool(config.GetStr("REDIS_HOST"), config.GetInt("REDIS_POOL"), config.GetStr("REDIS_PASSWORD"))
 	model.Init(pdb, rdb)
-	middleware.Init(rdb, config.GetInt("IPLimitMax"), config.GetInt("IPLimitPeriod"))
+	middleware.Init(config.GetInt("IPLimitMax"), config.GetInt("IPLimitPeriod"))
 }
 
 //Create router

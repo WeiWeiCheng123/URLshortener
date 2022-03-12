@@ -4,10 +4,15 @@ CREATE DATABASE dcard_db with ENCODING = 'UTF8' LC_COLLATE = 'en_US.UTF-8' LC_CT
 ALTER DATABASE dcard_db OWNER TO dcard_admin;
 
 \connect dcard_db;
+REVOKE USAGE ON SCHEMA public FROM PUBLIC;
+REVOKE CREATE ON SCHEMA public FROM PUBLIC;
+
+GRANT USAGE ON SCHEMA public to demo_admin;
+GRANT CREATE ON SCHEMA public to demo_admin;
 
 CREATE TABLE shortenerdb
 (
-    id serial NOT NULL,
+    id uuid,
     shortID  character(11) NOT NULL,
     originalURL character varying(500) NOT NULL,
     expireTime timestamp,

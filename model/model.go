@@ -12,8 +12,10 @@ type ShortURL struct {
 	OriginalURL string
 	ExpireTime  time.Time
 }
-var pdb *sql.DB
-var rdb *redis.Pool
+var (
+	pdb *sql.DB
+	rdb *redis.Pool
+)  
 
 //Connect to postgres and redis
 func Init(p *sql.DB, r *redis.Pool) {

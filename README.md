@@ -97,7 +97,6 @@
 ```c
 |--URLshortener 
     |-- .env                 // 環境變數，裡面宣告了資料庫連線的資料和程式中會使用到的參數
-    |-- ab_test_result.txt   // 我之前使用Apache banchmark 測試POST和GET的紀錄
     |-- docker-compose.yaml  // Docker compose file，用來執行此專案
     |-- Dockerfile           // Dockerfile，用來包裝API
     |-- go.mod
@@ -279,3 +278,83 @@ For example
    在 middleware 中使用 IP limit 的方式去計算該 IP 的 Request 次數，使用了 lua 搭配 Redis 來達成 IP limit 的功能，當達到上限時，回傳 429
 
 ---
+## ApacheBench
+設計完成後我有使用 ApacheBench 進行測試，在我的 Blog 有介紹到 ApacheBench https://weiweicheng123.github.io/2022/02/26/ab-test/#more
+
+測試傳入API的總數量為 1000 ，並模擬 200 個 Request 同時進行
+
+```sh
+#POST
+
+ab -n 1000 -c 200 -p post.json -T 'application/x-www-form-urlencoded' http://localhost:8080/api/v1/urls
+
+Concurrency Level:      200
+Time taken for tests:   0.957 seconds
+Complete requests:      1000
+Failed requests:        0
+Total transferred:      190000 bytes
+Total body sent:        229000
+HTML transferred:       67000 bytes
+Requests per second:    1045.37 [#/sec] (mean)
+Time per request:       191.320 [ms] (mean)
+Time per request:       0.957 [ms] (mean, across all concurrent requests)
+Transfer rate:          193.97 [Kbytes/sec] received
+                        233.78 kb/s sent
+                        427.74 kb/s total
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    2   3.3      0      12
+Processing:    25  172 137.1    131     924
+Waiting:       13  172 137.1    130     923
+Total:         26  174 138.0    131     928
+
+Percentage of the requests served within a certain time (ms)
+  50%    131
+  66%    178
+  75%    212
+  80%    240
+  90%    354
+  95%    470
+  98%    608
+  99%    726
+ 100%    928 (longest request)
+
+```
+
+```sh
+#GET
+
+ab -n 1000 -c 200 http://localhost:8080/L4qOJ2a
+
+Concurrency Level:      200
+Time taken for tests:   0.562 seconds
+Complete requests:      1000
+Failed requests:        0
+Non-2xx responses:      1000
+Total transferred:      198000 bytes
+HTML transferred:       45000 bytes
+Requests per second:    1778.12 [#/sec] (mean)
+Time per request:       112.478 [ms] (mean)
+Time per request:       0.562 [ms] (mean, across all concurrent requests)
+Transfer rate:          343.82 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    7   6.6      5      20
+Processing:     4   96  72.4     67     313
+Waiting:        4   91  73.0     63     313
+Total:         14  103  72.4     81     320
+
+Percentage of the requests served within a certain time (ms)
+  50%     81
+  66%     95
+  75%    108
+  80%    159
+  90%    237
+  95%    256
+  98%    270
+  99%    283
+ 100%    320 (longest request)
+
+```

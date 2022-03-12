@@ -14,7 +14,7 @@ func Test_Pg_save(t *testing.T) {
 }
 
 func Test_Pg_load_exist(t *testing.T) {
-	exist, _, u, _ := Pg_Load("888")
+	exist, u, _ := Pg_Load("888")
 	fmt.Println(exist, u)
 	if exist == true {
 		t.Error("error")
@@ -22,7 +22,7 @@ func Test_Pg_load_exist(t *testing.T) {
 }
 
 func Test_Pg_load_not_exist(t *testing.T) {
-	exist, _, _, _ := Pg_Load("6")
+	exist, _, _ := Pg_Load("6")
 	if exist != false {
 		t.Error("error")
 	}

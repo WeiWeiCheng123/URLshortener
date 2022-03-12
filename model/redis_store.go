@@ -3,6 +3,7 @@ package model
 import (
 	"time"
 
+	"github.com/WeiWeiCheng123/URLshortener/lib/lua"
 	"github.com/gomodule/redigo/redis"
 )
 
@@ -37,6 +38,7 @@ func Get() redis.Conn {
 func Redis_Save(shortURL string, url string, expireTime time.Time) error {
 	connections := rdb.Get()
 	defer connections.Close()
+	
 	_, err := connections.Do("SETEX", shortURL, int(expireTime.Sub(time.Now()).Seconds()), url)
 	if err != nil {
 		return err
@@ -63,10 +65,22 @@ func Redis_Load(shortURL string) (string, error) {
 func Redis_Set_NotExist(shortURL string) error {
 	connections := rdb.Get()
 	defer connections.Close()
-	_, err := connections.Do("SETEX",shortURL, 300, "NotExist")
+
+	_, err := connections.Do("SETEX", shortURL, 300, "NotExist")
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+//Give IP, limit max and limit period and use lua set it into Redis.
+//Limit IP usage
+func Redis_ip_limit(ip string, max int, period int) (int, error) {
+	connections := rdb.Get()
+	defer connections.Close()
+
+	script := redis.NewScript(1, lua.IP_script)
+	res, err := redis.Int(script.Do(connections, ip, max, period))
+	return res, err
 }
