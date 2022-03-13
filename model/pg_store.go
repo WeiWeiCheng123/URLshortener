@@ -23,7 +23,7 @@ func Connect_Pg(connect string) *sql.DB {
 
 //Give original URL and expire time, save to Postgres.
 func Pg_Save(url string, expireTime time.Time) (string, error) {
-	stmt, err := pdb.Prepare("INSERT INTO shortenerdb(shortid,originalurl,expiretime) VALUES($1,$2,$3)")
+	stmt, err := pdb.Prepare("INSERT INTO shortener(shortid,originalurl,expiretime) VALUES($1,$2,$3)")
 	defer stmt.Close()
 
 	if err != nil {
@@ -42,7 +42,7 @@ func Pg_Save(url string, expireTime time.Time) (string, error) {
 
 // If there is not exist, return false, otherwise return true
 func Pg_Load(shorturlID string) (bool, string, time.Time) {
-	stmt, err := pdb.Prepare("SELECT originalurl, expiretime FROM shortenerdb WHERE shortid = $1")
+	stmt, err := pdb.Prepare("SELECT originalurl, expiretime FROM shortener WHERE shortid = $1")
 	defer stmt.Close()
 
 	if err != nil {
@@ -60,7 +60,7 @@ func Pg_Load(shorturlID string) (bool, string, time.Time) {
 
 // If data expired, delete the data.
 func Pg_Del(shorturlID string) error {
-	stmt, err := pdb.Prepare("DELETE FROM shortenerdb WHERE shortid = $1")
+	stmt, err := pdb.Prepare("DELETE FROM shortener WHERE shortid = $1")
 	defer stmt.Close()
 
 	if err != nil {
@@ -77,7 +77,7 @@ func Pg_Del(shorturlID string) error {
 
 func Pg_Del_Exp() {
 	fmt.Println("Cron Job start", time.Now())
-	stmt, _ := pdb.Prepare("DELETE FROM shortenerdb WHERE expireTime < $1")
+	stmt, _ := pdb.Prepare("DELETE FROM shortener WHERE expireTime < $1")
 	defer stmt.Close()
 
 	stmt.Exec(time.Now())

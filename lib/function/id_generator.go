@@ -1,6 +1,7 @@
 package function
 
 import (
+	"math"
 	"math/rand"
 	"strings"
 	"time"
@@ -20,7 +21,9 @@ func Generator() string {
 	rand.Seed(time.Now().UnixNano() + int64(r_1))
 	r_2 := uint64(rand.Int())
 	t = t + r_1 + r_2
-
+	if t % 2 == 1 {
+		t = t + 1
+	}
 	return encode(t)
 }
 
@@ -33,4 +36,18 @@ func encode(num uint64) string {
 	}
 
 	return encoder.String()[:7]
+}
+
+func Decode(encoded string) uint64 {
+	var number uint64
+
+	for i, char := range encoded {
+		charPosition := strings.IndexRune(charTable, char)
+		if charPosition == -1 {
+			return uint64(charPosition)
+		}
+		number += uint64(charPosition) * uint64(math.Pow(float64(length), float64(i)))
+	}
+
+	return number
 }
