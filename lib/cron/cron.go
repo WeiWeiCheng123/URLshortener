@@ -19,7 +19,6 @@ func Init(database *xorm.Engine) {
 //At a specific time use cron job to delete expired data
 func Del_Expdata() {
 	c := cron.New()
-	data := model.Shortener{}
 	q := "DELETE FROM shortener WHERE expireTime < $1"
 	//Demo用，所以設置成每5分鐘進行刪除
 	c.AddFunc("*/1 * * * *",
