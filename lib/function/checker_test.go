@@ -78,3 +78,23 @@ func Test_TimeFormater_is_Expired(t *testing.T) {
 		t.Error("Wrong result")
 	}
 }
+
+func Test_ShortID_legal_Pass(t *testing.T) {
+	//Set a right shortID
+	//it should return nil
+	shortID := "K8c2CQK"
+	err := ShortID_legal(shortID)
+	if err != nil {
+		t.Error("Wrong result")
+	}
+}
+
+func Test_ShortID_legal_Fail(t *testing.T) {
+	//Set a wrong shortID
+	//it should return error
+	shortID := "58c5C11"
+	err := ShortID_legal(shortID)
+	if err == nil {
+		t.Error("Wrong result")
+	}
+}
