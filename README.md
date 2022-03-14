@@ -76,7 +76,7 @@
    
   - Example response
     ```sh
-    {"id":"m42er1M","shortURL":"http://localhost:8080/m42er1M"}
+    {"id":"KF4eAy9","shortURL":"http://localhost:8080/KF4eAy9"}
     ```
 
 - 第二個API為GET，若該縮網址沒過期，輸入縮網址，重新導向到原網址; 若縮網址過期，則顯示404
@@ -84,7 +84,7 @@
     - Example request
       ```sh
       #Use POST response shortID
-      curl -L -X GET "http://localhost:8080/m42er1M"
+      curl -L -X GET "http://localhost:8080/KF4eAy9"
       ```
 
   - Example response

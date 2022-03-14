@@ -14,9 +14,9 @@ GRANT USAGE ON SCHEMA public TO dcard_db_user;
 
 CREATE TABLE shortener
 (
-    shortID  CHARACTER(7) NOT NULL,
-    originalURL CHARACTER varying(500) NOT NULL,
-    expireTime TIMESTAMP,
+    short_id  CHARACTER(7) NOT NULL,
+    original_url CHARACTER varying(500) NOT NULL,
+    expire_time TIMESTAMP,
     CONSTRAINT "short_url" PRIMARY KEY (shortID)
 );
 

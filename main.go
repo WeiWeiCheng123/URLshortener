@@ -13,6 +13,7 @@ import (
 	"github.com/go-xorm/xorm"
 	"github.com/gomodule/redigo/redis"
 	_ "github.com/joho/godotenv/autoload"
+	_ "github.com/lib/pq"
 )
 
 //Connect to postgres and redis
