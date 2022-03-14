@@ -22,4 +22,3 @@ CREATE TABLE shortener
 
 ALTER TABLE shortener OWNER TO dcard_db_admin;
 GRANT SELECT, INSERT, UPDATE, DELETE, REFERENCES ON TABLE shortener TO dcard_db_user;
-GRANT ALL ON SEQUENCE shortener_id_seq TO dcard_db_user;

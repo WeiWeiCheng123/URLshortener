@@ -29,7 +29,7 @@ func init() {
 	db.SetMaxOpenConns(25)
 	db.SetConnMaxLifetime(5 * time.Minute)
 
-	rdb := redis.Pool{
+	rdb := &redis.Pool{
 		MaxIdle:     config.GetInt("REDIS_POOL"),
 		IdleTimeout: 240 * time.Second,
 		Dial: func() (redis.Conn, error) {
