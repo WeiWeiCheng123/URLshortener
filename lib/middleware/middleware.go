@@ -78,9 +78,9 @@ func TX() gin.HandlerFunc {
 		statusCode := c.GetInt(constant.StatusCode)
 		err := c.MustGet(constant.Error)
 		output := c.MustGet(constant.Output)
-		fmt.Println("s",statusCode)
-		fmt.Println("e",err.(error).Error())
-		fmt.Println("o",output.(string))
+		fmt.Println("s", statusCode)
+		fmt.Println("e", err)
+		fmt.Println("o", output)
 		if err != nil {
 			c.String(statusCode, err.(error).Error())
 		} else {
