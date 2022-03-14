@@ -77,6 +77,7 @@ func TX() gin.HandlerFunc {
 		if err != nil {
 			c.String(statusCode, err.(error).Error())
 		} else {
+			fmt.Println("Redirect to", output.(string))
 			c.Redirect(statusCode, output.(string))
 		}
 	}
