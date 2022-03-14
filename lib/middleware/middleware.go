@@ -29,11 +29,12 @@ func IPLimiter() gin.HandlerFunc {
 		res, err := model.Redis_ip_limit(c.ClientIP(), IPLimitMax, IPLimitPeriod)
 		if err != nil {
 			c.String(http.StatusInternalServerError, err.Error())
+			return
 		}
 
 		if res == -1 {
 			c.String(http.StatusTooManyRequests, "Too many requests")
-			c.Abort()
+			return
 		}
 	}
 }
