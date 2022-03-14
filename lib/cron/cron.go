@@ -23,7 +23,7 @@ func Del_Expdata() {
 	c.AddFunc("*/5 * * * *",
 		func() {
 			fmt.Println("Cron Job start", time.Now())
-			db.Where("expire_time < ?", time.Now()).Delete(&model.Shortener{})
+			db.Where("expire_time < ?", time.Now()).Delete(&(model.Shortener{}))
 			fmt.Println("Cron Job done")
 		},
 	//	model.Pg_Del_Exp,

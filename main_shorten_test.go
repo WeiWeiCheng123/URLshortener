@@ -13,8 +13,8 @@ import (
 )
 
 var input struct {
-	URL string
-	Exp string
+	URL string `json:"url"`
+	Exp string `json:"expireAt"`
 }
 
 func Test_Shorten_Pass(t *testing.T) {
@@ -23,7 +23,6 @@ func Test_Shorten_Pass(t *testing.T) {
 	router := engine()
 
 	TestTime := time.Now().Add(10 * time.Minute).Format("2006-01-02T15:04:05Z")
-	fmt.Println("Testtime,", TestTime)
 	input.URL = "https://www.dcard.tw/f"
 	input.Exp = TestTime
 	body, _ := json.Marshal(input)

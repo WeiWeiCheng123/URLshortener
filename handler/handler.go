@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"sync"
@@ -33,7 +34,7 @@ func Shorten(c *gin.Context) {
 	if !function.IsURL(url) {
 		fmt.Println("NOT URL")
 		c.Set(constant.StatusCode, http.StatusBadRequest)
-		c.Set(constant.Error, "Invalid URL")
+		c.Set(constant.Error, errors.New("Invalid URL"))
 		return
 	}
 
@@ -43,7 +44,7 @@ func Shorten(c *gin.Context) {
 	if err != nil {
 		fmt.Println("ERROR TIME ", err.Error())
 		c.Set(constant.StatusCode, http.StatusBadRequest)
-		c.Set(constant.Error, "Error time format or time is expired")
+		c.Set(constant.Error,  errors.New("Error time format or time is expired"))
 		return
 	}
 
@@ -74,7 +75,7 @@ func Parse(c *gin.Context) {
 	if url == "NotExist" {
 		fmt.Println("Not exist")
 		c.Set(constant.StatusCode, http.StatusNotFound)
-		c.Set(constant.Error, "This short URL is not existed or expired")
+		c.Set(constant.Error,  errors.New("This short URL is not existed or expired"))
 		return
 	}
 
@@ -101,7 +102,7 @@ func Parse(c *gin.Context) {
 
 			mux.RUnlock()
 			c.Set(constant.StatusCode, http.StatusNotFound)
-			c.Set(constant.Error, "This short URL is not existed or expired")
+			c.Set(constant.Error,  errors.New("This short URL is not existed or expired"))
 			return
 		}
 
@@ -127,7 +128,7 @@ func Parse(c *gin.Context) {
 
 			mux.RUnlock()
 			c.Set(constant.StatusCode, http.StatusNotFound)
-			c.Set(constant.Error, "This short URL is not existed or expired")
+			c.Set(constant.Error,  errors.New("This short URL is not existed or expired"))
 			return
 		}
 
