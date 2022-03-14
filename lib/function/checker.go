@@ -40,7 +40,8 @@ func Time_to_Taiwanzone(expTime time.Time) (time.Time, error) {
 	localLocation, _ = time.LoadLocation("Asia/Shanghai")
 
 	expTime = expTime.In(localLocation)
-	expTime = expTime.Add(-8 * time.Hour)
+	//expTime = expTime.Add(-8 * time.Hour)
+
 	//Time expired
 	if time.Now().After(expTime) {
 		return time.Time{}, errors.New("Time expired")
@@ -52,7 +53,7 @@ func Time_to_Taiwanzone(expTime time.Time) (time.Time, error) {
 //Check the shortID is legal or not
 //In this application, after decoding the shortID it must  be multiples of 2
 func ShortID_legal(shortID string) error {
-	if i := decode(shortID); i % 2 == 1 {
+	if i := decode(shortID); i%2 == 1 {
 		return errors.New("Not a shortID")
 	}
 

@@ -5,15 +5,11 @@ import (
 	"net/http"
 
 	"github.com/WeiWeiCheng123/URLshortener/lib/constant"
-
-	"github.com/gomodule/redigo/redis"
-
-	//"net/http"
-	//	"github.com/WeiWeiCheng123/URLshortener/model"
 	"github.com/WeiWeiCheng123/URLshortener/lib/function"
 	"github.com/WeiWeiCheng123/URLshortener/lib/lua"
 	"github.com/gin-gonic/gin"
 	"github.com/go-xorm/xorm"
+	"github.com/gomodule/redigo/redis"
 )
 
 var (
@@ -84,7 +80,6 @@ func TX() gin.HandlerFunc {
 			c.Redirect(statusCode, output.(string))
 		}
 	}
-
 }
 
 //Limit IP usage
@@ -94,7 +89,6 @@ func IPLimiter() gin.HandlerFunc {
 		defer connections.Close()
 		script := redis.NewScript(1, lua.IP_script)
 		res, err := redis.Int(script.Do(connections, c.ClientIP(), IPLimitMax, IPLimitPeriod))
-		//		res, err := model.Redis_ip_limit(c.ClientIP(), IPLimitMax, IPLimitPeriod)
 		if err != nil {
 			c.String(http.StatusInternalServerError, err.Error())
 			c.Abort()

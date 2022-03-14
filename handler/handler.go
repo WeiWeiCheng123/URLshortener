@@ -34,7 +34,7 @@ func Shorten(c *gin.Context) {
 	if !function.IsURL(url) {
 		fmt.Println("NOT URL")
 		c.Set(constant.StatusCode, http.StatusBadRequest)
-		c.Set(constant.Error, errors.New("Invalid URL"))
+		c.Set(constant.Error, errors.New("invalid URL"))
 		return
 	}
 
@@ -44,7 +44,7 @@ func Shorten(c *gin.Context) {
 	if err != nil {
 		fmt.Println("ERROR TIME ", err.Error())
 		c.Set(constant.StatusCode, http.StatusBadRequest)
-		c.Set(constant.Error,  errors.New("Error time format or time is expired"))
+		c.Set(constant.Error, errors.New("error time format or time is expired"))
 		return
 	}
 
@@ -66,7 +66,6 @@ func Shorten(c *gin.Context) {
 
 func Parse(c *gin.Context) {
 	shortID := c.MustGet(constant.ShortID).(string)
-	fmt.Println("short id", shortID)
 	rdb := c.MustGet(constant.Cache).(*redis.Pool)
 	connections := rdb.Get()
 	defer connections.Close()
@@ -75,7 +74,7 @@ func Parse(c *gin.Context) {
 	if url == "NotExist" {
 		fmt.Println("Not exist")
 		c.Set(constant.StatusCode, http.StatusNotFound)
-		c.Set(constant.Error,  errors.New("This short URL is not existed or expired"))
+		c.Set(constant.Error, errors.New("this shortid is not existed or expired"))
 		return
 	}
 
@@ -102,7 +101,7 @@ func Parse(c *gin.Context) {
 
 			mux.RUnlock()
 			c.Set(constant.StatusCode, http.StatusNotFound)
-			c.Set(constant.Error,  errors.New("This short URL is not existed or expired"))
+			c.Set(constant.Error, errors.New("this shortid is not existed or expired"))
 			return
 		}
 
@@ -128,7 +127,7 @@ func Parse(c *gin.Context) {
 
 			mux.RUnlock()
 			c.Set(constant.StatusCode, http.StatusNotFound)
-			c.Set(constant.Error,  errors.New("This short URL is not existed or expired"))
+			c.Set(constant.Error, errors.New("this shortid is not existed or expired"))
 			return
 		}
 
