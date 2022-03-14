@@ -14,11 +14,10 @@ GRANT USAGE ON SCHEMA public TO dcard_db_user;
 
 CREATE TABLE shortener
 (
-    id SERIAL NOT NULL,
     shortID  CHARACTER(7) NOT NULL,
     originalURL CHARACTER varying(500) NOT NULL,
     expireTime TIMESTAMP,
-    CONSTRAINT "short_url" PRIMARY KEY (id)
+    CONSTRAINT "short_url" PRIMARY KEY (shortID)
 );
 
 ALTER TABLE shortener OWNER TO dcard_db_admin;

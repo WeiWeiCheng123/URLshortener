@@ -22,3 +22,4 @@ func Init(p *sql.DB, r *redis.Pool) {
 	pdb = p
 	rdb = r
 }
+
