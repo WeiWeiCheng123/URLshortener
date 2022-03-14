@@ -39,3 +39,16 @@ services:
       - "82:80"
     depends_on:
       - redis    
+  backend:
+    container_name: 'url-shortener'
+    image: 'url-shortener'
+    build: ./
+    ports:
+      - "8080:8080"
+    restart: always
+    environment:
+      REDIS_HOST: redis:6379
+      DB_HOST: postgres
+    depends_on:
+      - postgres
+      - redis
