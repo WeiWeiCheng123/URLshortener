@@ -11,5 +11,5 @@ type Shortener struct {
 }
 
 func (u *Shortener) TableName() string {
-	return "Shortener"
+	return "shortener"
 }
