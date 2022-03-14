@@ -47,3 +47,10 @@ func Time_to_Taiwanzone(expTime time.Time) (time.Time, error) {
 
 	return expTime, nil
 }
+
+func ShortID_legal(shortID string) error {
+	if i := decode(shortID); i % 2 == 1 {
+		return errors.New("Not a shortID")
+	}
+	return nil
+}

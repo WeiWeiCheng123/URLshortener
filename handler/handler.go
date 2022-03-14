@@ -64,14 +64,20 @@ func Shorten(c *gin.Context) {
 //Give a short URL, if the URL exists, then redirect to the original URL.
 //Otherwise, return an error (404) and won't redirect
 func Parse(c *gin.Context) {
-	shortURL := c.Param("shortURL")
-	if len(shortURL) != 7 {
+	shortID := c.Param("shortID")
+	if len(shortID) != 7 {
 		fmt.Println("Length error")
 		c.String(http.StatusNotFound, "This short URL is not existed or expired")
 		return
 	}
 
-	url, err := model.Redis_Load(shortURL)
+	if err := function.ShortID_legal(shortID); err != nil {
+		fmt.Println("ShortID ilegal")
+		c.String(http.StatusNotFound, "This short URL is not existed or expired")
+		return
+	}
+
+	url, err := model.Redis_Load(shortID)
 	if url == "NotExist" {
 		fmt.Println("Not exist")
 		c.String(http.StatusNotFound, "This short URL is not existed or expired")
@@ -80,10 +86,10 @@ func Parse(c *gin.Context) {
 
 	if err != nil {
 		mux.RLock()
-		exist, url, expireTime := model.Pg_Load(shortURL)
+		exist, url, expireTime := model.Pg_Load(shortID)
 		if !exist {
 			fmt.Println("Not exist")
-			model.Redis_Set_NotExist(shortURL)
+			model.Redis_Set_NotExist(shortID)
 			mux.RUnlock()
 			c.String(http.StatusNotFound, "This short URL is not existed or expired")
 			return
@@ -93,14 +99,14 @@ func Parse(c *gin.Context) {
 		//Wrong Time format or time expire
 		if err != nil {
 			fmt.Println("Expired")
-			model.Redis_Set_NotExist(shortURL)
+			model.Redis_Set_NotExist(shortID)
 			mux.RUnlock()
 			c.String(http.StatusNotFound, "This short URL is not existed or expired")
-			model.Pg_Del(shortURL)
+			model.Pg_Del(shortID)
 			return
 		}
 
-		model.Redis_Save(shortURL, url, expTime)
+		model.Redis_Save(shortID, url, expTime)
 		mux.RUnlock()
 		fmt.Println("Redirect to ", url)
 		c.Redirect(http.StatusFound, url)

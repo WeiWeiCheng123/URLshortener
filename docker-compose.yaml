@@ -40,8 +40,8 @@ services:
     depends_on:
       - redis
   backend:
-    container_name: 'url_shortener'
-    image: 'url_shortener'
+    container_name: 'url-shortener'
+    image: 'url-shortener'
     build: ./
     ports:
       - "8080:8080"

@@ -27,7 +27,7 @@ func init() {
 func engine() *gin.Engine {
 	router := gin.Default()
 	router.POST("/api/v1/urls", handler.Shorten)
-	router.GET("/:shortURL", middleware.IPLimiter(), handler.Parse)
+	router.GET("/:shortID", middleware.IPLimiter(), handler.Parse)
 	return router
 }
 

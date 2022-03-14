@@ -38,7 +38,7 @@ func encode(num uint64) string {
 	return encoder.String()[:7]
 }
 
-func Decode(encoded string) uint64 {
+func decode(encoded string) uint64 {
 	var number uint64
 
 	for i, char := range encoded {
