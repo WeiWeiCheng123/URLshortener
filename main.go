@@ -54,8 +54,8 @@ func init() {
 //Create router
 func engine() *gin.Engine {
 	router := gin.Default()
-	router.POST("/api/v1/urls/1", middleware.Plain(), handler.ShortTest)
-	router.GET("/1/:shortID", middleware.IPLimiter(), middleware.TX(), handler.ParseTest)
+	router.POST("/api/v1/urls", middleware.Plain(), handler.ShortTest)
+	router.GET("/:shortID", middleware.IPLimiter(), middleware.TX(), handler.ParseTest)
 	return router
 }
 

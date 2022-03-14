@@ -58,11 +58,13 @@ func TX() gin.HandlerFunc {
 		if len(shortID) != 7 {
 			fmt.Println("Length error")
 			c.String(http.StatusNotFound, "This short URL is not existed or expired")
+			c.Abort()
 			return
 		}
 		if err := function.ShortID_legal(shortID); err != nil {
 			fmt.Println("ShortID illegal")
 			c.String(http.StatusNotFound, "This short URL is not existed or expired")
+			c.Abort()
 			return
 		}
 		c.Set(constant.ShortID, c.Param("shortID"))
@@ -95,11 +97,13 @@ func IPLimiter() gin.HandlerFunc {
 		//		res, err := model.Redis_ip_limit(c.ClientIP(), IPLimitMax, IPLimitPeriod)
 		if err != nil {
 			c.String(http.StatusInternalServerError, err.Error())
+			c.Abort()
 			return
 		}
 
 		if res == -1 {
 			c.String(http.StatusTooManyRequests, "Too many requests")
+			c.Abort()
 			return
 		}
 	}
