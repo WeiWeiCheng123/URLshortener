@@ -24,3 +24,5 @@ func (u *Shortener) TableName() string {
 /*
 git add .
 git commit -m ""
+git push origin v2
+*/
