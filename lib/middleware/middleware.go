@@ -58,12 +58,12 @@ func TX() gin.HandlerFunc {
 		if len(shortID) != 7 {
 			fmt.Println("Length error")
 			c.String(http.StatusNotFound, "This short URL is not existed or expired")
-			c.Abort()
+			return
 		}
 		if err := function.ShortID_legal(shortID); err != nil {
 			fmt.Println("ShortID illegal")
 			c.String(http.StatusNotFound, "This short URL is not existed or expired")
-			c.Abort()
+			return
 		}
 		c.Set(constant.ShortID, c.Param("shortID"))
 		c.Set(constant.DB, db)

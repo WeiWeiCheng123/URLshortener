@@ -60,7 +60,7 @@ func ShortTest(c *gin.Context) {
 
 	c.Set(constant.StatusCode, http.StatusOK)
 	c.Set(constant.Output, map[string]interface{}{"id": ShortID, "shortURL": "http://localhost:8080/" + ShortID})
-
+	c.Set(constant.Error, nil)
 }
 
 func ParseTest(c *gin.Context) {
@@ -83,7 +83,6 @@ func ParseTest(c *gin.Context) {
 		data := model.Shortener{}
 		db := c.MustGet(constant.DB).(*xorm.Engine)
 		result, err := db.Where("short_id = ?", shortID).Get(&data)
-		fmt.Println("res", result)
 		if err != nil {
 			fmt.Println("ERROR TO LOAD ", err.Error())
 			c.Set(constant.StatusCode, http.StatusInternalServerError)
@@ -143,11 +142,13 @@ func ParseTest(c *gin.Context) {
 
 		c.Set(constant.StatusCode, http.StatusFound)
 		c.Set(constant.Output, data.OriginalUrl)
+		c.Set(constant.Error, nil)
 		fmt.Println("Redirect to ", data.OriginalUrl)
 	}
 
 	c.Set(constant.StatusCode, http.StatusFound)
 	c.Set(constant.Output, url)
+	c.Set(constant.Error, nil)
 
 }
 
