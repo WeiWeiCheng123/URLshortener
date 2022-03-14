@@ -20,15 +20,17 @@ func Init(database *xorm.Engine) {
 func Del_Expdata() {
 	c := cron.New()
 	data := model.Shortener{}
+	q := "DELETE FROM shortener WHERE expireTime < $1"
 	//Demo用，所以設置成每5分鐘進行刪除
 	c.AddFunc("*/1 * * * *",
 		func() {
 			fmt.Println("Cron Job start", time.Now())
-			res, err := db.Where("expire_time < ?", time.Now()).Delete(&data)
+			res, err := db.Exec(q, time.Now())
+			row_affect, _ := res.RowsAffected()
 			if err != nil {
 				fmt.Println(err.Error())
 			}
-			fmt.Println("Cron Job done, delete ? data", res)
+			fmt.Println("Cron Job done, delete ? data", row_affect)
 		},
 	//	model.Pg_Del_Exp,
 	)
