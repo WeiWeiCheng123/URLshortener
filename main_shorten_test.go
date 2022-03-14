@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -22,7 +23,8 @@ func Test_Shorten_Pass(t *testing.T) {
 	router := engine()
 
 	TestTime := time.Now().Add(10 * time.Minute).Format("2006-01-02T15:04:05Z")
-	input.URL = "https//www.dcard.tw/f"
+	fmt.Println("Testtime,", TestTime)
+	input.URL = "https://www.dcard.tw/f"
 	input.Exp = TestTime
 	body, _ := json.Marshal(input)
 

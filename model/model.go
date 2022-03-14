@@ -14,7 +14,6 @@ func (u *Shortener) TableName() string {
 	return "shortener"
 }
 
-
 //docker rmi url-shortener
 //docker-compose down
 //docker-compose up
@@ -25,4 +24,20 @@ func (u *Shortener) TableName() string {
 git add .
 git commit -m "fix bug"
 git push origin v2
+*/
+
+/*
+  backend:
+    container_name: 'url-shortener'
+    image: 'url-shortener'
+    build: ./
+    ports:
+      - "8080:8080"
+    restart: always
+    environment:
+      REDIS_HOST: redis:6379
+      DB_HOST: postgres
+    depends_on:
+      - postgres
+      - redis
 */
