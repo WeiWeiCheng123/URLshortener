@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/WeiWeiCheng123/URLshortener/model"
 	"github.com/go-xorm/xorm"
 	"github.com/robfig/cron/v3"
 )
@@ -17,17 +18,18 @@ func Init(database *xorm.Engine) {
 //At a specific time use cron job to delete expired data
 func Del_Expdata() {
 	c := cron.New()
-	q := "DELETE FROM shortener WHERE expireTime < $1"
+	//q := "DELETE FROM shortener WHERE expireTime < $1"
 	//Demo用，所以設置成每5分鐘進行刪除
 	c.AddFunc("*/1 * * * *",
 		func() {
 			fmt.Println("Cron Job start", time.Now())
-			res, err := db.Exec(q, time.Now())
-			row_affect, _ := res.RowsAffected()
+			//res, err := db.Exec(q, time.Now())
+			res, err := db.Where("expire_time < ?", time.Now()).Delete(&(model.Shortener{}))
+			//row_affect, _ := res.RowsAffected()
 			if err != nil {
 				fmt.Println(err.Error())
 			}
-			fmt.Println("Cron Job done, delete ? data", row_affect)
+			fmt.Println("Cron Job done, delete ? data", res)
 		},
 	//	model.Pg_Del_Exp,
 	)

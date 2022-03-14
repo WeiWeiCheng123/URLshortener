@@ -46,7 +46,7 @@ func init() {
 			return c, nil
 		},
 	}
-
+	cron.Init(db)
 	middleware.Init(db, rdb)
 	middleware.Init_ip(config.GetInt("IPLimitMax"), config.GetInt("IPLimitPeriod"))
 }
