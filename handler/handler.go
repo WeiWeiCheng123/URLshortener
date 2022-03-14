@@ -144,6 +144,7 @@ func ParseTest(c *gin.Context) {
 		c.Set(constant.Output, data.OriginalUrl)
 		c.Set(constant.Error, nil)
 		fmt.Println("Redirect to ", data.OriginalUrl)
+		return
 	}
 
 	c.Set(constant.StatusCode, http.StatusFound)
