@@ -34,6 +34,7 @@ func TimeFormater(expTime string) (time.Time, error) {
 	return expireTime, nil
 }
 
+//Change the time to Taiwan time zone
 func Time_to_Taiwanzone(expTime time.Time) (time.Time, error) {
 	var localLocation *time.Location
 	localLocation, _ = time.LoadLocation("Asia/Shanghai")
@@ -48,9 +49,12 @@ func Time_to_Taiwanzone(expTime time.Time) (time.Time, error) {
 	return expTime, nil
 }
 
+//Check the shortID is legal or not
+//In this application, after decoding the shortID it must  be multiples of 2
 func ShortID_legal(shortID string) error {
 	if i := decode(shortID); i % 2 == 1 {
 		return errors.New("Not a shortID")
 	}
+
 	return nil
 }

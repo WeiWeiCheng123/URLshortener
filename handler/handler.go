@@ -72,7 +72,7 @@ func Parse(c *gin.Context) {
 	}
 
 	if err := function.ShortID_legal(shortID); err != nil {
-		fmt.Println("ShortID ilegal")
+		fmt.Println("ShortID illegal")
 		c.String(http.StatusNotFound, "This short URL is not existed or expired")
 		return
 	}
