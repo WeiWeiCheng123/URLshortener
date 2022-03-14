@@ -8,9 +8,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/WeiWeiCheng123/URLshortener/handler"
 	"github.com/stretchr/testify/assert"
 )
+
+var input struct {
+	URL string
+	Exp string
+}
 
 func Test_Shorten_Pass(t *testing.T) {
 	//Send a correct request
@@ -18,10 +22,9 @@ func Test_Shorten_Pass(t *testing.T) {
 	router := engine()
 
 	TestTime := time.Now().Add(10 * time.Minute).Format("2006-01-02T15:04:05Z")
-	post_data := handler.ShortURLForm{}
-	post_data.Originurl = "https://www.dcard.tw/f"
-	post_data.Exp = TestTime
-	body, _ := json.Marshal(post_data)
+	input.URL = "https//www.dcard.tw/f"
+	input.Exp = TestTime
+	body, _ := json.Marshal(input)
 
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/api/v1/urls", bytes.NewBuffer(body))
@@ -38,10 +41,9 @@ func Test_Shorten_Fail_wrong_url(t *testing.T) {
 	router := engine()
 
 	TestTime := time.Now().Add(10 * time.Minute).Format("2006-01-02T15:04:05Z")
-	post_data := handler.ShortURLForm{}
-	post_data.Originurl = "https//www.dcard.tw/f"
-	post_data.Exp = TestTime
-	body, _ := json.Marshal(post_data)
+	input.URL = "https//www.dcard.tw/f"
+	input.Exp = TestTime
+	body, _ := json.Marshal(input)
 
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/api/v1/urls", bytes.NewBuffer(body))
@@ -58,10 +60,9 @@ func Test_Shorten_Fail_time_wrong_format(t *testing.T) {
 	router := engine()
 
 	TestTime := "2022-02-T15:04:05Z"
-	post_data := handler.ShortURLForm{}
-	post_data.Originurl = "https://www.dcard.tw/f"
-	post_data.Exp = TestTime
-	body, _ := json.Marshal(post_data)
+	input.URL = "https//www.dcard.tw/f"
+	input.Exp = TestTime
+	body, _ := json.Marshal(input)
 
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/api/v1/urls", bytes.NewBuffer(body))
@@ -78,10 +79,9 @@ func Test_Shorten_Fail_time_expired(t *testing.T) {
 	router := engine()
 
 	TestTime := time.Now().Add(-10 * time.Minute).Format("2006-01-02T15:04:05Z")
-	post_data := handler.ShortURLForm{}
-	post_data.Originurl = "https://www.dcard.tw/f"
-	post_data.Exp = TestTime
-	body, _ := json.Marshal(post_data)
+	input.URL = "https//www.dcard.tw/f"
+	input.Exp = TestTime
+	body, _ := json.Marshal(input)
 
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/api/v1/urls", bytes.NewBuffer(body))

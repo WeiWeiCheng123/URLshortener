@@ -38,7 +38,7 @@ services:
     ports:
       - "82:80"
     depends_on:
-      - redis
+      - redis    
   backend:
     container_name: 'url-shortener'
     image: 'url-shortener'

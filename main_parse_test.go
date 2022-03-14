@@ -9,7 +9,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/WeiWeiCheng123/URLshortener/handler"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -19,10 +18,9 @@ func Test_Parse_Pass(t *testing.T) {
 	router := engine()
 
 	TestTime := time.Now().Add(10 * time.Minute).Format("2006-01-02T15:04:05Z")
-	post_data := handler.ShortURLForm{}
-	post_data.Originurl = "https://www.dcard.tw/f"
-	post_data.Exp = TestTime
-	body, _ := json.Marshal(post_data)
+	input.URL = "https//www.dcard.tw/f"
+	input.Exp = TestTime
+	body, _ := json.Marshal(input)
 
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/api/v1/urls", bytes.NewBuffer(body))
@@ -57,10 +55,9 @@ func Test_Parse_Fail_url_expired(t *testing.T) {
 	router := engine()
 
 	TestTime := time.Now().Add(2 * time.Second).Format("2006-01-02T15:04:05Z")
-	post_data := handler.ShortURLForm{}
-	post_data.Originurl = "https://www.dcard.tw/f"
-	post_data.Exp = TestTime
-	body, _ := json.Marshal(post_data)
+	input.URL = "https//www.dcard.tw/f"
+	input.Exp = TestTime
+	body, _ := json.Marshal(input)
 
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/api/v1/urls", bytes.NewBuffer(body))
