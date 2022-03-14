@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/WeiWeiCheng123/URLshortener/model"
-
 	"github.com/go-xorm/xorm"
 	"github.com/robfig/cron/v3"
 )
