@@ -49,7 +49,7 @@ func ShortTest(c *gin.Context) {
 
 	db := c.MustGet(constant.DB).(*xorm.Engine)
 	ShortID := function.Generator()
-	q := `INSERT INTO shortener(shortid, originalurl, expiretime) VALUES($1,$2,$3)`
+	q := `INSERT INTO shortener(short_id, original_url, expire_time) VALUES($1,$2,$3)`
 	_, err = db.Exec(q, ShortID, url, expTime)
 	if err != nil {
 		fmt.Println("ERROR TO SAVE ", err.Error())
@@ -82,7 +82,7 @@ func ParseTest(c *gin.Context) {
 		mux.RLock()
 		data := model.Shortener{}
 		db := c.MustGet(constant.DB).(*xorm.Engine)
-		result, err := db.Where("shortid = ?", shortID).Get(&data)
+		result, err := db.Where("short_id = ?", shortID).Get(&data)
 		fmt.Println("res", result)
 		if err != nil {
 			fmt.Println("ERROR TO LOAD ", err.Error())
@@ -118,7 +118,7 @@ func ParseTest(c *gin.Context) {
 				return
 			}
 
-			_, err = db.Where("shortid = ?", shortID).Delete(&data)
+			_, err = db.Where("short_id = ?", shortID).Delete(&data)
 			if err != nil {
 				fmt.Println("ERROR", err.Error())
 				c.Set(constant.StatusCode, http.StatusInternalServerError)

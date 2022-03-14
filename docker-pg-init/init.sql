@@ -17,7 +17,7 @@ CREATE TABLE shortener
     short_id  CHARACTER(7) NOT NULL,
     original_url CHARACTER varying(500) NOT NULL,
     expire_time TIMESTAMP,
-    CONSTRAINT "short_url" PRIMARY KEY (shortID)
+    CONSTRAINT "short_url" PRIMARY KEY (short_id)
 );
 
 ALTER TABLE shortener OWNER TO dcard_db_admin;
