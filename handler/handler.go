@@ -132,7 +132,7 @@ func ParseTest(c *gin.Context) {
 			return
 		}
 
-		_, err = connections.Do("SETEX", shortID, int(expTime.Sub(time.Now()).Seconds()), data.OriginalURL)
+		_, err = connections.Do("SETEX", shortID, int(expTime.Sub(time.Now()).Seconds()), data.OriginalUrl)
 		if err != nil {
 			mux.RUnlock()
 			fmt.Println("ERROR TO SET ", err.Error())
@@ -142,8 +142,8 @@ func ParseTest(c *gin.Context) {
 		}
 
 		c.Set(constant.StatusCode, http.StatusFound)
-		c.Set(constant.Output, data.OriginalURL)
-		fmt.Println("Redirect to ", data.OriginalURL)
+		c.Set(constant.Output, data.OriginalUrl)
+		fmt.Println("Redirect to ", data.OriginalUrl)
 	}
 
 	c.Set(constant.StatusCode, http.StatusFound)
