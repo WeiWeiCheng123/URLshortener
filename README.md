@@ -83,7 +83,8 @@
   
     - Example request
       ```sh
-      #Use POST response shortID
+      # use POST response shortID
+      # http://localhost:8080/ + short ID
       curl -L -X GET "http://localhost:8080/KF4eAy9"
       ```
 
@@ -198,7 +199,7 @@
 
 - 在縮網址進入後端前，先進行長度的檢查，查看長度是否為 7
 - 在GET的這個地方加入 IP Limit 的方式去限制同一個IP在短時間內大量的 request
-- 當使用者輸入一個不存在的縮網址，會在 Redis 存入該縮網址，並將 Value 設為 **NotExist** ，當使用者想再次輸入該不存在的縮網址不會每次都跟後端資料庫找資料
+- 當使用者輸入一個不存在或是不符合規則的縮網址，會在 Redis 存入該縮網址，並將 Value 設為 **NotExist** ，當使用者想再次輸入該不存在的縮網址不會每次都跟後端資料庫找資料
 - 當 Cache 內沒有該縮網址時，取得一個 Lock 以確保不會有大量的 request 同時間進入後端資料庫內，當結束後端的查找工作之後再 Unlock 
 
 ### IP Limit
@@ -271,6 +272,7 @@ For example
 3. GET API 中嘗試輸入錯誤的縮網址
    
    - 先確認該縮網址長度是否為 7，假如不符合，回傳 404
+   - 確認該縮網址經過解碼之後是否為2的倍數，假如不是則直接回傳 404
    - 假如該縮網址不存在 Cache 以及 Database 中，則在 Cache 存入該縮網址，給予 Value  **NotExist** 並設定 300 秒後過期，假如有惡意的想要在短時間內多次的連線該不存在的網址就可以避免再次到後端的 Database 中查找，可以在 Cache 直接找到並回傳 404
 
 4. 某一個IP嘗試在短時間內大量連線
