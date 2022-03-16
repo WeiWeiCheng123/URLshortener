@@ -29,6 +29,7 @@ func Init_ip(ip_max int, ip_limit_period int) {
 	IPLimitPeriod = ip_limit_period
 }
 
+// do nothing and provide an injection of database object only
 func Plain() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Set(constant.DB, db)
@@ -48,6 +49,7 @@ func Plain() gin.HandlerFunc {
 	}
 }
 
+// check the shortid and provide an injection of database and redis objects
 func TX() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		shortID := c.Param("shortID")
@@ -63,6 +65,7 @@ func TX() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+
 		c.Set(constant.ShortID, c.Param("shortID"))
 		c.Set(constant.DB, db)
 		c.Set(constant.Cache, rdb)

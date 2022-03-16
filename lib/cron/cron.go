@@ -36,9 +36,16 @@ func Del_Expdata() {
 		分    時    日     月     星期
 		0-59  0-23  1-31  1-12  0-6 (週日~週六)
 
-		c.AddFunc("0 3 * * *",
-			model.Pg_Del_Exp,
-		)
+	c.AddFunc("0 3 * * *",
+		func() {
+			fmt.Println("Cron Job start", time.Now())
+			res, err := db.Where("expire_time < ?", time.Now()).Delete(&(model.Shortener{}))
+			if err != nil {
+				fmt.Println(err.Error())
+			}
+			fmt.Println("Cron Job done, delete", res ," data")
+		},
+	)
 	*/
 	c.Start()
 }

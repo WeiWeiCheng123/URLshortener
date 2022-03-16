@@ -84,6 +84,7 @@ func Parse(c *gin.Context) {
 		db := c.MustGet(constant.DB).(*xorm.Engine)
 		result, err := db.Where("short_id = ?", shortID).Get(&data)
 		if err != nil {
+			mux.RUnlock()
 			fmt.Println("ERROR TO LOAD ", err.Error())
 			c.Set(constant.StatusCode, http.StatusInternalServerError)
 			c.Set(constant.Error, err.Error())
@@ -93,6 +94,7 @@ func Parse(c *gin.Context) {
 			fmt.Println("Not exist")
 			_, err = connections.Do("SETEX", shortID, 300, "NotExist")
 			if err != nil {
+				mux.RUnlock()
 				fmt.Println("ERROR", err.Error())
 				c.Set(constant.StatusCode, http.StatusInternalServerError)
 				c.Set(constant.Error, err.Error())
@@ -111,6 +113,7 @@ func Parse(c *gin.Context) {
 			fmt.Println("Expired")
 			_, err = connections.Do("SETEX", shortID, 300, "NotExist")
 			if err != nil {
+				mux.RUnlock()
 				fmt.Println("ERROR", err.Error())
 				c.Set(constant.StatusCode, http.StatusInternalServerError)
 				c.Set(constant.Error, err.Error())
@@ -119,6 +122,7 @@ func Parse(c *gin.Context) {
 
 			_, err = db.Where("short_id = ?", shortID).Delete(&data)
 			if err != nil {
+				mux.RUnlock()
 				fmt.Println("ERROR", err.Error())
 				c.Set(constant.StatusCode, http.StatusInternalServerError)
 				c.Set(constant.Error, err.Error())

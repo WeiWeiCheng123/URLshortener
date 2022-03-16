@@ -80,7 +80,7 @@ func Test_TimeFormater_is_Expired(t *testing.T) {
 }
 
 func Test_ShortID_legal_Pass(t *testing.T) {
-	//Set a right shortID
+	//Set a legal shortID
 	//it should return nil
 	shortID := "K8c2CQK"
 	err := ShortID_legal(shortID)
@@ -90,7 +90,7 @@ func Test_ShortID_legal_Pass(t *testing.T) {
 }
 
 func Test_ShortID_legal_Fail(t *testing.T) {
-	//Set a wrong shortID
+	//Set an illegal shortID
 	//it should return error
 	shortID := "58c5C11"
 	err := ShortID_legal(shortID)
