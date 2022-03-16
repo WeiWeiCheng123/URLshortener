@@ -54,14 +54,14 @@ func TX() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		shortID := c.Param("shortID")
 		if len(shortID) != 7 {
-			fmt.Println("Length error")
-			c.String(http.StatusNotFound, "This short URL is not existed or expired")
+			fmt.Println("length error")
+			c.String(http.StatusNotFound, "this short URL is not existed or expired")
 			c.Abort()
 			return
 		}
 		if err := function.ShortID_legal(shortID); err != nil {
-			fmt.Println("ShortID illegal")
-			c.String(http.StatusNotFound, "This short URL is not existed or expired")
+			fmt.Println("shortID illegal")
+			c.String(http.StatusNotFound, "this short URL is not existed or expired")
 			c.Abort()
 			return
 		}
@@ -80,13 +80,13 @@ func TX() gin.HandlerFunc {
 		if err != nil {
 			c.String(statusCode, err.(error).Error())
 		} else {
-			fmt.Println("Redirect to", output.(string))
+			fmt.Println("redirect to", output.(string))
 			c.Redirect(statusCode, output.(string))
 		}
 	}
 }
 
-//Limit IP usage
+// limit ip usage
 func IPLimiter() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		connections := rdb.Get()
@@ -100,7 +100,7 @@ func IPLimiter() gin.HandlerFunc {
 		}
 
 		if res == -1 {
-			c.String(http.StatusTooManyRequests, "Too many requests")
+			c.String(http.StatusTooManyRequests, "too many requests")
 			c.Abort()
 			return
 		}

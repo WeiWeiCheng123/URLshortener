@@ -16,7 +16,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
-//Connect to postgres and redis
+// connect to postgres and redis
 func init() {
 	pg_connect := fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s sslmode=%s",
 		config.GetStr("DB_HOST"), config.GetStr("DB_PORT"), config.GetStr("DB_NAME"),
@@ -26,6 +26,7 @@ func init() {
 	if err != nil {
 		log.Panic("DB connection initialization failed", err)
 	}
+
 	db.SetMaxIdleConns(25)
 	db.SetMaxOpenConns(25)
 	db.SetConnMaxLifetime(5 * time.Minute)
@@ -46,12 +47,13 @@ func init() {
 			return c, nil
 		},
 	}
+
 	cron.Init(db)
 	middleware.Init(db, rdb)
 	middleware.Init_ip(config.GetInt("IPLimitMax"), config.GetInt("IPLimitPeriod"))
 }
 
-//Create router
+//create router
 func engine() *gin.Engine {
 	router := gin.Default()
 	router.POST("/api/v1/urls", middleware.Plain(), handler.Shorten)
@@ -65,28 +67,52 @@ func main() {
 	router.Run(":8080")
 }
 
-/*
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 
 請求 佛祖 神明 耶穌 祖先們 保佑
 程式無Bug
 
 
-⠂⠂⠂⠂⠂⠂⠂⠂▀████▀▄▄⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂▄█
-⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂█▀░░░░▀▀▄▄▄▄▄⠂⠂⠂⠂▄▄▀▀█
+⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂▀████▀▄▄⠂⠂⠂⠂⠂⠂⠂⠂⠂▄█
+⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂█▀░░░░▀▀▄▄▄▄▄⠂⠂⠂▄▄▀▀█
 ⠂⠂⠂▄⠂⠂⠂⠂⠂⠂⠂█░░░░░░░░░░░▀▀▀▀▄░░▄▀
 ⠂▄▀░▀▄⠂⠂⠂⠂⠂⠂▀▄░░░░░░░░░░░░░░▀▄▀
 ▄▀░░░░█⠂⠂⠂⠂⠂⠂█▀░░░▄█▀▄░░░░░░▄█
 ▀▄░░░░░▀▄⠂⠂⠂█░░░░░▀██▀░░░░░██▄█
-⠂⠂▀▄░░░░▄▀⠂█░░░▄██▄░░░▄░░▄░░▀▀░█
+⠂▀▄░░░░▄▀⠂⠂█░░░▄██▄░░░▄░░▄░░▀▀░█
 ⠂⠂⠂█░░▄▀⠂⠂█░░░░▀██▀░░░░▀▀░▀▀░░▄▀
 ⠂⠂█░░░█⠂⠂█░░░░░░▄▄░░░░░░░░░░░▄▀
-⠂█░░░█⠂⠂█▄▄░░░░░░░▀▀▄░░░░░░▄░█
+⠂⠂█░░░█⠂⠂█▄▄░░░░░░░▀▀▄░░░░░░▄░█
 ⠂⠂▀▄░▄█▄█▀██▄░░▄▄░░░▄▀░░▄▀▀░░░█
 ⠂⠂⠂⠂▀███░░░░░░░░░▀▀▀░░░░▀▄░░░▄▀
 ⠂⠂⠂⠂⠂⠂▀▀█░░░░░░░░░▄░░░░░░▄▀█▀
-⠂⠂⠂⠂⠂⠂⠂⠂▀█░░░░░▄▄▄▀░░▄▄▀▀░▄▀
-⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂▀▀▄▄▄▄▀⠂▀▀▀⠂▀▀▄▄▄▀
+⠂⠂⠂⠂⠂⠂⠂⠂⠂▀█░░░░░▄▄▄▀░░▄▄▀▀░▄▀
+⠂⠂⠂⠂⠂⠂⠂⠂⠂▀▀▄▄▄▄▀⠂▀▀▀⠂▀▀▄▄▄▀
 
 
 ♂♀█▀▀▀▀▀▄▄♂♀♂▄▄▄▀▀▀▀▀▄▄▀▀▀▄

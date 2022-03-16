@@ -6,14 +6,14 @@ import (
 	"time"
 )
 
-//Valid the URL, if URL not correct then return false
+//valid the URL, if url not correct then return false
 func IsURL(OriginalURL string) bool {
 	u, err := url.Parse(OriginalURL)
 	return err == nil && u.Scheme != "" && u.Host != ""
 }
 
-//Time formater, if time format is wrong or expired, return false.
-//Otherwise, return true and convert to time type
+//time formater, if time format is wrong or expired, return false.
+//otherwise, return true and convert to time type
 func TimeFormater(expTime string) (time.Time, error) {
 	var localLocation *time.Location
 	localLocation, _ = time.LoadLocation("Asia/Shanghai")
@@ -34,7 +34,7 @@ func TimeFormater(expTime string) (time.Time, error) {
 	return expireTime, nil
 }
 
-//Change the time to Taiwan time zone
+//change the time to Taiwan time zone
 func Time_to_Taiwanzone(expTime time.Time) (time.Time, error) {
 	var localLocation *time.Location
 	localLocation, _ = time.LoadLocation("Asia/Shanghai")
@@ -50,8 +50,8 @@ func Time_to_Taiwanzone(expTime time.Time) (time.Time, error) {
 	return expTime, nil
 }
 
-//Check the shortID is legal or not
-//In this application, after decoding the shortID it must  be multiples of 2
+//check the shortID is legal or not
+//in this application, after decoding the shortID it must be multiples of 2
 func ShortID_legal(shortID string) error {
 	if i := decode(shortID); i%2 == 1 {
 		return errors.New("not a shortid")

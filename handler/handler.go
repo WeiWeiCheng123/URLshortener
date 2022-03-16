@@ -17,6 +17,7 @@ import (
 
 var mux sync.RWMutex
 
+//used for make short id 
 func Shorten(c *gin.Context) {
 	var input struct {
 		URL string `json:"url"`
@@ -64,6 +65,7 @@ func Shorten(c *gin.Context) {
 	c.Set(constant.Error, nil)
 }
 
+//used for redirect original url from short id
 func Parse(c *gin.Context) {
 	shortID := c.MustGet(constant.ShortID).(string)
 	rdb := c.MustGet(constant.Cache).(*redis.Pool)
@@ -90,6 +92,7 @@ func Parse(c *gin.Context) {
 			c.Set(constant.Error, err.Error())
 			return
 		}
+		//short id not existed
 		if result == false {
 			fmt.Println("Not exist")
 			_, err = connections.Do("SETEX", shortID, 300, "NotExist")
@@ -108,7 +111,7 @@ func Parse(c *gin.Context) {
 		}
 
 		expTime, err := function.Time_to_Taiwanzone(data.ExpireTime)
-		//Wrong Time format or time expire
+		//wrong time format or time expire
 		if err != nil {
 			fmt.Println("Expired")
 			_, err = connections.Do("SETEX", shortID, 300, "NotExist")

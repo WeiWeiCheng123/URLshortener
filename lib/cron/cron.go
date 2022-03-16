@@ -15,10 +15,10 @@ func Init(database *xorm.Engine) {
 	db = database
 }
 
-//At a specific time use cron job to delete expired data
+//at a specific time use cron job to delete expired data
 func Del_Expdata() {
 	c := cron.New()
-	//Demo用，所以設置成每5分鐘進行刪除
+	//demo用，所以設置成每5分鐘進行刪除
 	c.AddFunc("*/5 * * * *",
 		func() {
 			fmt.Println("Cron Job start", time.Now())

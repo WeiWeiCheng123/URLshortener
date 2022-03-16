@@ -13,7 +13,7 @@ const (
 	length    = uint64(62)
 )
 
-//Generate a unique id and convert it into base62 type
+//generate a unique id and convert it into base62 type
 func Generator() string {
 	t := uint64(time.Now().Unix())
 	rand.Seed(time.Now().UnixNano())
@@ -27,6 +27,7 @@ func Generator() string {
 	return encode(t)
 }
 
+// give an integer return based62 string
 func encode(num uint64) string {
 	var encoder strings.Builder
 	encoder.Grow(7)
@@ -38,6 +39,7 @@ func encode(num uint64) string {
 	return encoder.String()[:7]
 }
 
+// give base62 string return an integre
 func decode(encoded string) uint64 {
 	var number uint64
 
