@@ -26,7 +26,7 @@ GRANT CREATE ON SCHEMA public TO dcard_db_admin;
 
 /* grant the schema access privilege to normal users. Without schema right, user will unable to see the tables. */
 GRANT USAGE ON SCHEMA public TO dcard_db_user;
-GRANT USAGE ON SCHEMA public to demo_readonly;
+GRANT USAGE ON SCHEMA public to dcard_db_ramdonly;
 
 CREATE TABLE shortener
 (
