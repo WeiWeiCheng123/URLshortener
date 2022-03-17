@@ -27,8 +27,8 @@ func init() {
 		log.Panic("DB connection failed", err)
 	}
 
-	db.SetMaxIdleConns(25)
-	db.SetMaxOpenConns(25)
+	db.SetMaxIdleConns(config.GetInt("DB_MaxIdleConns"))
+	db.SetMaxOpenConns(config.GetInt("DB_SetMaxOpenConns"))
 	db.SetConnMaxLifetime(5 * time.Minute)
 
 	rdb := &redis.Pool{
