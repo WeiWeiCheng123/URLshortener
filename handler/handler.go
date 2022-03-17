@@ -18,8 +18,8 @@ func Shorten(c *gin.Context) {
 		URL string `json:"url"`
 		Exp string `json:"expireAt"`
 	}
-
-	if err := c.BindJSON(&input); err != nil {
+	err := c.BindJSON(&input)
+	if err != nil {
 		sendErr(c, http.StatusBadRequest, err.Error())
 		return
 	}
