@@ -17,8 +17,8 @@ var input struct {
 }
 
 func Test_Shorten_Pass(t *testing.T) {
-	//send a correct request
-	//it should return 200 (redirect) and a shortURL content
+	// send a correct request
+	// it should return 200 (redirect) and a shortURL content
 	router := engine()
 
 	TestTime := time.Now().Add(10 * time.Minute).Format("2006-01-02T15:04:05Z")
@@ -36,8 +36,8 @@ func Test_Shorten_Pass(t *testing.T) {
 }
 
 func Test_Shorten_Fail_wrong_url(t *testing.T) {
-	//send a wrong request (wrong url)
-	//it should return 400 and Invalid url
+	// send a wrong request (wrong url)
+	// it should return 400 and Invalid url
 	router := engine()
 
 	TestTime := time.Now().Add(10 * time.Minute).Format("2006-01-02T15:04:05Z")
@@ -55,8 +55,8 @@ func Test_Shorten_Fail_wrong_url(t *testing.T) {
 }
 
 func Test_Shorten_Fail_time_wrong_format(t *testing.T) {
-	//send a wrong request (wrong time format)
-	//it should return 400 and Error time format or time is expired
+	// send a wrong request (wrong time format)
+	// it should return 400 and Error time format or time is expired
 	router := engine()
 
 	TestTime := "2022-02-T15:04:05Z"
@@ -74,8 +74,8 @@ func Test_Shorten_Fail_time_wrong_format(t *testing.T) {
 }
 
 func Test_Shorten_Fail_time_expired(t *testing.T) {
-	//send a wrong request (expired time)
-	//it should return 400 and Error time format or time is expired
+	// send a wrong request (expired time)
+	// it should return 400 and Error time format or time is expired
 	router := engine()
 
 	TestTime := time.Now().Add(-10 * time.Minute).Format("2006-01-02T15:04:05Z")

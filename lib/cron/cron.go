@@ -26,26 +26,26 @@ func Del_Expdata() {
 			if err != nil {
 				fmt.Println(err.Error())
 			}
-			fmt.Println("Cron Job done, delete", res ," data")
+			fmt.Println("Cron Job done, delete", res, " data")
 		},
 	)
 	/*
-		實際上使用，我的設計會是在每天的最冷門時段進行刪除
-		在這邊我設置成凌晨三點
-		*     *     *      *      *
-		分    時    日     月     星期
-		0-59  0-23  1-31  1-12  0-6 (週日~週六)
+			實際上使用，我的設計會是在每天的最冷門時段進行刪除
+			在這邊我設置成凌晨三點
+			*     *     *      *      *
+			分    時    日     月     星期
+			0-59  0-23  1-31  1-12  0-6 (週日~週六)
 
-	c.AddFunc("0 3 * * *",
-		func() {
-			fmt.Println("Cron Job start", time.Now())
-			res, err := db.Where("expire_time < ?", time.Now()).Delete(&(model.Shortener{}))
-			if err != nil {
-				fmt.Println(err.Error())
-			}
-			fmt.Println("Cron Job done, delete", res ," data")
-		},
-	)
+		c.AddFunc("0 3 * * *",
+			func() {
+				fmt.Println("Cron Job start", time.Now())
+				res, err := db.Where("expire_time < ?", time.Now()).Delete(&(model.Shortener{}))
+				if err != nil {
+					fmt.Println(err.Error())
+				}
+				fmt.Println("Cron Job done, delete", res ," data")
+			},
+		)
 	*/
 	c.Start()
 }

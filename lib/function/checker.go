@@ -28,7 +28,7 @@ func TimeFormater(expTime string) (time.Time, error) {
 	expireTime = expireTime.Add(-8 * time.Hour)
 	//Time expired
 	if time.Now().After(expireTime) {
-		return time.Time{}, errors.New("time expired")
+		return time.Time{}, errors.New("data expired")
 	}
 
 	return expireTime, nil
@@ -42,9 +42,9 @@ func Time_to_Taiwanzone(expTime time.Time) (time.Time, error) {
 	expTime = expTime.In(localLocation)
 	//expTime = expTime.Add(-8 * time.Hour)
 
-	//Time expired
+	//time expired
 	if time.Now().After(expTime) {
-		return time.Time{}, errors.New("time expired")
+		return time.Time{}, errors.New("data expired")
 	}
 
 	return expTime, nil
@@ -53,8 +53,8 @@ func Time_to_Taiwanzone(expTime time.Time) (time.Time, error) {
 //check the shortID is legal or not
 //in this application, after decoding the shortID it must be multiples of 2
 func ShortID_legal(shortID string) error {
-	if i := decode(shortID); i%2 == 1 {
-		return errors.New("not a shortid")
+	if i := Decode(shortID); i%2 == 1 {
+		return errors.New("not a shortID")
 	}
 
 	return nil

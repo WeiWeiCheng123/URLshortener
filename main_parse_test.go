@@ -13,8 +13,8 @@ import (
 )
 
 func Test_Parse_Pass(t *testing.T) {
-	//first send a post request and set the expire time to 10 second after
-	//then use this shortURL, it should return 302 (redirect)
+	// first send a post request and set the expire time to 10 second after
+	// then use this shortURL, it should return 302 (redirect)
 	router := engine()
 
 	TestTime := time.Now().Add(10 * time.Minute).Format("2006-01-02T15:04:05Z")
@@ -37,7 +37,7 @@ func Test_Parse_Pass(t *testing.T) {
 }
 
 func Test_Parse_Fail_wrong_url(t *testing.T) {
-	//use an illegal shortURL id, it should return 404
+	// use an illegal shortURL id, it should return 404
 	router := engine()
 
 	w := httptest.NewRecorder()
@@ -50,8 +50,8 @@ func Test_Parse_Fail_wrong_url(t *testing.T) {
 }
 
 func Test_Parse_Fail_url_expired(t *testing.T) {
-	//first send a post request and set the expire time to 2 second after
-	//then wait for 3 second, this shortURL should expired and return 404
+	// first send a post request and set the expire time to 2 second after
+	// then wait for 3 second, this shortURL should expired and return 404
 	router := engine()
 
 	TestTime := time.Now().Add(2 * time.Second).Format("2006-01-02T15:04:05Z")
@@ -64,7 +64,7 @@ func Test_Parse_Fail_url_expired(t *testing.T) {
 	req.Header.Set("Content-Type", "application/json")
 	router.ServeHTTP(w, req)
 
-	//wait until the data expired
+	// wait until the data expired
 	time.Sleep(3 * time.Second)
 
 	shortURL := w.Body.String()[7:14]

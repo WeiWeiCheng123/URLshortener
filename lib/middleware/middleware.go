@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/WeiWeiCheng123/URLshortener/lib/constant"
@@ -54,13 +53,11 @@ func TX() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		shortID := c.Param("shortID")
 		if len(shortID) != 7 {
-			fmt.Println("length error")
 			c.String(http.StatusNotFound, "this short URL is not existed or expired")
 			c.Abort()
 			return
 		}
 		if err := function.ShortID_legal(shortID); err != nil {
-			fmt.Println("shortID illegal")
 			c.String(http.StatusNotFound, "this short URL is not existed or expired")
 			c.Abort()
 			return
@@ -75,12 +72,11 @@ func TX() gin.HandlerFunc {
 		c.Next()
 
 		statusCode := c.GetInt(constant.StatusCode)
-		err := c.MustGet(constant.Error)
 		output := c.MustGet(constant.Output)
+		err := c.MustGet(constant.Error)
 		if err != nil {
 			c.String(statusCode, err.(error).Error())
 		} else {
-			fmt.Println("redirect to", output.(string))
 			c.Redirect(statusCode, output.(string))
 		}
 	}
@@ -91,6 +87,7 @@ func IPLimiter() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		connections := rdb.Get()
 		defer connections.Close()
+
 		script := redis.NewScript(1, lua.IP_script)
 		res, err := redis.Int(script.Do(connections, c.ClientIP(), IPLimitMax, IPLimitPeriod))
 		if err != nil {
@@ -98,7 +95,7 @@ func IPLimiter() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-
+		// exceed the limit
 		if res == -1 {
 			c.String(http.StatusTooManyRequests, "too many requests")
 			c.Abort()

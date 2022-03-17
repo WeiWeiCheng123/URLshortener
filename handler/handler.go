@@ -1,10 +1,7 @@
 package handler
 
 import (
-	"errors"
-	"fmt"
 	"net/http"
-	"sync"
 	"time"
 
 	"github.com/WeiWeiCheng123/URLshortener/lib/constant"
@@ -15,135 +12,103 @@ import (
 	"github.com/gomodule/redigo/redis"
 )
 
-var mux sync.RWMutex
-
-//used for make short id 
+// used for POST method
 func Shorten(c *gin.Context) {
 	var input struct {
 		URL string `json:"url"`
 		Exp string `json:"expireAt"`
 	}
-	err := c.BindJSON(&input)
-	if err != nil {
-		c.Set(constant.StatusCode, http.StatusBadRequest)
-		c.Set(constant.Error, err.Error())
+
+	if err := c.BindJSON(&input); err != nil {
+		sendErr(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	url := input.URL
-	//Wrong URL format
-	if !function.IsURL(url) {
-		fmt.Println("NOT URL")
-		c.Set(constant.StatusCode, http.StatusBadRequest)
-		c.Set(constant.Error, errors.New("invalid URL"))
+	URL := input.URL
+	// wrong URL format
+	if !function.IsURL(URL) {
+		sendErr(c, http.StatusBadRequest, "invalid URL")
 		return
 	}
 
 	exp := input.Exp
 	expTime, err := function.TimeFormater(exp)
-	//Wrong Time format or time expire
+	// wrong Time format or time expired
 	if err != nil {
-		fmt.Println("ERROR TIME ", err.Error())
-		c.Set(constant.StatusCode, http.StatusBadRequest)
-		c.Set(constant.Error, errors.New("error time format or time is expired"))
+		sendErr(c, http.StatusBadRequest, "error time format or time is expired")
 		return
 	}
 
 	db := c.MustGet(constant.DB).(*xorm.Engine)
-	ShortID := function.Generator()
+	shortID, id := function.Generator()
 	q := `INSERT INTO shortener(short_id, original_url, expire_time) VALUES($1,$2,$3)`
-	_, err = db.Exec(q, ShortID, url, expTime)
+	_, err = db.Exec(q, id, URL, expTime)
 	if err != nil {
-		fmt.Println("ERROR TO SAVE ", err.Error())
-		c.Set(constant.StatusCode, http.StatusInternalServerError)
-		c.Set(constant.Error, err.Error())
+		sendErr(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	c.Set(constant.StatusCode, http.StatusOK)
-	c.Set(constant.Output, map[string]interface{}{"id": ShortID, "shortURL": "http://localhost:8080/" + ShortID})
+	c.Set(constant.Output, map[string]interface{}{"id": shortID, "shortURL": "http://localhost:8080/" + shortID})
 	c.Set(constant.Error, nil)
 }
 
-//used for redirect original url from short id
+// used for redirect original url from shortID
 func Parse(c *gin.Context) {
 	shortID := c.MustGet(constant.ShortID).(string)
 	rdb := c.MustGet(constant.Cache).(*redis.Pool)
 	connections := rdb.Get()
 	defer connections.Close()
 
-	url, err := redis.String(connections.Do("GET", shortID))
-	if url == "NotExist" {
-		fmt.Println("Not exist")
-		c.Set(constant.StatusCode, http.StatusNotFound)
-		c.Set(constant.Error, errors.New("this shortid is not existed or expired"))
+	URL, err := redis.String(connections.Do("GET", shortID))
+	if URL == "NotExist" {
+		sendErr(c, http.StatusNotFound, "this shortid is not existed or expired")
 		return
 	}
-
+	// data is not in the redis
 	if err != nil {
-		mux.RLock()
 		data := model.Shortener{}
+		id := function.Decode(shortID)
 		db := c.MustGet(constant.DB).(*xorm.Engine)
-		result, err := db.Where("short_id = ?", shortID).Get(&data)
+		result, err := db.Where("short_id = ?", id).Get(&data)
 		if err != nil {
-			mux.RUnlock()
-			fmt.Println("ERROR TO LOAD ", err.Error())
-			c.Set(constant.StatusCode, http.StatusInternalServerError)
-			c.Set(constant.Error, err.Error())
+			sendErr(c, http.StatusInternalServerError, err.Error())
 			return
 		}
-		//short id not existed
+		// shortID not existed
 		if result == false {
-			fmt.Println("Not exist")
 			_, err = connections.Do("SETEX", shortID, 300, "NotExist")
 			if err != nil {
-				mux.RUnlock()
-				fmt.Println("ERROR", err.Error())
-				c.Set(constant.StatusCode, http.StatusInternalServerError)
-				c.Set(constant.Error, err.Error())
+				sendErr(c, http.StatusInternalServerError, err.Error())
 				return
 			}
 
-			mux.RUnlock()
-			c.Set(constant.StatusCode, http.StatusNotFound)
-			c.Set(constant.Error, errors.New("this shortid is not existed or expired"))
+			sendErr(c, http.StatusNotFound, "this shortid is not existed or expired")
 			return
 		}
 
 		expTime, err := function.Time_to_Taiwanzone(data.ExpireTime)
-		//wrong time format or time expire
+		// data expired
 		if err != nil {
-			fmt.Println("Expired")
 			_, err = connections.Do("SETEX", shortID, 300, "NotExist")
 			if err != nil {
-				mux.RUnlock()
-				fmt.Println("ERROR", err.Error())
-				c.Set(constant.StatusCode, http.StatusInternalServerError)
-				c.Set(constant.Error, err.Error())
+				sendErr(c, http.StatusInternalServerError, err.Error())
 				return
 			}
 
-			_, err = db.Where("short_id = ?", shortID).Delete(&data)
+			_, err = db.Where("short_id = ?", id).Delete(&data)
 			if err != nil {
-				mux.RUnlock()
-				fmt.Println("ERROR", err.Error())
-				c.Set(constant.StatusCode, http.StatusInternalServerError)
-				c.Set(constant.Error, err.Error())
+				sendErr(c, http.StatusInternalServerError, err.Error())
 				return
 			}
 
-			mux.RUnlock()
-			c.Set(constant.StatusCode, http.StatusNotFound)
-			c.Set(constant.Error, errors.New("this shortid is not existed or expired"))
+			sendErr(c, http.StatusNotFound, "this shortid is not existed or expired")
 			return
 		}
 
 		_, err = connections.Do("SETEX", shortID, int(expTime.Sub(time.Now()).Seconds()), data.OriginalUrl)
 		if err != nil {
-			mux.RUnlock()
-			fmt.Println("ERROR TO SET ", err.Error())
-			c.Set(constant.StatusCode, http.StatusInternalServerError)
-			c.Set(constant.Error, err.Error())
+			sendErr(c, http.StatusInternalServerError, err.Error())
 			return
 		}
 
@@ -154,7 +119,12 @@ func Parse(c *gin.Context) {
 	}
 
 	c.Set(constant.StatusCode, http.StatusFound)
-	c.Set(constant.Output, url)
+	c.Set(constant.Output, URL)
 	c.Set(constant.Error, nil)
 
+}
+
+func sendErr(c *gin.Context, statuscode int, err string) {
+	c.Set(constant.StatusCode, http.StatusInternalServerError)
+	c.Set(constant.Error, err)
 }

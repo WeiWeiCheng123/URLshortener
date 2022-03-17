@@ -30,7 +30,7 @@ GRANT USAGE ON SCHEMA public to demo_readonly;
 
 CREATE TABLE shortener
 (
-    short_id  CHAR(7) NOT NULL,             /* URL short ID */
+    short_id  INT NOT NULL,             /* URL short ID */
     original_url VARCHAR(500) NOT NULL,     /* URL */
     expire_time TIMESTAMP NOT NULL,         /* Expire time */
     CONSTRAINT "short_url" PRIMARY KEY (short_id)

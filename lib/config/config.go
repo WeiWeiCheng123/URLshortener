@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-//get env variable and return as a string
+// get env variable and return as a string
 func GetStr(key string) string {
 	val := os.Getenv(key)
 	if val == "" {
@@ -15,7 +15,7 @@ func GetStr(key string) string {
 	return val
 }
 
-//get env variable and return as a Int
+// get env variable and return as a Int
 func GetInt(key string) int {
 	val := os.Getenv(key)
 	if val == "" {

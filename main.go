@@ -24,7 +24,7 @@ func init() {
 
 	db, err := xorm.NewEngine("postgres", pg_connect)
 	if err != nil {
-		log.Panic("DB connection initialization failed", err)
+		log.Panic("DB connection failed", err)
 	}
 
 	db.SetMaxIdleConns(25)
@@ -53,7 +53,7 @@ func init() {
 	middleware.Init_ip(config.GetInt("IPLimitMax"), config.GetInt("IPLimitPeriod"))
 }
 
-//create router
+// create router
 func engine() *gin.Engine {
 	router := gin.Default()
 	router.POST("/api/v1/urls", middleware.Plain(), handler.Shorten)
@@ -92,15 +92,17 @@ func main() {
 
 
 
+
+
 /*
 
 請求 佛祖 神明 耶穌 祖先們 保佑
 程式無Bug
 
 
-⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂▀████▀▄▄⠂⠂⠂⠂⠂⠂⠂⠂⠂▄█
-⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂█▀░░░░▀▀▄▄▄▄▄⠂⠂⠂▄▄▀▀█
-⠂⠂⠂▄⠂⠂⠂⠂⠂⠂⠂█░░░░░░░░░░░▀▀▀▀▄░░▄▀
+⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂▀████▀▄▄⠂⠂⠂⠂⠂⠂⠂⠂▄█
+⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂█▀░░░░▀▀▄▄▄▄▄⠂⠂▄▄▀▀█
+⠂⠂⠂▄⠂⠂⠂⠂⠂⠂█░░░░░░░░░░░▀▀▀▀▄░░▄▀
 ⠂▄▀░▀▄⠂⠂⠂⠂⠂⠂▀▄░░░░░░░░░░░░░░▀▄▀
 ▄▀░░░░█⠂⠂⠂⠂⠂⠂█▀░░░▄█▀▄░░░░░░▄█
 ▀▄░░░░░▀▄⠂⠂⠂█░░░░░▀██▀░░░░░██▄█

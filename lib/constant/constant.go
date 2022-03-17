@@ -1,10 +1,10 @@
 package constant
 
 const (
-	DB = "db"
-	Cache = "rdb"
-	ShortID = "shortid"
+	DB         = "db"
+	Cache      = "rdb"
+	ShortID    = "shortid"
 	StatusCode = "statuscode"
-	Error = "error"
-	Output = "output"
+	Error      = "error"
+	Output     = "output"
 )
