@@ -125,6 +125,7 @@ func Parse(c *gin.Context) {
 
 }
 
+// send error back
 func sendErr(c *gin.Context, statuscode int, err string) {
 	c.Set(constant.StatusCode, http.StatusInternalServerError)
 	c.Set(constant.Error, errors.New(err))

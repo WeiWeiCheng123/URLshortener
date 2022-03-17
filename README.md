@@ -45,19 +45,19 @@
    在docker compose的部分啟動了以下
    - postgres 
   
-      Postgres為此專案的backend database
+      Postgres 為此專案的 backend database
 
    - postgres-admin
     
-      使用pgadmin方便直接查看目前Postgres內的資訊，透過開啟 **localhost:80**，並在帳號的地方輸入 **dcard123@dcard.com**，密碼輸入 **dcard123**，登入後連線至postgres即可。
+      使用 pgadmin 可以直接查看目前 Postgres 內的資訊，透過開啟 **localhost:81**，並在帳號的地方輸入 **dcard123@dcard.com**，密碼輸入 **dcard123**，登入後再連線至 postgres 資料庫即可。
 
    - redis 
   
-      Redis為此專案的Cache
+      Redis 為此專案的 Cache
 
    - redis-admin
   
-      使用phpredisadmin方便查看目前Redis內的資訊，透過開啟 **localhost:81**，即可查看目前redis的資料。
+      使用 phpredisadmin 可以查看目前 Redis 內的資訊，透過開啟 **localhost:82**，即可查看目前 redis 的資料。
 
    - backend
   
@@ -83,8 +83,8 @@
   
     - Example request
       ```sh
-      # use POST response shortID
-      # http://localhost:8080/ + short ID
+      # use the return shortID
+      # http://localhost:8080/ + shortID
       curl -L -X GET "http://localhost:8080/KF4eAy9"
       ```
 
@@ -103,16 +103,16 @@
     |-- go.mod
     |-- go.sum
     |-- main.go              // 主程式
-    |-- main_parse_test.go   // 測試主程式的GET API
-    |-- main_shorten_test.go // 測試主程式的POST API  
+    |-- main_parse_test.go   // 測試主程式的 GET API
+    |-- main_shorten_test.go // 測試主程式的 POST API  
     |-- README.md             
-    |-- start-project.sh     // 用來啟動此專案的shell script
-    |-- docker-pg-init       // 用來initialize postgres，裡面包含創建使用者、創建DB及Table
+    |-- start-project.sh     // 用來啟動此專案的 shell script
+    |-- docker-pg-init       // 用來 Initialize postgres，裡面包含創建使用者、創建DB及Table
     |   |-- init.sql
-    |-- handler              // API的功能
+    |-- handler              // API 的功能
     |   |-- handler.go
     |-- lib
-    |   |-- config           // Get .env檔的環境變數
+    |   |-- config           // 取得 .env 檔的環境變數
     |   |   |-- config.go
     |   |-- cron             // 排程任務，用於刪除Postgres的過期資料
     |   |   |-- cron.go
@@ -122,14 +122,10 @@
     |   |   |-- id_generator.go
     |   |-- lua              // 用於IP limit function，確保在維持原子性的情況下操作Redis
     |   |   |-- lua.go
-    |   |-- middleware       // 限制IP不得在規定時間內超過最大值
+    |   |-- middleware       // 中間層，用來處理資料及限制IP不得在規定時間內超過最大值
     |       |-- middleware.go
-    |-- model                // 用於與Postgres和Redis連線並使用
+    |-- model                // 宣告 short URL structure
         |-- model.go
-        |-- pg_store.go
-        |-- pg_store_test.go
-        |-- redis_store.go
-        |-- redis_store_test.go
 
 ```
 ---
@@ -202,6 +198,12 @@
 - 當使用者輸入一個不存在或是不符合規則的縮網址，會在 Redis 存入該縮網址，並將 Value 設為 **NotExist** ，當使用者想再次輸入該不存在的縮網址不會每次都跟後端資料庫找資料
 - 當 Cache 內沒有該縮網址時，取得一個 Lock 以確保不會有大量的 request 同時間進入後端資料庫內，當結束後端的查找工作之後再 Unlock 
 
+### 資料庫Table
+當資料庫內的資料量極大時需要去考慮到如何設計去進行優化，讓搜尋速度可以往上提升
+
+本專案使用的是 Postgres ，設計 Table 時是使用 URL shortID 解碼後的數字當作 Primary key(PK) ，在 Postgres 內部會幫我們自動把 PK 當作 index ， 當資料庫內資料量很多時，這麼做可以加快在 GET 的這個 method 從資料庫搜尋出資料的速度。
+
+
 ### IP Limit
 由於在這個專案中需要去考慮到有人會在短時間多次的透過短網址重新導向到原網址，因此我這邊設計了一個 IP limit 去限制同一個IP下在一段時間內的 Request 數量，預設是在 300 秒內的 Request 數量為 500 ，當超過限制後就會回傳 429
 
@@ -231,17 +233,15 @@ return -1
 ```
 說明 : 
 - **KEYS[1], ARGV[1], ARGV[2]** 分別是使用者的 IP 、 IP 流量的最大值和限制 IP 的時間
-- 在最一開始會先查看 Redis 是否有這個 IP 的紀錄
-  - 如果沒有，則 SET 該 IP 的數值為 1 ，TTL 為限制時間，並回傳 1 
-  - 如果有則查看該 IP 內的數值
-- 如果 IP 內數值小於最大值，則將數值增加 1 ，刷新過期時間，並回傳 1
-- 如果 IP 內數值等於最大值則回傳 -1 ，並刷新過期時間
+1. 在最一開始會先查看 Redis 是否有這個 IP 的紀錄
+     - 如果沒有，則 SET 該 IP 的數值為 1 ，TTL 為限制時間，並回傳 1 
+    - 如果有則查看該 IP 內的數值
+2. 如果 IP 內數值小於最大值，則將數值增加 1 ，刷新過期時間，並回傳 1
+3. 如果 IP 內數值等於最大值則回傳 -1 ，並刷新過期時間
 
-lua 執行完畢後會回傳 1 or -1
-
-1 代表該 IP 未超過限制
-
--1 代表該 IP 超過限制
+- lua 執行完畢後會回傳 1 or -1
+  - 1 代表該 IP 未超過限制
+  - -1 代表該 IP 超過限制
 
 ### Cron Job
 在這個專案中我使用 Postgres 用來存放 縮網址 ID 、原網址、過期時間 ，由於資料具有時間性，因此我使用Cron Job的方式來刪除過期的資料，在 Demo 的時候我預設是每 5 分鐘進行刪除，假如在真正的應用上，我會選擇設定在冷門時段，像是凌晨 3 點
@@ -291,36 +291,36 @@ For example
 ab -n 1000 -c 200 -p post.json -T 'application/x-www-form-urlencoded' http://localhost:8080/api/v1/urls
 
 Concurrency Level:      200
-Time taken for tests:   0.957 seconds
+Time taken for tests:   0.794 seconds
 Complete requests:      1000
 Failed requests:        0
-Total transferred:      190000 bytes
-Total body sent:        229000
-HTML transferred:       67000 bytes
-Requests per second:    1045.37 [#/sec] (mean)
-Time per request:       191.320 [ms] (mean)
-Time per request:       0.957 [ms] (mean, across all concurrent requests)
-Transfer rate:          193.97 [Kbytes/sec] received
-                        233.78 kb/s sent
-                        427.74 kb/s total
+Total transferred:      182000 bytes
+Total body sent:        226000
+HTML transferred:       59000 bytes
+Requests per second:    1260.07 [#/sec] (mean)
+Time per request:       158.722 [ms] (mean)
+Time per request:       0.794 [ms] (mean, across all concurrent requests)
+Transfer rate:          223.96 [Kbytes/sec] received
+                        278.10 kb/s sent
+                        502.06 kb/s total
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
-Connect:        0    2   3.3      0      12
-Processing:    25  172 137.1    131     924
-Waiting:       13  172 137.1    130     923
-Total:         26  174 138.0    131     928
+Connect:        0    2   2.5      1      17
+Processing:     9  138 120.4     99     728
+Waiting:        3  136 120.5     99     728
+Total:          9  139 120.5    101     732
 
 Percentage of the requests served within a certain time (ms)
-  50%    131
-  66%    178
-  75%    212
-  80%    240
-  90%    354
-  95%    470
-  98%    608
-  99%    726
- 100%    928 (longest request)
+  50%    101
+  66%    145
+  75%    184
+  80%    203
+  90%    299
+  95%    384
+  98%    512
+  99%    622
+ 100%    732 (longest request)
 
 ```
 
@@ -330,33 +330,33 @@ Percentage of the requests served within a certain time (ms)
 ab -n 1000 -c 200 http://localhost:8080/L4qOJ2a
 
 Concurrency Level:      200
-Time taken for tests:   0.562 seconds
+Time taken for tests:   0.460 seconds
 Complete requests:      1000
 Failed requests:        0
 Non-2xx responses:      1000
-Total transferred:      198000 bytes
-HTML transferred:       45000 bytes
-Requests per second:    1778.12 [#/sec] (mean)
-Time per request:       112.478 [ms] (mean)
-Time per request:       0.562 [ms] (mean, across all concurrent requests)
-Transfer rate:          343.82 [Kbytes/sec] received
+Total transferred:      184000 bytes
+HTML transferred:       38000 bytes
+Requests per second:    2173.56 [#/sec] (mean)
+Time per request:       92.015 [ms] (mean)
+Time per request:       0.460 [ms] (mean, across all concurrent requests)
+Transfer rate:          390.56 [Kbytes/sec] received
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
-Connect:        0    7   6.6      5      20
-Processing:     4   96  72.4     67     313
-Waiting:        4   91  73.0     63     313
-Total:         14  103  72.4     81     320
+Connect:        0    4   4.5      3      19
+Processing:     2   80  68.8     55     242
+Waiting:        1   77  68.0     54     241
+Total:         11   85  68.0     58     252
 
 Percentage of the requests served within a certain time (ms)
-  50%     81
-  66%     95
-  75%    108
-  80%    159
-  90%    237
-  95%    256
-  98%    270
-  99%    283
- 100%    320 (longest request)
+  50%     58
+  66%     78
+  75%    101
+  80%    152
+  90%    208
+  95%    238
+  98%    244
+  99%    247
+ 100%    252 (longest request)
 
 ```
