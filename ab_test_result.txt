@@ -37,31 +37,33 @@ Percentage of the requests served within a certain time (ms)
 **Parse
 
 Concurrency Level:      200
-Time taken for tests:   0.562 seconds
+Time taken for tests:   0.392 seconds
 Complete requests:      1000
-Failed requests:        0
+Failed requests:        500
+   (Connect: 0, Receive: 0, Length: 500, Exceptions: 0)
 Non-2xx responses:      1000
-Total transferred:      198000 bytes
-HTML transferred:       45000 bytes
-Requests per second:    1778.12 [#/sec] (mean)
-Time per request:       112.478 [ms] (mean)
-Time per request:       0.562 [ms] (mean, across all concurrent requests)
-Transfer rate:          343.82 [Kbytes/sec] received
+Total transferred:      166500 bytes
+HTML transferred:       27500 bytes
+Requests per second:    2553.11 [#/sec] (mean)
+Time per request:       78.336 [ms] (mean)
+Time per request:       0.392 [ms] (mean, across all concurrent requests)
+Transfer rate:          415.13 [Kbytes/sec] received
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
-Connect:        0    7   6.6      5      20
-Processing:     4   96  72.4     67     313
-Waiting:        4   91  73.0     63     313
-Total:         14  103  72.4     81     320
+Connect:        0    6   6.5      3      29
+Processing:     2   70  52.7     55     182
+Waiting:        2   66  53.4     51     178
+Total:          6   76  51.1     59     188
 
 Percentage of the requests served within a certain time (ms)
-  50%     81
-  66%     95
-  75%    108
-  80%    159
-  90%    237
-  95%    256
-  98%    270
-  99%    283
- 100%    320 (longest request)
+  50%     59
+  66%     70
+  75%     86
+  80%     92
+  90%    180
+  95%    183
+  98%    185
+  99%    186
+ 100%    188 (longest request)
+ 

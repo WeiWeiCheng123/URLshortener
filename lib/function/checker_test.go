@@ -1,6 +1,8 @@
 package function
 
-import "testing"
+import (
+	"testing"
+)
 
 func Test_IsUrl_is_URL(t *testing.T) {
 	//set a correct url format
