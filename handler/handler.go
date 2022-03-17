@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"net/http"
 	"time"
 
@@ -126,5 +127,5 @@ func Parse(c *gin.Context) {
 
 func sendErr(c *gin.Context, statuscode int, err string) {
 	c.Set(constant.StatusCode, http.StatusInternalServerError)
-	c.Set(constant.Error, err)
+	c.Set(constant.Error, errors.New(err))
 }
