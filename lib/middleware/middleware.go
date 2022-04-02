@@ -7,18 +7,18 @@ import (
 	"github.com/WeiWeiCheng123/URLshortener/lib/function"
 	"github.com/WeiWeiCheng123/URLshortener/lib/lua"
 	"github.com/gin-gonic/gin"
-	"github.com/go-xorm/xorm"
+	"gorm.io/gorm"
 	"github.com/gomodule/redigo/redis"
 )
 
 var (
 	rdb           *redis.Pool
-	db            *xorm.Engine
+	db            *gorm.DB
 	IPLimitMax    int
 	IPLimitPeriod int
 )
 
-func Init(database *xorm.Engine, r *redis.Pool) {
+func Init(database *gorm.DB, r *redis.Pool) {
 	db = database
 	rdb = r
 }

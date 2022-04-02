@@ -10,10 +10,10 @@ import (
 	"github.com/WeiWeiCheng123/URLshortener/lib/cron"
 	"github.com/WeiWeiCheng123/URLshortener/lib/middleware"
 	"github.com/gin-gonic/gin"
-	"github.com/go-xorm/xorm"
 	"github.com/gomodule/redigo/redis"
 	_ "github.com/joho/godotenv/autoload"
-	_ "github.com/lib/pq"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 // connect to postgres and redis
@@ -22,9 +22,14 @@ func init() {
 		config.GetStr("DB_HOST"), config.GetStr("DB_PORT"), config.GetStr("DB_NAME"),
 		config.GetStr("DB_USERNAME"), config.GetStr("DB_PASSWORD"), config.GetStr("DB_SSL_MODE"))
 
-	db, err := xorm.NewEngine("postgres", pg_connect)
+	conn, err := gorm.Open(postgres.Open(pg_connect), &gorm.Config{})
 	if err != nil {
-		log.Panic("DB connection failed", err)
+		log.Panic(err)
+	}
+
+	db, err := conn.DB()
+	if err != nil {
+		log.Panic(err)
 	}
 
 	db.SetMaxIdleConns(config.GetInt("DB_MaxIdleConns"))
@@ -48,8 +53,8 @@ func init() {
 		},
 	}
 
-	cron.Init(db)
-	middleware.Init(db, rdb)
+	cron.Init(conn)
+	middleware.Init(conn, rdb)
 	middleware.Init_ip(config.GetInt("IPLimitMax"), config.GetInt("IPLimitPeriod"))
 }
 

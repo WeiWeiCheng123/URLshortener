@@ -2,16 +2,17 @@ package cron
 
 import (
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/WeiWeiCheng123/URLshortener/model"
-	"github.com/go-xorm/xorm"
 	"github.com/robfig/cron/v3"
+	"gorm.io/gorm"
 )
 
-var db *xorm.Engine
+var db *gorm.DB
 
-func Init(database *xorm.Engine) {
+func Init(database *gorm.DB) {
 	db = database
 }
 
@@ -22,11 +23,14 @@ func Del_Expdata() {
 	c.AddFunc("*/5 * * * *",
 		func() {
 			fmt.Println("Cron Job start", time.Now())
-			res, err := db.Where("expire_time < ?", time.Now()).Delete(&(model.Shortener{}))
-			if err != nil {
-				fmt.Println(err.Error())
+			res := db.Delete(&model.Shortener{}, "expire_time < ?",time.Now())
+			if res.Error != nil {
+				log.Panic(res.Error)
+			} else {
+				var count int64
+				res.Count(&count)
+				fmt.Println("Cron Job done, delete", count, " data")
 			}
-			fmt.Println("Cron Job done, delete", res, " data")
 		},
 	)
 	/*

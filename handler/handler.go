@@ -9,8 +9,8 @@ import (
 	"github.com/WeiWeiCheng123/URLshortener/lib/function"
 	"github.com/WeiWeiCheng123/URLshortener/model"
 	"github.com/gin-gonic/gin"
-	"github.com/go-xorm/xorm"
 	"github.com/gomodule/redigo/redis"
+	"gorm.io/gorm"
 )
 
 // used for POST method
@@ -19,32 +19,32 @@ func Shorten(c *gin.Context) {
 		URL string `json:"url"`
 		Exp string `json:"expireAt"`
 	}
+	data := model.Shortener{}
 	err := c.BindJSON(&input)
 	if err != nil {
 		sendErr(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	URL := input.URL
+	data.OriginalUrl = input.URL
 	// wrong URL format
-	if !function.IsURL(URL) {
+	if !function.IsURL(data.OriginalUrl) {
 		sendErr(c, http.StatusBadRequest, "invalid URL")
 		return
 	}
 
 	exp := input.Exp
-	expTime, err := function.TimeFormater(exp)
+	data.ExpireTime, err = function.TimeFormater(exp)
 	// wrong Time format or time expired
 	if err != nil {
 		sendErr(c, http.StatusBadRequest, "error time format or time is expired")
 		return
 	}
-
-	db := c.MustGet(constant.DB).(*xorm.Engine)
+	db := c.MustGet(constant.DB).(*gorm.DB)
 	shortID, id := function.Generator()
-	q := `INSERT INTO shortener(short_id, original_url, expire_time) VALUES($1,$2,$3)`
-	_, err = db.Exec(q, id, URL, expTime)
-	if err != nil {
+	data.ShortId = id
+	res := db.Create(data)
+	if res.Error != nil {
 		sendErr(c, http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -70,15 +70,15 @@ func Parse(c *gin.Context) {
 	if err != nil {
 		data := model.Shortener{}
 		id := function.Decode(shortID)
-		db := c.MustGet(constant.DB).(*xorm.Engine)
-		result, err := db.Where("short_id = ?", id).Get(&data)
-		if err != nil {
+		db := c.MustGet(constant.DB).(*gorm.DB)
+		res := db.Find(&data, id)
+		if res.Error != nil {
 			sendErr(c, http.StatusInternalServerError, err.Error())
 			return
 		}
 		// shortID not existed
-		if result == false {
-			_, err = connections.Do("SETEX", shortID, 300, "NotExist")
+		if data.ShortId == 0 {
+			_, err = connections.Do("SETEX", shortID, 150, "NotExist")
 			if err != nil {
 				sendErr(c, http.StatusInternalServerError, err.Error())
 				return
@@ -88,17 +88,17 @@ func Parse(c *gin.Context) {
 			return
 		}
 
-		expTime, err := function.Time_to_Taiwanzone(data.ExpireTime)
+		data.ExpireTime, err = function.Time_to_Taiwanzone(data.ExpireTime)
 		// data expired
 		if err != nil {
-			_, err = connections.Do("SETEX", shortID, 300, "NotExist")
+			_, err = connections.Do("SETEX", shortID, 150, "NotExist")
 			if err != nil {
 				sendErr(c, http.StatusInternalServerError, err.Error())
 				return
 			}
 
-			_, err = db.Where("short_id = ?", id).Delete(&data)
-			if err != nil {
+			res = db.Delete(&data, data.ShortId)
+			if res.Error != nil {
 				sendErr(c, http.StatusInternalServerError, err.Error())
 				return
 			}
@@ -107,10 +107,20 @@ func Parse(c *gin.Context) {
 			return
 		}
 
-		_, err = connections.Do("SETEX", shortID, int(expTime.Sub(time.Now()).Seconds()), data.OriginalUrl)
-		if err != nil {
-			sendErr(c, http.StatusInternalServerError, err.Error())
-			return
+		ttl := int(data.ExpireTime.Sub(time.Now()).Seconds())
+		if ttl > 900 {
+			ttl = 900
+			_, err = connections.Do("SETEX", shortID, ttl, data.OriginalUrl)
+			if err != nil {
+				sendErr(c, http.StatusInternalServerError, err.Error())
+				return
+			}
+		} else {
+			_, err = connections.Do("SETEX", shortID, ttl, data.OriginalUrl)
+			if err != nil {
+				sendErr(c, http.StatusInternalServerError, err.Error())
+				return
+			}
 		}
 
 		c.Set(constant.StatusCode, http.StatusFound)

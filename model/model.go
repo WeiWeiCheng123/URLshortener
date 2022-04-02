@@ -5,8 +5,8 @@ import (
 )
 
 type Shortener struct {
-	ShortId     int       `xorm:"pk" json:"short_id"`
-	OriginalUrl string    `json:"original_url"`
+	ShortId     uint64       `gorm:"pk" json:"short_id"`
+	OriginalUrl string    `gorm:"type:varchar(500)" json:"original_url"`
 	ExpireTime  time.Time `json:"expire_time"`
 }
 
