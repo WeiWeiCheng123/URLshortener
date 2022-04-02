@@ -4,7 +4,6 @@ go 1.15
 
 require (
 	github.com/gin-gonic/gin v1.7.7
-	github.com/go-xorm/xorm v0.7.9
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/gomodule/redigo v1.8.8
 	github.com/google/go-cmp v0.5.6 // indirect
