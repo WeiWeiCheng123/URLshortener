@@ -17,7 +17,7 @@ func Test_Parse_Pass(t *testing.T) {
 	// then use this shortURL, it should return 302 (redirect)
 	router := engine()
 
-	TestTime := time.Now().Add(1 * time.Minute).Format("2006-01-02T15:04:05Z")
+	TestTime := time.Now().Add(10 * time.Minute).Format("2006-01-02T15:04:05Z")
 	input.URL = "https://www.dcard.tw/f"
 	input.Exp = TestTime
 	body, _ := json.Marshal(input)
@@ -46,7 +46,7 @@ func Test_Parse_Fail_wrong_url(t *testing.T) {
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusNotFound, w.Code)
-	assert.Contains(t, w.Body.String(), "This short URL is not existed or expired")
+	assert.Contains(t, w.Body.String(), "this shortid is not existed or expired")
 }
 
 func Test_Parse_Fail_url_expired(t *testing.T) {
@@ -73,5 +73,5 @@ func Test_Parse_Fail_url_expired(t *testing.T) {
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusNotFound, w.Code)
-	assert.Contains(t, w.Body.String(), "This short URL is not existed or expired")
+	assert.Contains(t, w.Body.String(), "this shortid is not existed or expired")
 }

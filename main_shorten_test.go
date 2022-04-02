@@ -51,7 +51,7 @@ func Test_Shorten_Fail_wrong_url(t *testing.T) {
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusBadRequest, w.Code)
-	assert.Contains(t, w.Body.String(), "Invalid URL")
+	assert.Contains(t, w.Body.String(), "invalid URL")
 }
 
 func Test_Shorten_Fail_time_wrong_format(t *testing.T) {
@@ -60,7 +60,7 @@ func Test_Shorten_Fail_time_wrong_format(t *testing.T) {
 	router := engine()
 
 	TestTime := "2022-02-T15:04:05Z"
-	input.URL = "https//www.dcard.tw/f"
+	input.URL = "https://www.dcard.tw/f"
 	input.Exp = TestTime
 	body, _ := json.Marshal(input)
 
@@ -70,7 +70,7 @@ func Test_Shorten_Fail_time_wrong_format(t *testing.T) {
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusBadRequest, w.Code)
-	assert.Contains(t, w.Body.String(), "Error time format or time is expired")
+	assert.Contains(t, w.Body.String(), "error time format or time is expired")
 }
 
 func Test_Shorten_Fail_time_expired(t *testing.T) {
@@ -89,5 +89,5 @@ func Test_Shorten_Fail_time_expired(t *testing.T) {
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusBadRequest, w.Code)
-	assert.Contains(t, w.Body.String(), "Error time format or time is expired")
+	assert.Contains(t, w.Body.String(), "error time format or time is expired")
 }
