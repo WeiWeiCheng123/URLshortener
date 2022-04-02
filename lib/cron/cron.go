@@ -2,7 +2,6 @@ package cron
 
 import (
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/WeiWeiCheng123/URLshortener/model"
@@ -23,13 +22,11 @@ func Del_Expdata() {
 	c.AddFunc("*/5 * * * *",
 		func() {
 			fmt.Println("Cron Job start", time.Now())
-			res := db.Delete(&model.Shortener{}, "expire_time < ?",time.Now())
+			res := db.Delete(&model.Shortener{}, "expire_time < ?", time.Now())
 			if res.Error != nil {
-				log.Panic(res.Error)
+				fmt.Println(res.Error)
 			} else {
-				var count int64
-				res.Count(&count)
-				fmt.Println("Cron Job done, delete", count, " data")
+				fmt.Println("Cron Job done, delete", res.RowsAffected, " data")
 			}
 		},
 	)

@@ -40,7 +40,7 @@ func Time_to_Taiwanzone(expTime time.Time) (time.Time, error) {
 	localLocation, _ = time.LoadLocation("Asia/Shanghai")
 
 	expTime = expTime.In(localLocation)
-	//expTime = expTime.Add(-8 * time.Hour)
+	expTime = expTime.Add(-8 * time.Hour)
 
 	//time expired
 	if time.Now().After(expTime) {

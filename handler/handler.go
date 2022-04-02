@@ -107,20 +107,14 @@ func Parse(c *gin.Context) {
 			return
 		}
 
-		ttl := int(data.ExpireTime.Sub(time.Now()).Seconds())
-		if ttl > 900 {
-			ttl = 900
-			_, err = connections.Do("SETEX", shortID, ttl, data.OriginalUrl)
-			if err != nil {
-				sendErr(c, http.StatusInternalServerError, err.Error())
-				return
-			}
-		} else {
-			_, err = connections.Do("SETEX", shortID, ttl, data.OriginalUrl)
-			if err != nil {
-				sendErr(c, http.StatusInternalServerError, err.Error())
-				return
-			}
+		ttl := data.ExpireTime.Sub(time.Now())
+		if ttl > 20*time.Minute {
+			ttl = 20 * time.Minute
+		}
+		_, err = connections.Do("SETEX", shortID, int(ttl.Seconds()), data.OriginalUrl)
+		if err != nil {
+			sendErr(c, http.StatusInternalServerError, err.Error())
+			return
 		}
 
 		c.Set(constant.StatusCode, http.StatusFound)
