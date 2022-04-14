@@ -24,6 +24,7 @@ func Generator() (string, uint64) {
 	if t%2 == 1 {
 		t = t + 1
 	}
+	
 	enc := encode(t)
 	id := Decode(enc)
 	return enc, id
@@ -50,6 +51,7 @@ func Decode(encoded string) uint64 {
 		if charPosition == -1 {
 			return uint64(charPosition)
 		}
+
 		number += uint64(charPosition) * uint64(math.Pow(float64(length), float64(i)))
 	}
 

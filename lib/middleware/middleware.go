@@ -45,6 +45,7 @@ func Plain() gin.HandlerFunc {
 		} else {
 			c.JSON(statusCode, output)
 		}
+
 	}
 }
 
@@ -57,6 +58,7 @@ func TX() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+
 		if err := function.ShortID_legal(shortID); err != nil {
 			c.String(http.StatusNotFound, "this short URL is not existed or expired")
 			c.Abort()
@@ -79,6 +81,7 @@ func TX() gin.HandlerFunc {
 		} else {
 			c.Redirect(statusCode, output.(string))
 		}
+
 	}
 }
 
@@ -95,11 +98,13 @@ func IPLimiter() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+		
 		// exceed the limit
 		if res == -1 {
 			c.String(http.StatusTooManyRequests, "too many requests")
 			c.Abort()
 			return
 		}
+
 	}
 }

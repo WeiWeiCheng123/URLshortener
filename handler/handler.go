@@ -40,6 +40,7 @@ func Shorten(c *gin.Context) {
 		sendErr(c, http.StatusBadRequest, "error time format or time is expired")
 		return
 	}
+
 	db := c.MustGet(constant.DB).(*gorm.DB)
 	shortID, id := function.Generator()
 	data.ShortId = id
@@ -66,6 +67,7 @@ func Parse(c *gin.Context) {
 		sendErr(c, http.StatusNotFound, "this shortid is not existed or expired")
 		return
 	}
+
 	// data is not in the redis
 	if err != nil {
 		data := model.Shortener{}
@@ -76,6 +78,7 @@ func Parse(c *gin.Context) {
 			sendErr(c, http.StatusInternalServerError, err.Error())
 			return
 		}
+
 		// shortID not existed
 		if data.ShortId == 0 {
 			_, err = connections.Do("SETEX", shortID, 150, "NotExist")
@@ -111,6 +114,7 @@ func Parse(c *gin.Context) {
 		if ttl > 20*time.Minute {
 			ttl = 20 * time.Minute
 		}
+
 		_, err = connections.Do("SETEX", shortID, int(ttl.Seconds()), data.OriginalUrl)
 		if err != nil {
 			sendErr(c, http.StatusInternalServerError, err.Error())
@@ -126,7 +130,6 @@ func Parse(c *gin.Context) {
 	c.Set(constant.StatusCode, http.StatusFound)
 	c.Set(constant.Output, URL)
 	c.Set(constant.Error, nil)
-
 }
 
 // send error back

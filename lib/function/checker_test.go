@@ -11,6 +11,7 @@ func Test_IsUrl_is_URL(t *testing.T) {
 	if IsURL(url) != true {
 		t.Error("Wrong result")
 	}
+
 }
 
 func Test_IsURL_not_a_URL1(t *testing.T) {
@@ -20,6 +21,7 @@ func Test_IsURL_not_a_URL1(t *testing.T) {
 	if IsURL(url) != false {
 		t.Error("Wrong result")
 	}
+
 }
 
 func Test_IsURL_not_a_URL2(t *testing.T) {
@@ -29,6 +31,7 @@ func Test_IsURL_not_a_URL2(t *testing.T) {
 	if IsURL(url) != false {
 		t.Error("Wrong result")
 	}
+
 }
 
 func Test_TimeFormater_Pass(t *testing.T) {
@@ -39,6 +42,7 @@ func Test_TimeFormater_Pass(t *testing.T) {
 	if err != nil {
 		t.Error("Wrong result")
 	}
+
 }
 
 func Test_TimeFormater_Fail_in_Day(t *testing.T) {
@@ -49,6 +53,7 @@ func Test_TimeFormater_Fail_in_Day(t *testing.T) {
 	if err == nil {
 		t.Error("Wrong result")
 	}
+
 }
 
 func Test_TimeFormater_Fail_in_Month(t *testing.T) {
@@ -59,6 +64,7 @@ func Test_TimeFormater_Fail_in_Month(t *testing.T) {
 	if err == nil {
 		t.Error("Wrong result")
 	}
+
 }
 
 func Test_TimeFormater_Fail_in_Year(t *testing.T) {
@@ -69,6 +75,7 @@ func Test_TimeFormater_Fail_in_Year(t *testing.T) {
 	if err == nil {
 		t.Error("Wrong result")
 	}
+
 }
 
 func Test_TimeFormater_is_Expired(t *testing.T) {
@@ -79,6 +86,7 @@ func Test_TimeFormater_is_Expired(t *testing.T) {
 	if err == nil {
 		t.Error("Wrong result")
 	}
+
 }
 
 func Test_ShortID_legal_Pass(t *testing.T) {
@@ -89,6 +97,7 @@ func Test_ShortID_legal_Pass(t *testing.T) {
 	if err != nil {
 		t.Error("Wrong result")
 	}
+	
 }
 
 func Test_ShortID_legal_Fail(t *testing.T) {

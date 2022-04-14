@@ -40,11 +40,12 @@ func Del_Expdata() {
 		c.AddFunc("0 3 * * *",
 			func() {
 				fmt.Println("Cron Job start", time.Now())
-				res, err := db.Where("expire_time < ?", time.Now()).Delete(&(model.Shortener{}))
-				if err != nil {
-					fmt.Println(err.Error())
+				res := db.Delete(&model.Shortener{}, "expire_time < ?", time.Now())
+				if res.Error != nil {
+					fmt.Println(res.Error)
+				} else {
+					fmt.Println("Cron Job done, delete", res.RowsAffected, " data")
 				}
-				fmt.Println("Cron Job done, delete", res ," data")
 			},
 		)
 	*/

@@ -44,11 +44,13 @@ func init() {
 			if err != nil {
 				return nil, err
 			}
+
 			_, err = c.Do("AUTH", config.GetStr("REDIS_PASSWORD"))
 			if err != nil {
 				c.Close()
 				return nil, err
 			}
+			
 			return c, nil
 		},
 	}
