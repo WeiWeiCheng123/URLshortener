@@ -32,7 +32,7 @@ func Test_Shorten_Pass(t *testing.T) {
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusOK, w.Code)
-	assert.Contains(t, w.Body.String(), "http://localhost:8080/")
+	assert.Contains(t, w.Body.String(), "http://localhost:8083/")
 }
 
 func Test_Shorten_Fail_wrong_url(t *testing.T) {
