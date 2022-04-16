@@ -308,36 +308,36 @@ For example
 ab -n 1000 -c 200 -p post.json -T 'application/x-www-form-urlencoded' http://localhost:8083/api/v1/urls
 
 Concurrency Level:      200
-Time taken for tests:   0.794 seconds
+Time taken for tests:   0.841 seconds
 Complete requests:      1000
 Failed requests:        0
 Total transferred:      182000 bytes
-Total body sent:        226000
+Total body sent:        235000
 HTML transferred:       59000 bytes
-Requests per second:    1260.07 [#/sec] (mean)
-Time per request:       158.722 [ms] (mean)
-Time per request:       0.794 [ms] (mean, across all concurrent requests)
-Transfer rate:          223.96 [Kbytes/sec] received
-                        278.10 kb/s sent
-                        502.06 kb/s total
+Requests per second:    1188.66 [#/sec] (mean)
+Time per request:       168.257 [ms] (mean)
+Time per request:       0.841 [ms] (mean, across all concurrent requests)
+Transfer rate:          211.26 [Kbytes/sec] received
+                        272.79 kb/s sent
+                        484.05 kb/s total
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
-Connect:        0    2   2.5      1      17
-Processing:     9  138 120.4     99     728
-Waiting:        3  136 120.5     99     728
-Total:          9  139 120.5    101     732
+Connect:        0    3   4.6      1      32
+Processing:     9  150 117.1    118     790
+Waiting:        3  148 117.2    118     790
+Total:          9  153 116.9    121     801
 
 Percentage of the requests served within a certain time (ms)
-  50%    101
-  66%    145
-  75%    184
-  80%    203
-  90%    299
-  95%    384
-  98%    512
-  99%    622
- 100%    732 (longest request)
+  50%    121
+  66%    155
+  75%    183
+  80%    207
+  90%    285
+  95%    372
+  98%    546
+  99%    669
+ 100%    801 (longest request)
 
 ```
 
@@ -347,33 +347,33 @@ Percentage of the requests served within a certain time (ms)
 ab -n 1000 -c 200 http://localhost:8083/L4qOJ2a
 
 Concurrency Level:      200
-Time taken for tests:   0.460 seconds
+Time taken for tests:   0.441 seconds
 Complete requests:      1000
 Failed requests:        0
 Non-2xx responses:      1000
-Total transferred:      184000 bytes
-HTML transferred:       38000 bytes
-Requests per second:    2173.56 [#/sec] (mean)
-Time per request:       92.015 [ms] (mean)
-Time per request:       0.460 [ms] (mean, across all concurrent requests)
-Transfer rate:          390.56 [Kbytes/sec] received
+Total transferred:      198000 bytes
+HTML transferred:       45000 bytes
+Requests per second:    2268.50 [#/sec] (mean)
+Time per request:       88.164 [ms] (mean)
+Time per request:       0.441 [ms] (mean, across all concurrent requests)
+Transfer rate:          438.64 [Kbytes/sec] received
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
-Connect:        0    4   4.5      3      19
-Processing:     2   80  68.8     55     242
-Waiting:        1   77  68.0     54     241
-Total:         11   85  68.0     58     252
+Connect:        0    9   8.2      8      34
+Processing:     3   76  63.4     54     213
+Waiting:        2   70  62.7     50     211
+Total:          4   85  63.0     63     223
 
 Percentage of the requests served within a certain time (ms)
-  50%     58
+  50%     63
   66%     78
-  75%    101
-  80%    152
-  90%    208
-  95%    238
-  98%    244
-  99%    247
- 100%    252 (longest request)
+  75%     97
+  80%    142
+  90%    203
+  95%    217
+  98%    220
+  99%    220
+ 100%    223 (longest request)
 
 ```
