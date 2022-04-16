@@ -92,21 +92,7 @@
       ```
       該網站HTML form
       ```
----
-## Test
-在這個專案中分成兩個測試，一個是將原網址變成縮網址，一個是重新導向縮網址
 
-在原網址變成縮網址的測試裡面又分成
-1. 輸入正確無誤的格式，回傳 200 以及 short URL 的內容
-2. 輸入錯誤的網址格式，回傳 400 以及 invalid URL
-3. 輸入錯誤的時間格式，回傳 400 以及 error time format or time is expired
-4. 輸入過期的時間格式，回傳 400 以及 error time format or time is expired
-
-在重新導向縮網址的測試裡面又分成
-1. 輸入實際存在的縮網址，回傳 302
-2. 輸入不存在的縮網址，回傳 404 以及 this shortid is not existed or expired
-3. 輸入過期的縮網址，回傳 404 以及 this shortid is not existed or expired
-    
 ---
 ## 專案目錄結構
 ```c
@@ -142,6 +128,7 @@
         |-- model.go
 
 ```
+
 ---
 ## 設計發想
 ### 縮網址設計
@@ -296,6 +283,21 @@ For example
    
    在 middleware 中使用 IP limit 的方式去計算該 IP 的 Request 次數，使用了 lua 搭配 Redis 來達成 IP limit 的功能，當達到上限時，回傳 429
 
+---
+## Test
+在這個專案中分成兩個測試，一個是將原網址變成縮網址，一個是重新導向縮網址
+
+在原網址變成縮網址的測試裡面又分成
+1. 輸入正確無誤的格式，回傳 200 以及 short URL 的內容
+2. 輸入錯誤的網址格式，回傳 400 以及 invalid URL
+3. 輸入錯誤的時間格式，回傳 400 以及 error time format or time is expired
+4. 輸入過期的時間格式，回傳 400 以及 error time format or time is expired
+
+在重新導向縮網址的測試裡面又分成
+1. 輸入實際存在的縮網址，回傳 302
+2. 輸入不存在的縮網址，回傳 404 以及 this shortid is not existed or expired
+3. 輸入過期的縮網址，回傳 404 以及 this shortid is not existed or expired
+    
 ---
 ## ApacheBench
 設計完成後我有使用 ApacheBench 進行測試，在我的 Blog 有介紹到 ApacheBench https://weiweicheng123.github.io/2022/02/26/ab-test/#more
