@@ -51,7 +51,7 @@ func Shorten(c *gin.Context) {
 	}
 
 	c.Set(constant.StatusCode, http.StatusOK)
-	c.Set(constant.Output, map[string]interface{}{"id": shortID, "shortURL": "http://localhost:8080/" + shortID})
+	c.Set(constant.Output, map[string]interface{}{"id": shortID, "shortURL": "http://localhost:8083/" + shortID})
 	c.Set(constant.Error, nil)
 }
 

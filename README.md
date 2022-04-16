@@ -71,12 +71,12 @@
   
   - Example request
     ```sh
-    curl -X POST -H "Content-Type:application/json" -d '{"url":"https://www.dcard.tw/f","expireAt":"2023-01-01T09:00:41Z"}' http://localhost:8080/api/v1/urls
+    curl -X POST -H "Content-Type:application/json" -d '{"url":"https://www.dcard.tw/f","expireAt":"2023-01-01T09:00:41Z"}' http://localhost:8083/api/v1/urls
     ```
    
   - Example response
     ```sh
-    {"id":"KF4eAy9","shortURL":"http://localhost:8080/KF4eAy9"}
+    {"id":"KF4eAy9","shortURL":"http://localhost:8083/KF4eAy9"}
     ```
 
 - 第二個API為GET，若該縮網址沒過期，輸入縮網址，重新導向到原網址; 若縮網址過期，則顯示404
@@ -85,7 +85,7 @@
       ```sh
       # use the return shortID
       # http://localhost:8080/ + shortID
-      curl -L -X GET "http://localhost:8080/KF4eAy9"
+      curl -L -X GET "http://localhost:8083/KF4eAy9"
       ```
 
   - Example response
