@@ -1,4 +1,4 @@
-**ab -n 1000 -c 200 -p post.json -T 'application/x-www-form-urlencoded' http://localhost:8080/api/v1/urls
+**ab -n 1000 -c 200 -p post.json -T 'application/x-www-form-urlencoded' http://localhost:8083/api/v1/urls
 
 **Shorten
 
@@ -34,7 +34,7 @@ Percentage of the requests served within a certain time (ms)
   99%    622
  100%    732 (longest request)
 
-**ab -n 1000 -c 200 http://localhost:8080/4riZDo9
+**ab -n 1000 -c 200 http://localhost:8083/4riZDo9
 **Parse
 
 Concurrency Level:      200

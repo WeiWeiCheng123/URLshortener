@@ -291,7 +291,7 @@ For example
 ```sh
 #POST
 
-ab -n 1000 -c 200 -p post.json -T 'application/x-www-form-urlencoded' http://localhost:8080/api/v1/urls
+ab -n 1000 -c 200 -p post.json -T 'application/x-www-form-urlencoded' http://localhost:8083/api/v1/urls
 
 Concurrency Level:      200
 Time taken for tests:   0.794 seconds
@@ -330,7 +330,7 @@ Percentage of the requests served within a certain time (ms)
 ```sh
 #GET
 
-ab -n 1000 -c 200 http://localhost:8080/L4qOJ2a
+ab -n 1000 -c 200 http://localhost:8083/L4qOJ2a
 
 Concurrency Level:      200
 Time taken for tests:   0.460 seconds
